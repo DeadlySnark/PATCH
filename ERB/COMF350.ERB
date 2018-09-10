@@ -1,0 +1,167 @@
+;-------------------------------------------------------------------------------
+;‰Ÿ‚µ“|‚·
+@COM350
+	#DIM “z—ê
+	#DIM LOOP_I
+	;‰Ÿ‚µ“|‚·
+	FOR LOOP_I,1,CHARANUM
+		SIF TARGET:LOOP_I <= 0
+			CONTINUE
+		“z—ê = TARGET:LOOP_I
+		;NG‚Ìê‡‚à‚ ‚é‚Ì‚ÅŒã‚Åƒtƒ‰ƒO‚ð—§‚Ä‚éB
+		;CFLAG:“z—ê:‚¤‚Ó‚Ó = 1
+		CALL CHK_350_WC_KEY(“z—ê)
+		IF 0 == RESULT
+			RETURN 0
+		ENDIF
+		; •‚‹C”ñŒö”F‚Ì—ö•çZl‚Ìê‡A‚ ‚È‚½ˆÈŠO‚Ì‘ŠŽè‚Ì¸‰t‚ðŽó‚¯‚Ä‚¢‚éê‡‹‘â‚³‚ê‚é
+		CALL CHK_350_STAIN_SEMEN_MES(“z—ê)
+		IF 0 == RESULT
+			RETURN 0
+		ENDIF
+	NEXT
+	;‘Sˆõ¬Œ÷ŽžA‚¤‚Ó‚Óƒtƒ‰ƒO‚ð—§‚Ä‚éB
+	FOR LOOP_I,1,CHARANUM
+		SIF TARGET:LOOP_I <= 0
+			CONTINUE
+		“z—ê = TARGET:LOOP_I
+		CFLAG:“z—ê:‚¤‚Ó‚Ó = 1
+	NEXT
+	CFLAG:MASTER:‚¤‚Ó‚Ó = 1
+	TIME += 5
+RETURN 1
+
+;ŒöO•ÖŠ‰Ÿ‚µ“|‚µ‰Â”Ûƒ`ƒFƒbƒN
+;  –ß‚è’lF 1: ‰Ÿ‚µ“|‚µ¬Œ÷
+;           0: ‰Ÿ‚µ“|‚µŽ¸”s
+@CHK_350_WC_KEY(“z—ê)
+	#DIM “z—ê
+	IF TALENT:“z—ê:ŒöO•ÖŠ && EQUIP:“z—ê:‰º”¼g‰º’…‚P == 100
+		IF FLAG:’å‘€‘ÑŒ®w“üƒtƒ‰ƒO == “z—ê
+			;ŒöO•ÖŠ‘ŠŽè‚ÉŒ®‚ð”ƒ‚Á‚Ä‚¢‚½ê‡
+			IF CFLAG:“z—ê:NTR’å‘€‘Ñ”½‰ž
+				;ŒöO•ÖŠŽ©g‚ª’å‘€‘Ñ‚ÌŒ®‚ð”FŽ¯‚µ‚Ä‚¢‚È‚¢ê‡
+				IF TCVAR:“z—ê:“é‚ê‡‚¢‹­“x < 2
+					;ŒöO•ÖŠ‚ª‚»‚Ì‹C‚É‚È‚Á‚Ä‚È‚¢‚Ì‚É‰Ÿ‚µ“|‚µ‚½ê‡
+					PRINTFORML Even though %CALLNAME:“z—ê% tried to push %CALLNAME:MASTER% back instinctively,
+					PRINTFORML When %HE_SHE(MASTER)% showed %CALLNAME:“z—ê% the key from %HIS_HER(“z—ê)% chastity belt, 
+					PRINTFORML %CALLNAME:“z—ê%'s body stopped struggling, forcing %HIM_HER(“z—ê)% to accept %CALLNAME:MASTER%...
+					CFLAG:“z—ê:‚Ï‚ñ‚ÂŠm”F = 1
+				ELSE
+					;ŒöO•ÖŠ‚ª‚»‚Ì‹C‚É‚È‚Á‚Ä‚éŽž‚É‰Ÿ‚µ“|‚µ‚½ê‡
+					PRINTFORML %CALLNAME:“z—ê% stroked %HIS_HER(“z—ê)% chastity belt and asked %CALLNAME:MASTER% when %HE_SHE(MASTER)% is going to buy %HIM_HER(“z—ê)%.
+					PRINTFORML As %CALLNAME:MASTER% showed %CALLNAME:“z—ê% the key %HE_SHE(MASTER)% just purchased, 
+					PRINTFORML %CALLNAME:“z—ê% has spread %HIS_HER(“z—ê)% legs and pointed at the keyhole.
+					CFLAG:“z—ê:‚Ï‚ñ‚ÂŠm”F = 1
+				ENDIF
+				CALL NTR_LOCK_REACTION(“z—ê)
+			ELSE
+				;ŒöO•ÖŠŽ©g‚ª’å‘€‘Ñ‚ÌŒ®‚ð”FŽ¯‚µ‚Ä‚¢‚éê‡
+				IF TCVAR:“z—ê:“é‚ê‡‚¢‹­“x < 2
+					;ŒöO•ÖŠ‚ª‚»‚Ì‹C‚É‚È‚Á‚Ä‚È‚¢‚Ì‚É‰Ÿ‚µ“|‚µ‚½ê‡
+					PRINTFORML %CALLNAME:“z—ê% showed signs of slight resistance, but %HIS_HER(“z—ê)% body was forced to relax immediately,
+					PRINTFORML Making %HIM_HER(“z—ê)% accept %CALLNAME:MASTER%...
+				ELSE
+					;ŒöO•ÖŠ‚ª‚»‚Ì‹C‚É‚È‚Á‚Ä‚éŽž‚É‰Ÿ‚µ“|‚µ‚½ê‡
+					PRINTFORML %CALLNAME:“z—ê% exposed %HIS_HER(“z—ê)% chastity belt in front of %CALLNAME:MASTER%,
+					PRINTFORML And begged %HIM_HER(MASTER)% to unlock it as fast as possible...
+					CFLAG:“z—ê:‚Ï‚ñ‚ÂŠm”F = 1
+				ENDIF
+			ENDIF
+		ELSE
+			;PRINTFORML %CALLNAME:MASTER+"‚ª”—‚é‚Æ"+CALLNAME:“z—ê+"‚ÍŒ®‚Ì‚©‚¯‚ç‚ê‚½’å‘€‘Ñ‚ðŒ©‚¹Aw"+CALLNAME:“z—ê+"x‚Í"+NTR_NAME(0)+"‚Ì¤•i‚È‚Ì‚¾‚©‚çAŽg‚¢‚½‚¯‚ê‚Î"+NTR_NAME(0)+"‚©‚çŒ®‚ð”ƒ‚í‚È‚¯‚ê‚Îƒ_ƒ‚¾‚Æ’f‚Á‚½B"%
+			PRINTFORML As %CALLNAME:MASTER% tried to draw %CALLNAME:“z—ê% near, %HE_SHE(“z—ê)% turned %CALLNAME:MASTER% down,
+			PRINTFORML Showing %CALLNAME:MASTER% %HIS_HER(“z—ê)% locked chastity belt,
+			PRINTFORML And saying that w%CALLNAME:“z—ê%x belongs to %NTR_NAME(0)% as his product, so if %CALLNAME:MASTER% wants to use %HIM_HER(“z—ê)%,
+			PRINTFORML %CALLNAME:MASTER% has to buy a key from %NTR_NAME(0)% first.
+			CFLAG:“z—ê:‚Ï‚ñ‚ÂŠm”F = 1
+			CFLAG:“z—ê:‚¤‚Ó‚Ó = 0
+			CFLAG:MASTER:‚¤‚Ó‚Ó = 0
+			TIME += 5
+			RETURN 0
+		ENDIF
+	ENDIF
+RETURN 1
+
+;¸‰t‰˜‚ê‚É‚æ‚é‰Ÿ‚µ“|‚µ‰Â”Ûƒ`ƒFƒbƒN(ƒƒbƒZ[ƒW‚ ‚è)
+;@—ö•çŽ‚¿A‚©‚Â•‚‹C”ñŒö”F‚ÌZl‚Ìê‡A‚ ‚È‚½ˆÈŠO‚Ì¸‰t‰˜‚ê‚ð‰B‚»‚¤‚Æ‚·‚éB
+;  –ß‚è’lF 1: ‰Ÿ‚µ“|‚µ¬Œ÷
+;           0: ‰Ÿ‚µ“|‚µŽ¸”s
+@CHK_350_STAIN_SEMEN_MES(“z—ê)
+	#DIM “z—ê
+	;ƒRƒ“ƒtƒBƒO‚É‚æ‚é—}§Žž‚Íí‚É¬Œ÷
+	IF !IS_NTR_ESCAPE()
+		RETURN 1
+	ENDIF
+	IF TALENT:“z—ê:—ö•ç && 0 == TALENT:“z—ê:•‚‹CŒö”F
+		; ‰˜‚ê•”ˆÊ‚Æ‚ ‚È‚½‚ÌŽË¸—š—ð‚ªˆê’v‚µ‚È‚¢
+		IF 0 == CHK_350_STAIN_SEMEN(“z—ê)
+			;ŽË¸ŽÒ‚ª–K–âŽÒ‚Å‚ ‚ê‚Î‘ØÝi‰ï˜b¨•‚‹CŒö”Fj
+			IF l•¨_–K–âŽÒ == CFLAG:“z—ê:ŽË¸ŽÒM || l•¨_–K–âŽÒ == CFLAG:“z—ê:ŽË¸ŽÒV || l•¨_–K–âŽÒ == CFLAG:“z—ê:ŽË¸ŽÒA
+				;PRINTFORML %CALLNAME:MASTER+"‚ª”—‚é‚Æ"+CALLNAME:“z—ê+"‚Í‹C‚Ü‚¸‚»‚¤‚É¡‚ÍŠ¾‚ð‚©‚¢‚Ä‚¢‚é‚©‚ç‚Æ’f‚Á‚½B"%
+				;PRINTFORML %"•sR‚ÉŽv‚Á‚½"+CALLNAME:MASTER+"‚ª–³—‚É‰Ÿ‚µ“|‚·‚ÆA"+CALLNAME:“z—ê+"‚Ìg‘Ì‚ÉîŽ–‚Ì­Õ‚ð”­Œ©‚µ‚½B"%
+				PRINTFORML As %CALLNAME:MASTER% tried to draw %CALLNAME:“z—ê% near, %HE_SHE(“z—ê)% turned %CALLNAME:MASTER% down,
+				PRINTFORML Saying that it would be awkward because %HE_SHE(“z—ê)% is very sweaty right now.
+				PRINTFORML Doubting that, %CALLNAME:MASTER% tried to push %CALLNAME:“z—ê% down forcibly,
+				PRINTFORML Only to find traces from %CALLNAME:“z—ê%'s recent love affair on %HIS_HER(“z—ê)% body.
+				CFLAG:“z—ê:‰˜‚ê”­Šo = ‰˜‚ê”­Šo_‚ ‚è
+			;ŽË¸ŽÒ‚ª–K–âŽÒ‚Å‚È‚¯‚ê‚Î“¦‘–
+			ELSE
+				;PRINTFORML %CALLNAME:MASTER+"‚ª”—‚é‚Æ"+CALLNAME:“z—ê+"‚ÍQ‚Ä‚½‚æ‚¤‚ÈŠ´‚¶‚Å¡‚ÍŠ¾‚ð‚©‚¢‚Ä‚¢‚é‚©‚çæ‚É‚¨•—˜C‚É“ü‚è‚½‚¢‚Æ’f‚Á‚½B"%
+				PRINTFORML As %CALLNAME:MASTER% tried to draw %CALLNAME:“z—ê% near, %HE_SHE(“z—ê)% turned %CALLNAME:MASTER% down,
+				PRINTFORML Being seemingly flustered and saying that %HE_SHE(“z—ê)% is very sweaty right now and should take a bath first.
+				CFLAG:“z—ê:‰˜‚ê”­Šo = ‰˜‚ê”­Šo_“¦‘–
+			ENDIF
+			CFLAG:“z—ê:‚¤‚Ó‚Ó = 0
+			CFLAG:MASTER:‚¤‚Ó‚Ó = 0
+			TIME += 5
+			RETURN 0
+		ENDIF
+	ENDIF
+RETURN 1
+
+;¸‰t‰˜‚ê‚É‚æ‚é‰Ÿ‚µ“|‚µ‰Â”Ûƒ`ƒFƒbƒN(ƒƒbƒZ[ƒW‚È‚µ)
+;@—ö•çŽ‚¿A‚©‚Â•‚‹C”ñŒö”F‚ÌZl‚Ìê‡A‚ ‚È‚½ˆÈŠO‚Ì¸‰t‰˜‚ê‚ð‰B‚»‚¤‚Æ‚·‚éB
+;  –ß‚è’lF 1: ‰Ÿ‚µ“|‚µ¬Œ÷
+;           0: ‰Ÿ‚µ“|‚µŽ¸”s
+@CHK_350_STAIN_SEMEN(“z—ê)
+	#FUNCTION
+	#DIM “z—ê
+	IF TALENT:“z—ê:—ö•ç && 0 == TALENT:“z—ê:•‚‹CŒö”F
+		; Œû,V,B,A ‚Ì‚¢‚¸‚ê‚©‚É¸‰t‰˜‚ê‚ ‚è
+		IF GETBIT(STAIN:“z—ê:•”ˆÊ_Œû, ‰˜‚êB_¸‰t) || GETBIT(STAIN:“z—ê:•”ˆÊ_‚u, ‰˜‚êB_¸‰t) || GETBIT(STAIN:“z—ê:•”ˆÊ_‚`, ‰˜‚êB_¸‰t) || GETBIT(STAIN:“z—ê:•”ˆÊ_‚a, ‰˜‚êB_¸‰t)
+			; –{“ú‚ ‚È‚½‚É‚æ‚éŽË¸—š—ð‚È‚µ
+			IF 0 == CFLAG:“z—ê:‚ ‚È‚½ŽË¸ƒtƒ‰ƒO
+				RETURNF 0
+			ENDIF
+		ENDIF
+	ENDIF
+RETURNF 1
+
+
+;¸‰t‰˜‚ê‚É‚æ‚é‰Ÿ‚µ“|‚µ‰Â”Ûƒ`ƒFƒbƒN‚Ì•”ˆÊ•Êƒ`ƒFƒbƒN(–¢Žg—p)
+;@‚ ‚È‚½‚ªŽË¸‚µ‚½‰ÓŠ‚ª‰˜‚ê‚Ä‚¢‚éê‡ƒXƒ‹[
+@CHK_350_STAIN(“z—ê, •”ˆÊ)
+	#FUNCTION
+	#DIM “z—ê
+	#DIM •”ˆÊ
+
+	SELECTCASE •”ˆÊ
+		CASE ”íŽË¸‰ÓŠ_Œû
+			IF !GETBIT(CFLAG:“z—ê:‚ ‚È‚½ŽË¸ƒtƒ‰ƒO, •”ˆÊ) && GETBIT(STAIN:“z—ê:•”ˆÊ_Œû, ‰˜‚êB_¸‰t)
+				RETURNF 0
+			ENDIF
+		CASE ”íŽË¸‰ÓŠ_‚u
+			IF !GETBIT(CFLAG:“z—ê:‚ ‚È‚½ŽË¸ƒtƒ‰ƒO, •”ˆÊ) && GETBIT(STAIN:“z—ê:•”ˆÊ_‚u, ‰˜‚êB_¸‰t)
+				RETURNF 0
+			ENDIF
+		CASE ”íŽË¸‰ÓŠ_‚`
+			IF !GETBIT(CFLAG:“z—ê:‚ ‚È‚½ŽË¸ƒtƒ‰ƒO, •”ˆÊ) && GETBIT(STAIN:“z—ê:•”ˆÊ_‚`, ‰˜‚êB_¸‰t)
+				RETURNF 0
+			ENDIF
+		CASE ”íŽË¸‰ÓŠ_‚a
+			IF !GETBIT(CFLAG:“z—ê:‚ ‚È‚½ŽË¸ƒtƒ‰ƒO, •”ˆÊ) && GETBIT(STAIN:“z—ê:•”ˆÊ_‚a, ‰˜‚êB_¸‰t)
+				RETURNF 0
+			ENDIF
+	ENDSELECT
+RETURNF 1

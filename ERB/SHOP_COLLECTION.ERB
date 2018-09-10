@@ -1,0 +1,132 @@
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@SHOW_COLLECTION
+	#DIM キャラ番号
+	#DIM キャラ番号2
+	#DIM 収集品番号
+	#DIM 表示カウント
+	#DIM 重複枚数
+	#DIM 売却枚数
+	DRAWLINE
+	重複枚数 = 0
+	売却枚数 = 0
+	;キャラ毎
+	FOR キャラ番号,0,CHARANUM
+		表示カウント = 0
+		;ぱんつチェック
+		FOR 収集品番号,0,42
+			LOCALS = %CALLNAME:キャラ番号%{収集品番号}/
+			IF STRCOUNT(SAVESTR:10,LOCALS)
+				SIF STRCOUNT(SAVESTR:10,LOCALS) > 1
+					重複枚数 ++
+				IF !表示カウント
+					PRINTFORM 【%CALLNAME:キャラ番号%'s panties】
+				ENDIF
+				SIF 表示カウント % 4 == 0
+					PRINTL
+				表示カウント ++
+				LOCALS:1 = {STRCOUNT(SAVESTR:10,LOCALS)} - %PANTSNAME(収集品番号)%
+				PRINTFORMLC %LOCALS:1,32,LEFT%
+			ENDIF
+		NEXT
+		SIF 表示カウント
+			PRINTL
+		表示カウント = 0
+		;写真チェック
+		FOR 収集品番号,0,20
+			LOCALS = %CALLNAME:キャラ番号%{収集品番号}PH/
+			IF STRCOUNT(SAVESTR:10,LOCALS)
+				SIF STRCOUNT(SAVESTR:10,LOCALS) > 1
+					重複枚数 ++
+				IF !表示カウント
+					PRINTFORM 【%CALLNAME:キャラ番号%'s photo】
+				ENDIF
+				SIF 表示カウント % 4 == 0
+					PRINTL
+				表示カウント ++
+				LOCALS:1 = {STRCOUNT(SAVESTR:10,LOCALS)} - %PHOTO_NAME(収集品番号)%
+				PRINTFORMLC %LOCALS:1,32,LEFT%
+			ENDIF
+		NEXT
+		SIF 表示カウント
+			PRINTL
+		表示カウント = 0
+	NEXT
+	;キャラ2人毎
+	FOR キャラ番号,1,CHARANUM
+		FOR キャラ番号2,1,CHARANUM
+			SIF キャラ番号 == キャラ番号2
+				CONTINUE
+			表示カウント = 0
+			FOR 収集品番号,100,110
+				LOCALS = %CALLNAME:キャラ番号%と%CALLNAME:キャラ番号2%{収集品番号}PH/
+				IF STRCOUNT(SAVESTR:10,LOCALS)
+					SIF STRCOUNT(SAVESTR:10,LOCALS) > 1
+						重複枚数 ++
+					IF !表示カウント
+						PRINTFORM 【Photo of %CALLNAME:キャラ番号% and %CALLNAME:キャラ番号2%】
+					ENDIF
+					SIF 表示カウント % 4 == 0
+						PRINTL
+					表示カウント ++
+					LOCALS:1 = {STRCOUNT(SAVESTR:10,LOCALS)} - %PHOTO_NAME(収集品番号)%
+					PRINTFORMLC %LOCALS:1,32,LEFT%
+				ENDIF
+				LOCALS = %CALLNAME:キャラ番号%が%CALLNAME:キャラ番号2%{収集品番号}PH/
+				IF STRCOUNT(SAVESTR:10,LOCALS)
+					SIF STRCOUNT(SAVESTR:10,LOCALS) > 1
+						重複枚数 ++
+					IF !表示カウント
+						PRINTFORM 【Photo of %CALLNAME:キャラ番号% and %CALLNAME:キャラ番号2%】
+					ENDIF
+					SIF 表示カウント % 4 == 0
+						PRINTL
+					表示カウント ++
+					LOCALS:1 = {STRCOUNT(SAVESTR:10,LOCALS)} - %PHOTO_NAME(収集品番号)%
+					PRINTFORMLC %LOCALS:1,32,LEFT%
+				ENDIF
+			NEXT
+			SIF 表示カウント
+				PRINTL
+		NEXT
+	NEXT
+	PRINTL
+	PRINT [0] - Return 
+	SIF 重複枚数
+		PRINT [1] - Sell all duplicates
+	INPUT
+	IF RESULT == 1 && 重複枚数
+		VARSET LOCALS
+		FOR キャラ番号,1,CHARANUM
+			FOR 収集品番号,0,42
+				LOCALS = %CALLNAME:キャラ番号%{収集品番号}/
+				SIF STRCOUNT(SAVESTR:10,LOCALS) > 1
+					売却枚数 += STRCOUNT(SAVESTR:10,LOCALS) - 1
+				LOCALS = %CALLNAME:キャラ番号%{収集品番号}PH/
+				SIF STRCOUNT(SAVESTR:10,LOCALS) > 1
+					売却枚数 += STRCOUNT(SAVESTR:10,LOCALS) - 1
+			NEXT
+		NEXT
+		LOCALS:2 = /
+		FOR キャラ番号,1,CHARANUM
+			FOR 収集品番号,0,42
+				LOCALS = /%CALLNAME:キャラ番号%{収集品番号}/
+				IF STRCOUNT(SAVESTR:10,LOCALS)
+					LOCALS:1 = %CALLNAME:キャラ番号%{収集品番号}/
+					LOCALS:2 += LOCALS
+				ENDIF
+				LOCALS = /%CALLNAME:キャラ番号%{収集品番号}PH/
+				IF STRCOUNT(SAVESTR:10,LOCALS)
+					LOCALS:1 = %CALLNAME:キャラ番号%{収集品番号}PH/
+					LOCALS:2 += LOCALS
+				ENDIF
+			NEXT
+		NEXT
+		SAVESTR:10 = %LOCALS:2%
+		PRINTFORMW You earned {100 * 売却枚数}$ selling {売却枚数} piece\@売却枚数 == 1 ?#s\@ in total.
+		MONEY += 100 * 売却枚数
+	ELSE
+		RETURN 0
+	ENDIF
+	RESTART

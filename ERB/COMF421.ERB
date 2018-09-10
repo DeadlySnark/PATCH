@@ -1,0 +1,14 @@
+;-------------------------------------------------
+;êgÇ∂ÇÎÇ¨Ç∑ÇÈ
+;-------------------------------------------------
+@COM421
+	PRINTFORMW You started struggling in order to remove the restrains.
+	IF RAND:10
+		PRINTFORMW ...However, you were not able to unfasten them at all.
+		TIME += 5
+	ELSE
+		PRINTFORMW Luckily, you managed to remove the restraints!
+		TFLAG:120 = 0
+		TIME += 5
+	ENDIF
+RETURN 1

@@ -1,0 +1,177 @@
+;-------------------------------------------------------------------------------
+;コマンド:連れ出す
+;@return 1:成功,0:失敗
+@COM351
+
+	#DIM 対象人数
+	#DIM 同行可能人数
+	#DIM 別離可能人数
+	#DIM 対象
+	#DIM LOOP_CHR
+	#DIM BK_SELCOM
+
+	;連れ出せる対象が何人いるか探す
+	FOR LOOP_CHR,1,CHARANUM
+		IF CFLAG:(TARGET:LOOP_CHR):馴れ合い強度度
+			対象人数 ++
+			IF CFLAG:(TARGET:LOOP_CHR):同行
+				RESULT = LOOP_CHR+500
+			ELSE
+				RESULT = LOOP_CHR
+			ENDIF
+		ENDIF
+	NEXT
+
+	;複数人連れ出し対象がいる場合は選択させる
+	IF 対象人数 > 1
+		PRINTL Who will accompany you?
+		;連れ出せる対象を探す
+		同行可能人数 = 0
+		FOR LOOP_CHR,1,CHARANUM
+			IF CFLAG:(TARGET:LOOP_CHR):馴れ合い強度度 && !CFLAG:(TARGET:LOOP_CHR):同行
+				PRINTFORML %"["+TOSTR(LOOP_CHR)+"] - "+CALLNAME:(TARGET:LOOP_CHR)%
+				同行可能人数 += 1
+			ENDIF
+		NEXT
+		;離れる対象を探す
+		別離可能人数 = 0
+		FOR LOOP_CHR,1,CHARANUM
+			IF CFLAG:(TARGET:LOOP_CHR):同行
+				PRINTFORML %"["+TOSTR(500+LOOP_CHR)+"] - " + "Cancel accompany with " +CALLNAME:(TARGET:LOOP_CHR)%
+				別離可能人数 += 1
+			ENDIF
+		NEXT
+		
+		;まとめて同行
+		IF 同行可能人数 >= 2
+			PRINTFORML [997] %"Gather everyone"%
+		ENDIF
+		;まとめて離れる
+		IF 別離可能人数 >= 2
+			PRINTFORML [998] %"Cancel accompanying"%
+		ENDIF
+		PRINTFORML [999] %"Cancel"%
+		
+		$INPUT_LOOP
+		INPUT
+		IF RESULT <= 0
+			GOTO INPUT_LOOP
+		ELSEIF  RESULT >= 997 && RESULT <= 999
+		;
+		ELSEIF RESULT < CHARANUM
+			IF !TARGET:RESULT
+				GOTO INPUT_LOOP
+			ELSEIF CFLAG:(TARGET:RESULT):馴れ合い強度度 < 1
+				GOTO INPUT_LOOP
+			ENDIF
+		ENDIF
+	ENDIF
+	
+	IF RESULT == 999
+		RETURN 0
+	ELSEIF RESULT == 997
+		;まとめて同行
+		CALL COM351_Bring_ALL
+		対象 = -1
+	ELSEIF RESULT == 998
+		;まとめて同行解除
+		CALL COM351_Leave_ALL
+		対象 = -1
+	ELSEIF RESULT > 500
+		;同行解除
+		対象 = TARGET:(RESULT-500)
+		CALL COM351_Leave(対象)
+	ELSE
+		;同行させる
+		対象 = TARGET:RESULT
+		CALL COM351_Bring(対象)
+	ENDIF
+	
+	;同一コマンド連続実行を回避させないための処理
+	BK_SELCOM = SELECTCOM
+	SELECTCOM = 351
+
+	;SOURCEまでを回さないのでここで口上を表示させる
+	IF TEQUIP:ボールギャグ && SELECTCOM != 106 && FLAG:情景テキスト設定 > 0
+		;ボールギャグのコマンドって106だよね……？
+		SELECTCOM = BK_SELCOM
+		RETURN 1
+	ELSE
+		RESULT = 0
+		RESULTS =
+		;口上の存在判定 and RESULTSに文字列代入
+		TRYCALLFORM KOJO_K{対象}
+		IF !RESULT && FLAG:情景テキスト設定 > 0
+			SELECTCOM = BK_SELCOM
+			RETURN 1
+		ENDIF
+		RESULT = 0
+		TRYCALLLIST
+			FUNC NTR_KOJO%RESULTS%_MESSAGE_COM_K{対象}_351
+			FUNC KOJO%RESULTS%_MESSAGE_COM_K{対象}_351
+		ENDFUNC
+	ENDIF
+
+	SELECTCOM = BK_SELCOM
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;同行させる
+;@return 1:連れ出し成功,0:連れ出し失敗
+@COM351_Bring(対象)
+	#DIM 対象
+	IF CFLAG:対象:幽閉
+		PRINTFORMW %CALLNAME:対象+" is under confinement and cannot follow you."%
+		RETURN 0
+	ENDIF
+	IF CFLAG:(TARGET:RESULT):馴れ合い強度度 < 1
+		RETURN 0
+	ELSE
+		PRINTFORMW %CALLNAME:対象+" is accompanying you."%
+		CFLAG:対象:同行 = 120
+		TIME += 1
+	ENDIF
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;離れる
+;@return 1:離別成功,0:離別失敗
+@COM351_Leave(対象)
+	#DIM 対象
+	IF !CFLAG:対象:同行
+		PRINTFORMW %CALLNAME:対象+" is not accompanying you right now."%
+		RETURN 0
+	ENDIF
+	PRINTFORMW %"You canceled accompany with " + CALLNAME:対象%
+	CFLAG:対象:同行 = 0
+	TIME += 1
+	
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;同行させる
+;@return 1:連れ出し成功,0:連れ出し失敗
+@COM351_Bring_ALL
+	LOCAL:98 = 0
+	FOR LOCAL,1,CHARANUM
+		IF CFLAG:(TARGET:LOCAL):馴れ合い強度度 && !CFLAG:(TARGET:LOCAL):同行
+			CALL COM351_Bring(TARGET:LOCAL)
+			LOCAL:98 += 1
+		ENDIF
+	NEXT
+	PRINTFORMW {LOCAL:98} \@LOCAL:98 > 1 ?people were#person was\@ gathered.
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;まとめて離れる
+;@param ARG:0 キャラクター番号
+;@return 1:離別成功,0:離別失敗
+@COM351_Leave_ALL
+	FOR LOCAL,1,CHARANUM
+		IF CFLAG:(TARGET:LOCAL):同行
+			CALL COM351_Leave(TARGET:LOCAL)
+		ENDIF
+	NEXT
+
+RETURN 1
+

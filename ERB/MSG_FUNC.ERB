@@ -1,0 +1,127 @@
+;--------------------------------------------------
+;汎用メッセージ関数群
+;何か引数から文字列を取得できる関数など
+;--------------------------------------------------
+
+;ハートマーク
+@MSG_HEART
+	#FUNCTIONS
+	RETURNF UNICODE(0x2764)
+
+;壁または木取得(訪問者)
+@MSG_WALL_OR_TREE
+	#FUNCTIONS
+	#DIM 場所
+	場所 = FLAG:訪問者の現在位置 
+	IF 場所 == 場所_庭 || 場所 == 場所_湖 || 場所 == 場所_湖南部 || 場所 == 場所_魔法の森内部
+		RETURNF "tree"
+	ELSE
+		RETURNF "wall"
+	ENDIF
+
+;壁または木取得(汎用)
+@MSG_WallOrTree(場所)
+	#FUNCTIONS
+	#DIM 場所
+	IF 場所 == 場所_庭 || 場所 == 場所_湖 || 場所 == 場所_湖南部 || 場所 == 場所_魔法の森内部
+		RETURNF "tree"
+	ELSE
+		RETURNF "wall"
+	ENDIF
+
+;割れ目描写文字列取得
+@MSG_SLIT(奴隷)
+	#FUNCTIONS
+	#DIM 奴隷
+	VARSET LOCALS
+	IF TALENT:奴隷:体型 < 0
+	SELECTCASE RAND:17
+	CASE 0
+		LOCALS += "immature "
+	CASE 1
+		LOCALS += "childish "
+	CASE 2
+		LOCALS += "tiny "
+	CASE 3
+		LOCALS += "young "
+	CASE 4
+		LOCALS += "smooth "
+	CASE 5
+		LOCALS += "developing "
+	CASE 6
+		LOCALS += "pubescent "
+	CASE 7
+		LOCALS += "childlike "
+	CASE 8
+		LOCALS += "soft "
+	CASE 9
+		LOCALS += "pink "
+	CASE 10
+		LOCALS += "delicate "
+	CASE 11
+		LOCALS += "tender "
+	CASE 12
+		LOCALS += "pussy "
+	CASE 13
+		LOCALS += "juvenile "
+	CASE 14
+		LOCALS += "budding "
+	CASE 15
+		LOCALS += "cute "
+	CASE 16
+		LOCALS += "lovely "
+	ENDSELECT
+	ELSE
+	SELECTCASE RAND:9
+	CASE 0
+		LOCALS += "soft "
+	CASE 1
+		LOCALS += "pink "
+	CASE 2
+		LOCALS += "delicate "
+	CASE 3
+		LOCALS += "tender "
+	CASE 4
+		LOCALS += "female "
+	CASE 5
+		LOCALS += "feminine "
+	CASE 6
+		LOCALS += "womanish "
+	CASE 7
+		LOCALS += "pussy "
+	CASE 8
+		LOCALS += "girlish "
+	ENDSELECT
+	ENDIF
+	SELECTCASE RAND:7
+	CASE 0
+		LOCALS += "entrance"
+	CASE 1
+		LOCALS += "crack"
+	CASE 2
+		LOCALS += "slit"
+	CASE 3
+		LOCALS += "hole"
+	CASE 4
+		LOCALS += "opening"
+	CASE 5
+		LOCALS += "mound"
+	CASE 6
+		LOCALS += "cleft"
+	ENDSELECT
+RETURNF LOCALS
+
+;分単位の数値を時間、分文字列に変換
+@MSG_HOUR_MIN(時間_分)
+	#FUNCTIONS
+	#DIM 時間_分
+	#DIMS 時間分文字列
+	IF 時間_分 >= 60 && 時間_分 % 60 == 0
+		時間分文字列 = {時間_分/60} hour\@時間_分/60 <= 1 ?#s\@
+	ELSEIF 時間_分 > 60
+		時間分文字列 = {時間_分/60}hour\@時間_分/60 <= 1 ?#s\@ {時間_分%60}minute\@時間_分%60 <= 1 ?#s\@
+	ELSE
+		時間分文字列 = {時間_分%60} minute\@時間_分%60 <= 1 ?#s\@
+	ENDIF
+	RETURNF 時間分文字列
+

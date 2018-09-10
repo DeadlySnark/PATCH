@@ -1,0 +1,162 @@
+;-------------------------------------------------------------------------------
+;ぅな系汎用口上ファイル
+;  心で理解してください。
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;オプション設定画面
+@LUNA_OPTION
+	$INPUT_LOOP_LUNA_OPTION_TOP
+	PRINTFORML 
+	PRINTFORML %"Luna patch settings."%
+	PRINTFORML %"[0]   - Luna yay?      "%%\@GETBIT(FLAG:ぅな設定,0)?Yay!    #Nay!\@%
+	IF GETBIT(FLAG:ぅな設定,0)
+		;PRINTFORML %"[1]   - 口上の表示………………………"%%\@GETBIT(FLAG:ぅな設定,1)?するよ      #しないよ    \@%
+		PRINTFORML %"[2]   - Pee pee?       "%%\@GETBIT(FLAG:ぅな設定,2)?Pee is okay      #No, little girls don't pee!    \@%
+		PRINTFORML %"[3]   - Poo poo?       "%%\@GETBIT(FLAG:ぅな設定,3)?Poo is okay      #No, little girls don't poo!    \@%
+		;PRINTFORML %"[9]   - 金髪の子…………………………"%%\@GETBIT(FLAG:ぅな設定,9)?かわいそう  #いらないよ  \@%
+	ENDIF
+	PRINTFORML %"[100] - Return"%
+	$INPUT_LOOP_LUNA_OPTION
+	INPUT
+	TRYCCALLFORM %"LUNA_OPTION_"+TOSTR(RESULT:0,"00")%
+		IF RESULT:0
+			;Trueなら設定したので確認を兼ねて選択肢を再表示
+			GOTO INPUT_LOOP_LUNA_OPTION_TOP
+		ENDIF
+	CATCH
+		;選択された選択肢(関数)がなかったら選択肢を再表示
+		GOTO INPUT_LOOP_LUNA_OPTION_TOP
+	ENDCATCH
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;オプション：ぅな使う
+;@return 1
+@LUNA_OPTION_00
+	PRINTFORML %"Luna yay? Or Luna nay?"%
+	PRINTFORML %"[1] Luna yay indeed",25,LEFT%%"[0] Nay!",15,LEFT%
+	$INPUT_LOOP_LUNA_OPTION_00
+	INPUT
+	SELECTCASE RESULT:0
+		CASE 1
+			SETBIT FLAG:ぅな設定,0
+			PRINTFORML %"Luna patch is enabled."%
+		CASE 0
+			FLAG:ぅな設定 = 0
+			PRINTFORML %"Luna patch is disabled."%
+		CASEELSE
+			GOTO INPUT_LOOP_LUNA_OPTION_00
+	ENDSELECT
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;オプション：口上使う
+;@return 1
+@LUNA_OPTION_01
+	PRINTFORML %"Show luna dialogue?"%
+	PRINTFORML %"[1] Go ahead",15,LEFT%%"[0] I don't want it!",15,LEFT%
+	$INPUT_LOOP_LUNA_OPTION_01
+	INPUT
+	SELECTCASE RESULT:0
+		CASE 1
+			SETBIT FLAG:ぅな設定,1
+			PRINTFORML %"Luna dialogue will be displayed."%
+		CASE 0
+			CLEARBIT FLAG:ぅな設定,1
+			PRINTFORML %"Luna dialogue will not displayed."%
+		CASEELSE
+			GOTO INPUT_LOOP_LUNA_OPTION_01
+	ENDSELECT
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;オプション：おしっこする
+;@return 1
+@LUNA_OPTION_02
+	PRINTFORML %"Does everyone at Scarlet Devil Mansion pee?"%
+	PRINTFORML %"[1] Yeah",15,LEFT%%"[0] Nope",15,LEFT%
+	$INPUT_LOOP_LUNA_OPTION_02
+	INPUT
+	SELECTCASE RESULT:0
+		CASE 1
+			SETBIT FLAG:ぅな設定,2
+			PRINTFORML %"Each character will be able to have an urge to pee."%
+		CASE 0
+			CLEARBIT FLAG:ぅな設定,2
+			PRINTFORML %"Of course Gensokyo girls don't have to pee, right?"%
+		CASEELSE
+			GOTO INPUT_LOOP_LUNA_OPTION_02
+	ENDSELECT
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;オプション：うんこする
+;@return 1
+@LUNA_OPTION_03
+	PRINTFORML %"Does everyone at Scarlet Devil Mansion poo?"%
+	PRINTFORML %"[1] Yeah",15,LEFT%%"[0] Nope",15,LEFT%
+	$INPUT_LOOP_LUNA_OPTION_03
+	INPUT
+	SELECTCASE RESULT:0
+		CASE 1
+			SETBIT FLAG:ぅな設定,3
+			PRINTFORML %"Each character will be able to have an urge to poo."%
+		CASE 0
+			CLEARBIT FLAG:ぅな設定,3
+			PRINTFORML %"Of course Gensokyo girls don't have to poo, right?"%
+		CASEELSE
+			GOTO INPUT_LOOP_LUNA_OPTION_03
+	ENDSELECT
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;オプション：魔理沙ちゃんを使う
+;@return 1
+@LUNA_OPTION_09
+	PRINTFORML %"Would you like Marisa-chan to suffer horribly?"%
+	PRINTFORML %"[1] Fuck her!",15,LEFT%%"[0] No, she's a good girl",15,LEFT%
+	$INPUT_LOOP_LUNA_OPTION_09
+	INPUT
+	SELECTCASE RESULT:0
+		CASE 1
+			SETBIT FLAG:ぅな設定,9
+			PRINTFORML %"From now on sadistic characters would love to use Marisa as their favorite toy."%
+		CASE 0
+			CLEARBIT FLAG:ぅな設定,9
+			PRINTFORML %"Everyone decided to leave Marisa alone."%
+		CASEELSE
+			GOTO INPUT_LOOP_LUNA_OPTION_09
+	ENDSELECT
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;オプション：戻る
+@LUNA_OPTION_100
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;口上呼び出し用の汎用関数
+;@param ARGS:0 イベント番号（数値）
+;@param ARG:0  被害者キャラ番号（数値）
+;@param ARG:1  加害者キャラ番号（数値）
+;@param ARG:2  引数１
+;@param ARG:3  引数２
+;@return 1:呼び出し成功,0:呼び出し失敗
+@LUNA_KOJO(ARGS:0,ARG:0,ARG:1,ARG:2,ARG:3)
+	DEBUGPRINTL LUNA KOJO
+	RESULT:0=0
+	TRYCALLLIST
+		FUNC %"LUNA_KOJO_CHARA"+TOSTR(ARG:0)+"_EVENT_"+ARGS:0+"("+TOSTR(ARG:0)+","+TOSTR(ARG:1)+","+TOSTR(ARG:2)+","+TOSTR(ARG:3)+")"%
+		FUNC %"LUNA_KOJO_EVENT_"+ARGS:0%,ARG:0,ARG:1,ARG:2,ARG:3
+	ENDFUNC
+RETURN RESULT:0
+
+;-------------------------------------------------------------------------------
+;トイレを使う際の口上
+;@param ARG:0 被害者キャラ番号（数値）
+;@param ARG:1 加害者キャラ番号（数値）
+;@param ARG:2 尿量
+;@param ARG:3 便量
+;@return 1:xxx,0:xxx
+@LUNA_KOJO_EVENT_REST_UseRestRoom_Pee(ARG:0,ARG:1,ARG:2,ARG:3)
+RETURN 1

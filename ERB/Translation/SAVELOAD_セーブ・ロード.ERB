@@ -1,0 +1,175 @@
+;[ライセンス]パブリックドメイン
+;本ファイルに係る著作権を放棄する。
+;本ファイルに係る著作人格権は行使しない。
+;2009/3/28 MinorShift(Emuera作者)
+;2010/4/2 MinorShift(Emuera作者) ver 1.736に合わせて一部修正。
+
+;独自のセーブ・ロードシステムの例（Emuera  ver 1.736以降対象）
+;LOADGAMEの代わりにCALL LOADGAME_EX、SAVEGAMEの代わりにCALL SAVEGAME_EXを実行してください。
+;実際に使用するには旧来の@SAVEINFOに合わせて@SAVEINFO_EXを編集する必要があります。
+;使用している命令の詳細については下記のEmueraWikiを参照してください。
+;http://sourceforge.jp/projects/emuera/wiki/FrontPage
+
+;========================================================
+;セーブ時の設定
+;;========================================================
+@SAVEGAME_EX
+#DIM LCOUNT
+LOADGLOBAL
+SIF GLOBAL:999 < 0
+	GLOBAL:999 = 0
+SIF GLOBAL:999 > 30
+	GLOBAL:999 = 29
+DRAWLINE
+PRINTFORML Where do you want to save? Page {GLOBAL:999+1}/10
+DRAWLINE
+CALL PRINT_SAVEDATA
+
+PRINTFORMLC \@ (GLOBAL:999 == 0) ? [1000] Last page # [1000] Previous page\@ 
+PRINTFORMLC [999] Return
+PRINTFORMLC \@ GLOBAL:999 == 9 ? [1002] First page # [1002] Next page\@ 
+
+INPUT
+IF (RESULT == 999)
+	RETURN
+ELSEIF RESULT == 1000
+	IF GLOBAL:999 > 0 && GLOBAL:999 < 10
+		GLOBAL:999 -= 1
+	ELSEIF GLOBAL:999 == 0
+		GLOBAL:999 = 9
+	ENDIF
+	CLEARLINE 25
+	SAVEGLOBAL
+	RESTART
+ELSEIF RESULT == 1002
+	IF GLOBAL:999 < 9
+		GLOBAL:999 += 1
+	ELSEIF GLOBAL:999 == 9
+		GLOBAL:999 = 0
+	ENDIF
+	CLEARLINE 25
+	SAVEGLOBAL
+	RESTART
+ELSEIF ((RESULT < 0) || (RESULT >= 200)) && (RESULT != 300)
+	PRINTFORMW Invalid value.
+	RESTART
+ELSE
+	LCOUNT = RESULT
+	CHKDATA LCOUNT
+	;RESULT == 1は"ファイルが存在しない"
+	IF RESULT != 1
+		DRAWLINE
+		PRINTL Save already exists. Overwrite?
+		PRINTL  　[0] Yes
+		PRINTL  　[1] No
+$INPUT_LOOP
+		INPUT
+		IF RESULT == 1
+			RESTART
+		ELSEIF RESULT != 0
+			GOTO INPUT_LOOP
+		ENDIF
+	ENDIF
+	GLOBAL:998 = LCOUNT
+	SAVEGLOBAL
+	CALL SAVEINFO_EX
+	SAVEDATA LCOUNT, RESULTS
+ENDIF
+DRAWLINE
+PRINTFORMW Successfully saved.
+
+;========================================================
+;ロード時の設定
+;;========================================================
+@LOADGAME_EX
+#DIM LCOUNT
+LOADGLOBAL
+SIF GLOBAL:999 < 0
+	GLOBAL:999 = 0
+SIF GLOBAL:999 > 30
+	GLOBAL:999 = 29
+
+DRAWLINE
+PRINTFORML What do you want to load? Page {GLOBAL:999+1}/10
+DRAWLINE
+CALL PRINT_SAVEDATA
+
+CHKDATA 300
+SETCOLOR COLOR("aqua")
+PRINTBUTTON @"[Auto] %RESULTS:0%", 300
+RESETCOLOR
+PRINTL
+;PRINTFORM  [999] %"- Return",18,LEFT%
+PRINTFORMLC \@ (GLOBAL:999 == 0) ? [1000] Last page # [1000] Previous page\@ 
+PRINTFORMLC [999] Return
+PRINTFORMLC \@ GLOBAL:999 == 9 ? [1002] First page # [1002] Next page\@ 
+
+INPUT
+IF RESULT == 999
+	RETURN
+	;CALL SYSTEM_TITLE
+ELSEIF RESULT == 1000
+	IF GLOBAL:999 > 0 && GLOBAL:999 < 10
+		GLOBAL:999 -= 1
+	ELSEIF GLOBAL:999 == 0
+		GLOBAL:999 = 9
+	ENDIF
+	CLEARLINE 26
+	SAVEGLOBAL
+	RESTART
+ELSEIF RESULT == 1002
+	IF GLOBAL:999 < 9
+		GLOBAL:999 += 1
+	ELSEIF GLOBAL:999 == 9
+		GLOBAL:999 = 0
+	ENDIF
+	CLEARLINE 26
+	SAVEGLOBAL
+	RESTART
+ELSEIF ((RESULT < 0) || (RESULT >= 200)) && (RESULT != 300)
+	PRINTFORMW Invalid value.
+	RESTART
+ELSE
+	LCOUNT = RESULT
+	CHKDATA LCOUNT
+	;RESULT == 0ならロード可能
+	IF RESULT != 0
+		RESTART
+	ENDIF
+	GLOBAL:998 = LCOUNT
+	SAVEGLOBAL
+	LOADDATA LCOUNT
+ENDIF
+;========================================================
+;セーブ時のテキストの設定
+;;========================================================
+@PRINT_SAVEDATA
+#DIM LCOUNT
+LOADGLOBAL
+;呼び出し元でCOUNTを使っているかも知れないのでCOUNTを保護
+LCOUNT = COUNT
+;REPEAT GLOBAL:999 * 20
+LOCAL:1 = GLOBAL:999 < 10 ? GLOBAL:999 * 20  # 200
+FOR LOCAL, LOCAL:1 , LOCAL:1 + 20
+	CHKDATA LOCAL
+	SIF LOCAL == GLOBAL:998
+		SETCOLOR COLOR("orange")
+		PRINTFORML 　[{LOCAL,2}] %RESULTS:0%
+		RESETCOLOR
+;REND
+NEXT
+COUNT = LCOUNT
+RETURN
+
+@SAVEINFO_EX
+;SAVEDATA命令は@SAVEINFO関数を呼ばないのでPUTFORMの代わりの文字列を用意する必要がある
+;GETTIME命令でRESULTSに現在時刻を代入
+RESULTS:0 = 
+GETTIME
+RESULTS:0 += @" Day: {DAY, 3, LEFT}・%NAME:MASTER%"
+
+@SYSTEM_AUTOSAVE
+;オートセーブの処理を独自に行う場合、@SYSTEM_AUTOSAVEを定義する
+;@SYSTEM_AUTOSAVEが定義されていると、標準のオートセーブの代わりにSYSTEM_AUTOSAVEが呼ばれる。
+CALL SAVEINFO_EX
+SAVEDATA 300, RESULTS

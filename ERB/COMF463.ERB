@@ -1,0 +1,133 @@
+;-------------------------------------------------
+;訪問者を誘う
+;-------------------------------------------------
+@COM463
+	#DIM LOOP_CHR
+	#DIM MSG表示フラグ
+	IF CFLAG:MASTER:現在位置 == 場所_訪問者宅
+	ELSE
+		PRINTFORMW When %CALLNAME:MASTER% spotted %NTR_NAME(0)%, %HE_SHE(MASTER)% approached %NTR_NAME(0)% and started speaking.
+	ENDIF
+	; ここから他の住人が居る場合の処理
+	MSG表示フラグ = 0
+	FOR LOOP_CHR,1,CHARANUM
+		IF CFLAG:MASTER:現在位置 == CFLAG:LOOP_CHR:現在位置 && CFLAG:LOOP_CHR:睡眠 == 0
+			PRINTFORML Wondering whether he would come to %CALLNAME:MASTER%'s room, 
+			; 訪問者には懐いて(?)なく、主人公が好きな状態だと無理矢理言わされてると勘違いして主人公を救出
+			IF CFLAG:LOOP_CHR:屈服度 <= 400 && (TALENT:LOOP_CHR:恋慕 || TALENT:LOOP_CHR:親愛)
+				PRINTFORML When you tried to invite %NTR_NAME(0)%, %CALLNAME:LOOP_CHR% stopped %HIM_HER(MASTER)%,
+				PRINTFORMW Grabbed %CALLNAME:MASTER%'s hand and ran away from that place.
+				TRYCALLLIST
+					FUNC KOJO_MESSAGE_COM_K{LOOP_CHR}_463_0(LOOP_CHR)
+					FUNC KOJO_MESSAGE_COM_KU_463_0(LOOP_CHR)
+				ENDFUNC
+				CFLAG:MASTER:現在位置 = 場所_あなた私室
+				CFLAG:LOOP_CHR:現在位置 = 場所_あなた私室
+				RETURN 0
+			; 訪問者に懐いて(?)なく、主人公ともあまり親しくない場合は逃げる
+			ELSEIF CFLAG:LOOP_CHR:屈服度 <= 400
+				PRINTFORML When you tried to invite %NTR_NAME(0)%, he offered that %CALLNAME:LOOP_CHR% should also join in,
+				PRINTFORMW To have a fun time together in threesome.
+				TRYCALLLIST
+					FUNC KOJO_MESSAGE_COM_K{LOOP_CHR}_463_1(LOOP_CHR)
+					FUNC KOJO_MESSAGE_COM_KU_463_1(LOOP_CHR)
+				ENDFUNC
+				PRINTFORML However as %CALLNAME:LOOP_CHR% heard those words, %HE_SHE(LOOP_CHR)% escaped from that place in a hurry.
+				PRINTFORML When %CALLNAME:MASTER% pointed out that it would be just them together and asked if that would it be okay,
+				PRINTFORMW %NTR_NAME(0)% acted as if he never offered a threesome in the first place and headed to the room together with %CALLNAME:MASTER%.
+				MSG表示フラグ = 1
+				BREAK
+			; 訪問者に懐いて(?)いて、主人公も好きな場合は自ら乗り気に. 断ると嫉妬とかありかもしれない
+			ELSEIF TALENT:LOOP_CHR:恋慕 || TALENT:LOOP_CHR:親愛
+				PRINTFORML When you tried to invite %NTR_NAME(0)%, %CALLNAME:LOOP_CHR% offered %HIM_HER(LOOP_CHR)% self to join in too for a threesome.
+				TRYCALLLIST
+					FUNC KOJO_MESSAGE_COM_K{LOOP_CHR}_463_2(LOOP_CHR)
+					FUNC KOJO_MESSAGE_COM_KU_463_2(LOOP_CHR)
+				ENDFUNC
+				PRINTL [0] Threesome it is then　[1] I just want to be together
+				$INPUT_LOOP_COMF463_00
+				INPUT
+				IF RESULT == 0
+					PRINTFORMW When you looked at %NTR_NAME(0)%, %NTR_NAME(0)% accepted it and headed towards your room together with you and %CALLNAME:LOOP_CHR%.
+					TRYCALLLIST
+						FUNC KOJO_MESSAGE_COM_K{LOOP_CHR}_463_3(LOOP_CHR)
+						FUNC KOJO_MESSAGE_COM_KU_463_3(LOOP_CHR)
+					ENDFUNC
+					CFLAG:MASTER:現在位置 = 場所_あなた私室
+					CFLAG:LOOP_CHR:現在位置 = 場所_あなた私室
+					FLAG:訪問者の現在位置 = 場所_あなた私室
+					CALL NTR_MASTER_3P_SEX(LOOP_CHR)
+					RETURN 1
+				ELSEIF RESULT == 1
+					PRINTFORMW When you said that you're going only together, refusing %CALLNAME:LOOP_CHR%'s request, %HE_SHE(LOOP_CHR)% reluctantly accepted it.
+					TRYCALLLIST
+						FUNC KOJO_MESSAGE_COM_K{LOOP_CHR}_463_4(LOOP_CHR)
+						FUNC KOJO_MESSAGE_COM_KU_463_4(LOOP_CHR)
+					ENDFUNC
+					;TALENT:LOOP_CHR:嫉妬 = 1
+					MSG表示フラグ = 1
+					BREAK
+				ELSE
+					GOTO INPUT_LOOP_COMF463_00
+				ENDIF
+			; 訪問者に懐いて(?)いて、主人公とはあまり親しくない場合はむしろ訪問者を取る方向で
+			ELSE
+				PRINTFORMW When you tried to invite %NTR_NAME(0)%, %CALLNAME:LOOP_CHR% started speaking with %NTR_NAME(0)% as if trying to prevent you from doing it.
+				TRYCALLLIST
+					FUNC KOJO_MESSAGE_COM_K{LOOP_CHR}_463_5(LOOP_CHR)
+					FUNC KOJO_MESSAGE_COM_KU_463_5(LOOP_CHR)
+				ENDFUNC
+				PRINTFORMW That was a bad timing...
+				RETURN 0
+			ENDIF
+		ENDIF
+	NEXT
+	IF MSG表示フラグ == 0
+		IF CFLAG:MASTER:現在位置 == 場所_訪問者宅
+			PRINTFORMW As %CALLNAME:MASTER% invited %NTR_NAME(0)% with a gesture, %NTR_NAME(0)% carried %CALLNAME:MASTER% over to %HIS_HER(MASTER)% bedroom.
+		ELSE
+			PRINTFORMW As you invited %NTR_NAME(0)% to your room, he nodded and went followed you to the bedroom.
+		ENDIF
+		PRINTFORML 
+	ENDIF
+	IF CFLAG:MASTER:現在位置 == 場所_訪問者宅
+		CFLAG:MASTER:現在位置 = 場所_訪問者宅
+		CFLAG:MASTER:現在位置詳細 = 9
+	ELSE
+		CFLAG:MASTER:現在位置 = 場所_あなた私室
+		FLAG:訪問者の現在位置 = 場所_あなた私室
+	ENDIF
+	PRINTFORM Upon arrival to the room, %NTR_NAME(0)% 
+	SIF DRESS_LEVEL(MASTER) & (1p4)
+		PRINTFORM took off %CALLNAME:MASTER%'s clothes quickly,
+	SIF DRESS_LEVEL(MASTER) & (1p2)
+		PRINTFORM removed %CALLNAME:MASTER%'s underwear,
+	PRINTL
+	PRINTFORMW And pushed %HIM_HER(MASTER)% on the bed while kissing %HIS_HER(MASTER)% lips and neck.
+	PRINTFORML Then, he spread %CALLNAME:MASTER%'s legs, fully exposing %HIS_HER(MASTER)% %VAGINA(MASTER)%,
+	PRINTFORMW As he starts pushing his %PENIS_APPEAR_SIMPLE()% against %CALLNAME:MASTER%'s %MSG_SLIT(MASTER)%,
+	IF TALENT:MASTER:処女
+		PRINTFORMW Inserting it gently but firmly, pushing against the hymen, tearing it off in one swift move and becoming one with %CALLNAME:MASTER%.
+	ELSE
+		PRINTFORMW Slowly inserting it inside and becoming one with %CALLNAME:MASTER%.
+	ENDIF
+	CALL CLOTHES_Preset_NUDE(MASTER)
+	LOCAL = RAND:20 + 10
+	TIME += LOCAL
+	PRINTFORMW 　　　　　　・
+	PRINTFORMW 　　　　　　・
+	PRINTFORMW 　　　　　　・
+	IF TALENT:MASTER:処女
+		PRINTFORML %CALLNAME:MASTER% devoted %HIS_HER(MASTER)% %VIRGINITY(MASTER,TALENT:MASTER:0)% to %NTR_NAME(0)%.
+		PRINTFORML ＜%CALLNAME:MASTER% has lost %HIS_HER(MASTER)% %VIRGINITY(MASTER)%!＞
+	ENDIF
+	PRINTFORML As {LOCAL} minutes have passed, after enjoying %CALLNAME:MASTER%'s %VAGINA(MASTER)% and having a good taste of it,
+	PRINTFORML %NTR_NAME(0)% plunged his %PENIS_APPEAR_SIMPLE()% deep inside, ejaculating his %SAMEN_DESCRIPTION()% right inside of %CALLNAME:MASTER%'s womb.
+	PRINTFORMW Overflowing %SEMEN()% \@ TALENT:MASTER:処女 ? mixed together with the hymen blood# \@ started to spill over on the \@ BEDROOM(FLAG:訪問者の現在位置) ? bed sheet # ground \@, soaking inside.
+	CALL NTR_MASTER_SEX_STATUS(0)
+	IF TALENT:MASTER:処女
+		FLAG:1840 = 3
+	ELSE
+		FLAG:1840 = 4
+	ENDIF
+

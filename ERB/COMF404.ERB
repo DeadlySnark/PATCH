@@ -1,0 +1,854 @@
+;-------------------------------------------------
+;覗く
+;-------------------------------------------------
+@COM404
+	#DIM LOOP_POS	; ループ変数：場所
+	#DIM TGT_POS	; 覗き先場所
+	#DIM LOOP_CHR	; ループ変数：人物
+	#DIM CNT_CHR	; 覗いた先にいた人数
+	#DIM FIRST_CHR	; 最初に見つけた人物
+	#DIM ONA_CHR	; 覗いた先で自慰をしている人物
+	VARSET LOCAL
+
+	DRAWLINE
+	PRINTFORML どの部屋を覗きますか？
+	PRINTL [0] - やめる
+	FOR LOOP_POS,0,MAXROOM()
+		SIF CAN_MOVE(CFLAG:MASTER:現在位置, LOOP_POS)
+			PRINTFORML [{LOOP_POS}] - %GETPLACENAME(LOOP_POS)%
+	NEXT
+	INPUT
+	TGT_POS = RESULT	; 覗き対象位置
+	
+	TFLAG:現在覗いている場所 = 0
+	IF CAN_MOVE(CFLAG:MASTER:現在位置, TGT_POS)
+		IF CAN_MOVE(CFLAG:MASTER:現在位置, TGT_POS) == 1
+			PRINTFORM %CALLNAME:MASTER%は
+			IF FLAG:(300 + TGT_POS)
+				PRINTFORM 扉\@ HAS_DUPLICATE_KEY(TGT_POS) ? を合鍵でそっとあけて # の上にある採光窓から \@
+			ELSE
+				PRINT そっと扉をあけて
+			ENDIF
+			PRINTFORMW %GETPLACENAME(TGT_POS)%の様子をうかがった
+		ENDIF
+	
+		TFLAG:現在覗いている場所 = TGT_POS
+	
+		;天候が霧で覗く場所が野外なら何も見えない
+		IF 天候(天候値) == "Foggy" && OPENPLACE(TGT_POS) == 2
+			PRINTL
+			PRINTL しかし霧がかかっていて何も見えなかった…
+			GOTO SKIP_COM404_021
+		;暗闇なら何も見えない
+		ELSEIF 天候(天候値) == "Darkness"
+			PRINTL
+			PRINTL しかし辺りは真っ暗で何も見えなかった…
+			GOTO SKIP_COM404_021
+		;住人と訪問者の同時位置存在時時処理
+		ELSEIF FLAG:訪問者の現在位置 != 場所_訪問者宅 && TGT_POS == FLAG:訪問者の現在位置
+			CALL LOOK_WITH_VISITOR(TGT_POS)
+			IF RESULT
+				GOTO SKIP_COM404_021
+			ENDIF
+		ENDIF
+		
+		;自慰中の人物チェック
+		ONA_CHR = 0	; 覗いた先で自慰をしている人物
+		FOR LOOP_CHR,1,CHARANUM
+			IF CFLAG:LOOP_CHR:現在位置 == TGT_POS && CFLAG:LOOP_CHR:自慰中 > 0
+				ONA_CHR = LOOP_CHR
+				BREAK
+			ENDIF
+		NEXT
+		;自慰覗き判定
+		IF ONA_CHR
+			CALL LOOK_MASTURBATION(ONA_CHR)
+			SOURCE:PLAYER:欲情 = 10
+			;相手による補正
+			IF 1 == RESULT
+				SOURCE:PLAYER:欲情 += 10
+			ELSEIF -1 == RESULT
+				IF TALENT:ONA_CHR:浮気公認 > 2
+					SOURCE:PLAYER:欲情 += 10
+				ELSEIF TALENT:ONA_CHR:浮気公認
+					SOURCE:PLAYER:欲情 += 5
+				ELSE
+					SOURCE:PLAYER:欲情 -= 5
+				ENDIF
+			ENDIF
+			GOTO SKIP_COM404_021
+		ENDIF
+	
+		CNT_CHR = 0		; 覗いた先にいた人数
+		FIRST_CHR = 0	; 最初に見つけた人物
+		PRINTFORM %GETPLACENAME(TGT_POS)%には
+		FOR LOOP_CHR,1,CHARANUM
+			IF CFLAG:LOOP_CHR:現在位置 == TGT_POS
+				SIF CNT_CHR
+					PRINT と
+				PRINTFORM %CALLNAME:LOOP_CHR%
+				SIF !CNT_CHR
+					FIRST_CHR = LOOP_CHR
+				CNT_CHR ++
+			ENDIF
+		NEXT
+		IF FLAG:侵入者の現在位置 == TGT_POS
+			SIF CNT_CHR
+				PRINT と
+			PRINTFORM こいし
+			CNT_CHR ++
+		ENDIF
+		IF FLAG:訪問者の現在位置 == TGT_POS
+			SIF CNT_CHR
+				PRINT と
+			PRINTFORM %NTR_NAME(0)%
+			CNT_CHR ++
+		ENDIF
+		IF CNT_CHR
+			IF BATHROOM(TGT_POS)
+				PRINTL がいる
+				SOURCE:PLAYER:欲情 = 10
+			ELSE
+				PRINTL がいる。
+			ENDIF
+			;スカートばきの住人一人しかいないとき場所によってはパンチラのチャンス
+			IF CNT_CHR == 1 && FIRST_CHR && (EQUIP:FIRST_CHR:スカート && EQUIP:FIRST_CHR:スカート != 5 || EQUIP:FIRST_CHR:ワンピース == 1)
+				CALL CHK_PANCHIRA(TGT_POS, FIRST_CHR)
+			ENDIF
+		ELSE
+			PRINTL 誰もいなかった。
+		ENDIF
+		;住人同士イベントを覗けるかチェック
+		FOR LOOP_CHR,1,CHARANUM
+			CALL LOOK_INHABITANT(TGT_POS, LOOP_CHR)
+		NEXT
+		$SKIP_COM404_021
+		WAIT
+	ELSE
+		RETURN 0
+	ENDIF
+	TIME += 3
+RETURN 1
+
+;覗いた先に訪問者と住人がいた場合の処理
+;現状は１対１でないと詳細はわからないものとする。
+;ハーレム状態でも覗けるべきか。
+;@RETURN 0:表示なし　1:表示あり
+@LOOK_WITH_VISITOR(TGT_POS)
+	#DIM TGT_POS
+	#DIM LOOP_CHR
+	#DIM CNT_CHR
+
+	SIF FLAG:訪問者の現在位置 != TGT_POS
+		RETURN 0
+	; 訪問者と同じ場所にいる住人の人数
+	CNT_CHR = 0
+	FOR LOOP_CHR,1,CHARANUM
+		SIF CFLAG:LOOP_CHR:現在位置 == TGT_POS
+			CNT_CHR ++
+	NEXT
+	IF CNT_CHR == 0
+		;同じ場所にいる住人が０人の場合何もなし
+	ELSEIF CNT_CHR == 1
+		;同じ場所にいる住人が１人の場合詳細を覗ける
+		FOR LOOP_CHR,1,CHARANUM
+			IF CFLAG:LOOP_CHR:現在位置 == TGT_POS
+				PRINTFORM 【%GETPLACENAME(TGT_POS)%】で
+				IF FLAG:睡姦フラグ == 1
+					PRINTFORMW %NTR_NAME(0)%が睡眠中の%CALLNAME:LOOP_CHR%を襲っていた
+				ELSE
+					SELECTCASE CFLAG:LOOP_CHR:訪問者行為
+						CASE NTR_行為_なし
+							PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%が話をしていた
+							;湖の特殊処理
+							IF CFLAG:LOOP_CHR:現在位置 == 場所_湖|| CFLAG:LOOP_CHR:現在位置 == 場所_湖南部
+								CALL NTR_LAKE_TALK(LOOP_CHR)
+							ENDIF
+						CASE NTR_行為_キス
+							PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%がキスをしていた
+						CASE NTR_行為_愛撫
+							PRINTFORMW %NTR_NAME(0)%が%CALLNAME:LOOP_CHR%の体を丹念に愛撫していた
+						CASE NTR_行為_胸愛撫
+							PRINTFORMW %NTR_NAME(0)%が%CALLNAME:LOOP_CHR%の胸を優しく撫でていた
+						CASE NTR_行為_フェラチオ
+							PRINTFORMW %CALLNAME:LOOP_CHR%が%NTR_NAME(0)%のペニスを咥えていた
+						CASE NTR_行為_シックスナイン
+							PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%がお互いの性器を舐めあっていた
+						CASE NTR_行為_素股
+							PRINTFORMW %CALLNAME:LOOP_CHR%が%NTR_NAME(0)%に素股をしていた
+						CASE NTR_行為_Ｖ正常位 TO NTR_行為_Ｖ背面立位
+							PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%がまぐわっていた
+						CASE NTR_行為_Ａ正常位 TO NTR_行為_Ａ背面立位
+							PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%がアナルセックスをしていた
+						CASEELSE
+							PRINTW バグです
+					ENDSELECT
+					;覗きバレ時見せつけ
+					;浮気公認Lvで頻度が変化
+					SELECTCASE TALENT:LOOP_CHR:浮気公認
+						CASE 0 ;非公認時は1/2
+							SIF RAND:2
+								CALL NTR_SHOW_PEEP(LOOP_CHR)
+						CASE 1 ;公認Lv1時は2/3
+							SIF RAND:3
+								CALL NTR_SHOW_PEEP(LOOP_CHR)
+						CASEELSE ;それ以上の時は常に見せつけ
+							CALL NTR_SHOW_PEEP(LOOP_CHR)
+					ENDSELECT
+				ENDIF
+			ENDIF
+		NEXT
+		RETURN 1
+	ELSE
+		;同じ場所にいる住人が２人以上の場合概略を覗ける。覗きバレ見せつけなし
+		FOR LOOP_CHR,1,CHARANUM
+			IF CFLAG:LOOP_CHR:現在位置 == TGT_POS && !CFLAG:LOOP_CHR:睡眠
+				SELECTCASE CFLAG:LOOP_CHR:訪問者行為
+					CASE NTR_行為_なし
+						IF FLAG:ハーレム時カウンタ
+							PRINTFORMW %NTR_NAME(0)%は%CALLNAME:LOOP_CHR%を抱き寄せた
+						ELSE
+							PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%が話をしていた
+						ENDIF
+					CASE NTR_行為_キス
+						PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%がキスをしていた
+					CASE NTR_行為_愛撫
+						PRINTFORMW %NTR_NAME(0)%が%CALLNAME:LOOP_CHR%の体を丹念に愛撫していた
+					CASE NTR_行為_胸愛撫
+						PRINTFORMW %NTR_NAME(0)%が%CALLNAME:LOOP_CHR%の胸を優しく撫でていた
+					CASE NTR_行為_フェラチオ
+						PRINTFORMW %CALLNAME:LOOP_CHR%が%NTR_NAME(0)%のペニスを咥えていた
+					CASE NTR_行為_シックスナイン
+						PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%がお互いの性器を舐めあっていた
+					CASE NTR_行為_素股
+						PRINTFORMW %CALLNAME:LOOP_CHR%が%NTR_NAME(0)%に素股をしていた
+					CASE NTR_行為_Ｖ正常位 TO NTR_行為_Ｖ背面立位
+						PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%がまぐわっていた
+					CASE NTR_行為_Ａ正常位 TO NTR_行為_Ａ背面立位
+						PRINTFORMW %NTR_NAME(0)%と%CALLNAME:LOOP_CHR%がアナルセックスをしていた
+					CASEELSE
+						PRINTW バグです
+				ENDSELECT
+			ENDIF
+		NEXT
+		RETURN 1
+	ENDIF
+
+RETURN 0
+
+;パンチラ可否チェック
+@CHK_PANCHIRA(TGT_POS, TGT_CHR)
+	#DIM TGT_POS	; 覗いてる先の場所
+	#DIM TGT_CHR	; 覗いてる先の人物
+	#DIM POS		; 覗いてる側の場所
+	
+	POS =  CFLAG:MASTER:現在位置		; 覗いてる側の場所
+	;広間から踊り場を見上げたとき1/3でパンチラ
+	IF POS == 場所_広間 && TGT_POS == 場所_二階踊り場 && !RAND:3
+		CALL LOOK_PANCHIRA(TGT_CHR, MASTER, TGT_POS, 0)
+	ENDIF
+	;踊り場から二階廊下を見上げたとき1/4でパンチラ
+	IF POS == 場所_二階踊り場 && TGT_POS == 場所_二階廊下 && !RAND:4 
+		CALL LOOK_PANCHIRA(TGT_CHR, MASTER, TGT_POS, 0)
+	ENDIF
+	;庭に面した一階から庭を見たとき1/3でパンチラ
+	IF POS == 場所_食堂 || POS == 場所_納屋 || POS == 場所_屋外トイレ
+		IF TGT_POS == 場所_庭 && !RAND:3 
+			CALL LOOK_PANCHIRA(TGT_CHR, MASTER, TGT_POS, 1)
+		ENDIF
+	ENDIF
+	;湖に面した一階から湖を見たとき1/3でパンチラ
+	IF POS == 場所_正門 
+		IF TGT_POS == 場所_湖 && !RAND:3 
+			CALL LOOK_PANCHIRA(TGT_CHR, MASTER, TGT_POS, 1)
+		ENDIF
+	ENDIF
+	;湖南部に面した一階から湖を見たとき1/3でパンチラ
+	IF POS == 場所_チルノの家 || POS == 場所_大妖精の家 
+		IF TGT_POS == 場所_湖南部 && !RAND:3 
+			CALL LOOK_PANCHIRA(TGT_CHR, MASTER, TGT_POS, 1)
+		ENDIF
+	ENDIF
+RETURN
+
+;パンチラ処理
+@LOOK_PANCHIRA(被害者, 加害者, TGT_POS, FLG_POS)
+	#DIM 被害者		; 見られた人
+	#DIM 加害者		; 見た人(998:訪問者, 997:こいし)
+	#DIM TGT_POS	; 覗いた先の場所
+	#DIM FLG_POS	; 場所フラグ 0:踊り場、二階廊下 1:庭、湖
+	;踊り場 or 二階廊下
+	IF FLG_POS == 0
+		;見た人がMASTER
+		IF 被害者 != MASTER && 加害者 == MASTER
+			PRINTFORML %GETPLACENAME(TGT_POS)%を見上げる形になってしまったため%CALLNAME:被害者%の
+			CALL LOOK_PANCHIRA_MSG1(被害者, 加害者, TGT_POS)
+			SIF 0 == CFLAG:被害者:ぱんつ確認 
+				CFLAG:被害者:ぱんつ確認 = 2
+		;見られた人がMASTER
+		ELSEIF 被害者 == MASTER && 加害者 != MASTER
+			PRINTFORM  たまたま%GETPLACENAME(TGT_POS)%を見上げる場所にいた
+			CALL LOOK_PANCHIRA_MSG2(被害者, 加害者, TGT_POS)
+		;その他の組み合わせは現在未対応
+		ELSE
+		ENDIF
+	;庭 or 湖
+	ELSEIF FLG_POS == 1
+		;見た人がMASTER
+		IF 被害者 != MASTER && 加害者 == MASTER
+			PRINTFORML %GETPLACENAME(TGT_POS)%には%CALLNAME:被害者%がいたが、悪戯な風が吹いたため
+			CALL LOOK_PANCHIRA_MSG1(被害者, 加害者, TGT_POS)
+		;見られた人がMASTER
+		ELSEIF 被害者 == MASTER && 加害者 != MASTER
+			;その他の組み合わせは現在未対応
+			PRINTFORML 悪戯な風が吹いたためスカートがめくれあがってしまい、
+			PRINTFORM  たまたま%GETPLACENAME(TGT_POS)%を見ることのできる場所にいた
+			CALL LOOK_PANCHIRA_MSG2(被害者, 加害者, TGT_POS)
+		ELSE
+		ENDIF
+	ENDIF
+
+RETURN 0
+
+; 見てしまった時のメッセージ
+@LOOK_PANCHIRA_MSG1(被害者, 加害者, TGT_POS)
+	#DIM 被害者		; 見られた人
+	#DIM 加害者		; 見た人(998:訪問者, 997:こいし)
+	#DIM TGT_POS	; 覗いた先の場所
+
+	IF EQUIP:被害者:下半身下着１
+		IF GETBIT(FLAG:匂いフェチ,1) 
+			PRINTFORM %PANTS_DESCRIPTION(EQUIP:被害者:下半身下着１)%%IRUINAME_SMELL(EQUIP:被害者:下半身下着１)%%PANTSNAME(EQUIP:被害者:下半身下着１)%
+		ELSE
+			PRINTFORM %PANTS_DESCRIPTION(EQUIP:被害者:下半身下着１)%%PANTSNAME(EQUIP:被害者:下半身下着１)%
+		ENDIF
+	ELSEIF !EQUIP:被害者:下半身下着２
+		PRINTFORM スカートの中の何も着ていない下半身
+		SOURCE:PLAYER:欲情 = 10
+	ELSE
+		IF GETBIT(FLAG:匂いフェチ,1) 
+			PRINTFORM %PANTS_DESCRIPTION(EQUIP:被害者:下半身下着２)%%IRUINAME_SMELL(EQUIP:被害者:下半身下着２)%%PANTSNAME(EQUIP:被害者:下半身下着２)%
+		ELSE
+			PRINTFORM %PANTS_DESCRIPTION(EQUIP:被害者:下半身下着２)%%PANTSNAME(EQUIP:被害者:下半身下着２)%
+		ENDIF
+	ENDIF
+	PRINTFORML が見えてしまった。
+	SIF 0 == CFLAG:被害者:ぱんつ確認 
+		CFLAG:被害者:ぱんつ確認 = 2
+RETURN
+
+; 見られてしまった時のメッセージ
+@LOOK_PANCHIRA_MSG2(被害者, 加害者, TGT_POS)
+	#DIM 被害者		; 見られた人
+	#DIM 加害者		; 見た人(998:訪問者, 997:こいし)
+	#DIM TGT_POS	; 覗いた先の場所
+
+	SELECTCASE 加害者
+		;こいし
+		CASE 997
+			PRINTFORML こいしに
+		;訪問者
+		CASE 人物_訪問者
+			PRINTFORML %NTR_NAME(0)%に
+		;他
+		CASEELSE
+			PRINTFORML %CALLNAME:(加害者)%に
+	ENDSELECT
+	IF EQUIP:被害者:下半身下着１
+		IF GETBIT(FLAG:匂いフェチ,1) 
+			PRINTFORM %PANTS_DESCRIPTION(EQUIP:被害者:下半身下着１)%%IRUINAME_SMELL(EQUIP:被害者:下半身下着１)%%PANTSNAME(EQUIP:被害者:下半身下着１)%
+		ELSE
+			PRINTFORM %PANTS_DESCRIPTION(EQUIP:被害者:下半身下着１)%%PANTSNAME(EQUIP:被害者:下半身下着１)%
+		ENDIF
+	ELSEIF !EQUIP:被害者:下半身下着２
+		PRINTFORM スカートの中の何も着ていない下半身
+		IF 加害者 <= CHARANUM
+			SOURCE:加害者:欲情 = 10
+		ENDIF
+	ELSE
+		IF GETBIT(FLAG:匂いフェチ,1) 
+			PRINTFORM %PANTS_DESCRIPTION(EQUIP:被害者:下半身下着２)%%IRUINAME_SMELL(EQUIP:被害者:下半身下着２)%%PANTSNAME(EQUIP:被害者:下半身下着２)%
+		ELSE
+			PRINTFORM %PANTS_DESCRIPTION(EQUIP:被害者:下半身下着２)%%PANTSNAME(EQUIP:被害者:下半身下着２)%
+		ENDIF
+	ENDIF
+	PRINTFORML を見られてしまった。
+RETURN
+
+;逆パンチラ
+;パンチラ可能な場所でMASTERが掃除したとき、見ることができる場所にいる誰かに見られてしまう。
+@REV_PANCHIRA
+	#DIM LOOP_CHR
+	#DIM FLG_LOOKED ; 0:パンチラを見られていない 1:パンチラを見られた
+	#DIM RSLT_CHK
+	
+	;そもそもスカートをはいてない場合見れない
+	SIF !EQUIP:MASTER:スカート
+		RETURN 0
+	;ロングスカートの場合見える可能性減
+	SIF EQUIP:MASTER:スカート == 3 && RAND:2
+		RETURN 0
+	;裳の場合見えない
+	SIF EQUIP:MASTER:スカート == 5
+		RETURN 0
+	;パンチラ不可能な場所の場合処理しない（踊り場、二階廊下、庭、湖以外）
+	SELECTCASE CFLAG:MASTER:現在位置
+		CASE 場所_二階踊り場
+		CASE 場所_二階廊下
+		CASE 場所_庭
+		CASE 場所_湖
+		CASE 場所_湖南部
+		;パンチラ不可
+		CASEELSE
+			RETURN 0
+	ENDSELECT
+	;MASTER以外に誰かいたら見られない
+	SIF GET_N_IN_ROOM(CFLAG:MASTER:現在位置, 0, 1, 1)
+		RETURN 0
+
+	FLG_LOOKED = 0 ; 0:パンチラを見られていない 1:パンチラを見られた
+	;全住人についてチェック
+	;誰か一人に見られたら処理終了
+	FOR LOOP_CHR,1,CHARANUM
+		;睡眠中は見れない
+		SIF CFLAG:LOOP_CHR:睡眠
+			CONTINUE
+		;パンチラを覗くことのできる場所にいるかチェック
+		RSLT_CHK = CHK_LOOK_PANCHIRA(CFLAG:MASTER:現在位置, CFLAG:LOOP_CHR:現在位置)
+		IF RSLT_CHK != -1 && RAND:2
+			CALL LOOK_PANCHIRA(MASTER, LOOP_CHR, CFLAG:MASTER:現在位置, RSLT_CHK)
+			FLG_LOOKED = 1
+		ENDIF
+		SIF FLG_LOOKED
+			BREAK
+	NEXT
+	;訪問者チェック
+	IF FLG_LOOKED == 0
+		;パンチラを覗くことのできる場所にいるかチェック
+		RSLT_CHK = CHK_LOOK_PANCHIRA(CFLAG:MASTER:現在位置, FLAG:訪問者の現在位置)
+		IF RSLT_CHK != -1 && RAND:2
+			CALL LOOK_PANCHIRA(MASTER, 人物_訪問者, CFLAG:MASTER:現在位置, RSLT_CHK)
+			FLG_LOOKED = 1
+		ENDIF
+	ENDIF
+	;こいしチェック
+	IF FLG_LOOKED == 0
+		;パンチラを覗くことのできる場所にいるかチェック
+		RSLT_CHK = CHK_LOOK_PANCHIRA(CFLAG:MASTER:現在位置, FLAG:侵入者の現在位置)
+		IF RSLT_CHK != -1 && RAND:2
+			CALL LOOK_PANCHIRA(MASTER, 997, CFLAG:MASTER:現在位置, RSLT_CHK)
+			FLG_LOOKED = 1
+		ENDIF
+	ENDIF
+
+RETURN 0
+
+;パンチラを覗くことのできる場所にいるかチェック
+;戻り値 … -1:覗けない 0:覗ける(階段、二階廊下) 1:覗ける(庭、湖）
+@CHK_LOOK_PANCHIRA(TGT_POS, POS)
+	#FUNCTION
+	#DIM TGT_POS	; 覗いてる先の場所
+	#DIM POS		; 覗いてる側の場所
+
+	SELECTCASE TGT_POS
+		;踊り場
+		CASE 場所_二階踊り場
+			;広間のみ
+			SIF POS == 場所_広間
+				RETURNF 0
+		;二階廊下
+		CASE 場所_二階廊下
+			;踊り場のみ
+			SIF POS == 場所_二階踊り場
+				RETURNF 0
+		;庭
+		CASE 場所_庭
+			;庭に面した一階
+			SIF POS == 場所_食堂 || POS == 場所_納屋 || POS == 場所_屋外トイレ
+				RETURNF 1
+		;湖
+		CASE 場所_湖
+			;湖に面した一階から湖を見たとき1/3でパンチラ
+			SIF POS == 場所_正門
+				RETURNF 1
+		;湖南部
+		CASE 場所_湖南部
+			;湖に面した一階から湖を見たとき1/3でパンチラ
+			SIF POS == 場所_チルノの家 || POS == 場所_大妖精の家
+				RETURNF 1
+	ENDSELECT
+RETURNF -1
+
+;湖で住人と訪問者が二人きりで会話している様を覗き見たとき、デートしているように見える件
+;ARG…訪問者と一緒にいる住人
+;戻り値…常に0
+@NTR_LAKE_TALK(ARG)
+	IF NTR_CHK_FAVORABLY(ARG, FAV_寝取られ)
+		PRINTDATAL
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%の膝の上に座っている。
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%に膝枕をしている。
+		ENDDATA
+		PRINTFORML その姿は遠目に中睦まじい恋人のようにも見えた。
+	ELSEIF NTR_CHK_FAVORABLY(ARG, FAV_寝取られ寸前)
+		PRINTDATAL
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%の膝の上に座っている。
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%に膝枕をしている。
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%と寄り添い%NTR_KARE()%の肩に頭を預けている。
+		ENDDATA
+		PRINTFORML その姿は遠目に中睦まじい恋人のようにも見えた。
+	ELSEIF NTR_CHK_FAVORABLY(ARG, FAV_寝取られそう)
+		PRINTDATAL
+			DATAFORM %CALLNAME:ARG%は樹にもたれかかり%NTR_NAME(0)%に抱きしめられて微笑んでいる。
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%に肩を抱かれている。
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%と寄り添い%NTR_KARE()%の肩に頭を預けている。
+		ENDDATA
+		PRINTFORML その姿は遠目にデートしているようにも見えた。
+	ELSEIF NTR_CHK_FAVORABLY(ARG, FAV_主人より高い)
+		PRINTFORML 
+		PRINTDATAL
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%と腕を組んで歩いている。
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%と恋人つなぎで手をつないで歩いている。
+			DATAFORM %CALLNAME:ARG%は%NTR_NAME(0)%と寄り添いながら歩いている。
+		ENDDATA
+		PRINTFORML その姿は遠目にデートしているようにも見えた。
+	ELSEIF NTR_CHK_FAVORABLY(ARG, FAV_うふふする程度)
+		PRINTFORML %CALLNAME:ARG%は%NTR_NAME(0)%と腕を組んで歩いている。
+		PRINTFORML その姿は遠目にデートしているようにも見えた。
+	ELSEIF NTR_CHK_FAVORABLY(ARG, FAV_奉仕する程度)
+		PRINTFORML %CALLNAME:ARG%は%NTR_NAME(0)%と手を繋いで歩いている。
+	ELSEIF NTR_CHK_FAVORABLY(ARG, FAV_体を触らせる程度)
+		PRINTFORML %CALLNAME:ARG%は%NTR_NAME(0)%と並んで歩いている。
+	ELSEIF NTR_CHK_FAVORABLY(ARG, FAV_キスする程度)
+		PRINTFORML %CALLNAME:ARG%は%NTR_NAME(0)%につきまとわれて迷惑そうだ。
+	ELSE
+		PRINTFORML %CALLNAME:ARG%は%NTR_NAME(0)%につきまとわれて迷惑そうだ。
+	ENDIF
+RETURN 0
+
+
+;自慰覗きイベント
+;戻り値：0…誰かの名前　1…あなたの名前　-1…訪問者の名前
+@LOOK_MASTURBATION(奴隷)
+	#DIM 奴隷
+	#DIM 貞操帯着用中
+	#DIM 自慰部位１
+	#DIM 自慰感覚
+	#DIM 戻り値
+	#DIMS 名前
+	;自慰行動保存 Bit 0=行為C 1=行為V 2=行為A 3=行為B 4=2点行為 5=絶頂
+
+	貞操帯着用中 = (下着名１_２(奴隷)=="貞操帯")
+
+	PRINTFORM %"中では"+CALLNAME:奴隷+"が"%
+
+	IF 貞操帯着用中
+		自慰感覚 = 0
+		IF !GETBIT(CFLAG:奴隷:自慰行動保存,4)
+			;単一部位
+			IF GETBIT(CFLAG:奴隷:自慰行動保存,0)
+				PRINTFORM %"クリトリスに触れようと"+下着名１_２(奴隷)+"の表面を引っ掻いて"%
+			ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,1)
+				PRINTFORM %"膣内に触れようと"+下着名１_２(奴隷)+"の表面を引っ掻いて"%
+			ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,2)
+				PRINTFORM %"アナルに触れようと"+下着名１_２(奴隷)+"の表面を引っ掻いて"%
+			ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,3)
+				自慰感覚 = ABL:奴隷:Ｂ感覚
+				IF ABL:奴隷:Ｂ感覚 >= 4
+					PRINTFORM %"乳首を指先で軽くつまんで刺激を与え"%
+				ELSEIF TALENT:奴隷:バストサイズ >= 0
+					PRINTFORM %"胸を揉んで時激し"%
+				ELSE
+					PRINTFORM %"に指を当てて撫でる様に愛撫し"%
+				ENDIF
+			ENDIF
+		ELSE
+			;複数部位
+			IF GETBIT(CFLAG:奴隷:自慰行動保存,3)
+				;胸とセット
+				IF GETBIT(CFLAG:奴隷:自慰行動保存,0)
+					PRINTFORM %"クリトリスに触れようと"+下着名１_２(奴隷)+"の表面を引っ掻きながら、"%
+				ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,1)
+					PRINTFORM %"膣内に触れようと"+下着名１_２(奴隷)+"の表面を引っ掻きながら、"%
+				ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,2)
+					PRINTFORM %"アナルに触れようと"+下着名１_２(奴隷)+"の表面を引っ掻きながら、"%
+				ENDIF
+				IF ABL:奴隷:Ｂ感覚 >= 4
+					PRINTFORM %"乳首を指先で軽くつまんで刺激を与え"%
+				ELSEIF TALENT:奴隷:バストサイズ >= 0
+					PRINTFORM %"胸を揉んで時激し"%
+				ELSE
+					PRINTFORM %"に指を当てて撫でる様に愛撫し"%
+				ENDIF
+				自慰感覚 = ABL:奴隷:Ｂ感覚
+			ELSE
+				;胸以外のセット、つまり刺激無し
+				IF GETBIT(CFLAG:奴隷:自慰行動保存,0)
+					自慰部位１ = 0
+					PRINTFORM %"クリトリスと"%
+				ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,1)
+					自慰部位１ = 1
+					PRINTFORM %"膣内と"%
+				ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,2)
+					自慰部位１ = 2
+					PRINTFORM %"アナルと"%
+				ENDIF
+				
+				IF 自慰部位１ != 0 && GETBIT(CFLAG:奴隷:自慰行動保存,0)
+					PRINTFORM %"クリトリスに触れようと"+下着名１_２(奴隷)+"の表面を引っ掻いて"%
+				ELSEIF 自慰部位１ != 1 && GETBIT(CFLAG:奴隷:自慰行動保存,1)
+					PRINTFORM %"膣内に触れようと"+下着名１_２(奴隷)+"の表面を引っ掻いて"%
+				ELSEIF 自慰部位１ != 2 && GETBIT(CFLAG:奴隷:自慰行動保存,2)
+					PRINTFORM %"アナルに触れようと"+下着名１_２(奴隷)+"の表面を引っ掻いて"%
+				ENDIF
+			ENDIF
+		ENDIF
+		PRINTL
+	ELSE
+		;貞操帯なし、普通の自慰
+		IF GETBIT(CFLAG:奴隷:自慰行動保存,0)
+			PRINT クリトリス
+			自慰部位１ = 0
+			自慰感覚 = ABL:奴隷:Ｃ感覚
+			IF !GETBIT(CFLAG:奴隷:自慰行動保存,4)
+				IF 自慰感覚 >= 4
+					PRINT を指先で軽くつまんで刺激を与え
+				ELSE
+					PRINT を軽くなぞる様に愛撫し
+				ENDIF
+			ENDIF
+		ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,1)
+			PRINT 膣内
+			自慰部位１ = 1
+			自慰感覚 = ABL:奴隷:Ｖ感覚
+			IF !GETBIT(CFLAG:奴隷:自慰行動保存,4)
+				IF 自慰感覚 >= 4
+					PRINT に指を２本入れて膣内を執拗にかき混ぜ
+				ELSE
+					PRINT に指を入れて膣内を刺激し
+				ENDIF
+			ENDIF
+		ELSEIF GETBIT(CFLAG:奴隷:自慰行動保存,2)
+			PRINT アナル
+			自慰部位１ = 2
+			自慰感覚 = ABL:奴隷:Ａ感覚
+			IF !GETBIT(CFLAG:奴隷:自慰行動保存,4)
+				IF 自慰感覚 >= 4
+					PRINT に指を２本入れて腸内を執拗にかき混ぜ
+				ELSE
+					PRINT に指を入れて腸内を刺激し
+				ENDIF
+			ENDIF
+		ELSE
+			IF 自慰感覚 >= 4
+				PRINT 乳首
+			ELSE
+				PRINT 胸
+			ENDIF
+			自慰部位１ = 3
+			自慰感覚 = ABL:奴隷:Ｂ感覚
+			IF !GETBIT(CFLAG:奴隷:自慰行動保存,4)
+				IF 自慰感覚 >= 4
+					PRINT を指先で軽くつまんで刺激を与え
+				ELSE
+					IF TALENT:奴隷:バストサイズ >= 0
+						PRINT を揉んで時激し
+					ELSE
+						PRINT に指を当てて撫でる様に愛撫し
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+		IF GETBIT(CFLAG:奴隷:自慰行動保存,4)
+			PRINT と
+			IF 自慰部位１ != 0 && GETBIT(CFLAG:奴隷:自慰行動保存,0)
+				PRINT クリトリス
+				自慰感覚 = MAX(自慰感覚, ABL:奴隷:Ｃ感覚)
+			ELSEIF 自慰部位１ != 1 && GETBIT(CFLAG:奴隷:自慰行動保存,1)
+				PRINT 膣内
+				自慰感覚 = MAX(自慰感覚, ABL:奴隷:Ｖ感覚)
+			ELSEIF 自慰部位１ != 2 && GETBIT(CFLAG:奴隷:自慰行動保存,2)
+				PRINT アナル
+				自慰感覚 = MAX(自慰感覚, ABL:奴隷:Ａ感覚)
+			ELSEIF 自慰部位１ != 3 && GETBIT(CFLAG:奴隷:自慰行動保存,3)
+				PRINT 胸
+				自慰感覚 = MAX(自慰感覚, ABL:奴隷:Ｂ感覚)
+			ENDIF
+			PRINT を同時に弄り
+		ENDIF
+		PRINTL
+
+	ENDIF
+
+	名前 = %"誰か"%
+	戻り値 = 0
+	IF TALENT:奴隷:恋慕
+		戻り値 = 1
+		SIF NTR_CHK_FAVORABLY(奴隷, FAV_寝取られ寸前)
+			戻り値 = -1
+		SIF NTR_CHK_FAVORABLY(奴隷, FAV_寝取られそう) && RAND:2 == 0
+			戻り値 = -1
+		SIF NTR_CHK_FAVORABLY(奴隷, FAV_主人より高い) && RAND:3 == 0
+			戻り値 = -1
+		SIF TALENT:奴隷:親愛
+			戻り値 = 1
+	ELSEIF TALENT:奴隷:NTR
+		戻り値 = -1
+		SIF NTR_CHK_FAVORABLY(奴隷, FAV_寝取り返し寸前) && RAND:2 == 0
+			戻り値 = 1
+		SIF NTR_CHK_FAVORABLY(奴隷, FAV_寝取り返し中) && RAND:3 == 0
+			戻り値 = 1
+	ENDIF
+	IF 1 == 戻り値
+		名前 = %CALLNAME:MASTER%
+	ELSEIF -1 == 戻り値
+		名前 = %NTR_NAME(0)%
+	ENDIF
+	IF PALAM:奴隷:欲情 >= PALAMLV:5
+		PRINTFORM %"何度も"+名前+"の名前を呼びながら"%
+	ELSE
+		PRINTFORM %"時折"+名前+"の名前を呼びながら"%
+	ENDIF
+	PRINT 感じる度に
+	IF 自慰感覚 >= 4
+		PRINT 抑えの効かない淫靡な声を出している。
+	ELSEIF 自慰感覚 >= 2
+		PRINT 小さな喘ぎ声を出している。
+	ELSE
+		PRINT 声を堪えてくぐもった声を出している。
+	ENDIF
+	PRINTW
+	PRINTFORML どうやら自慰に夢中でこちらには気付いていないようだ。
+RETURN 戻り値
+
+;住人同士の行為を覗けるかチェック
+@LOOK_INHABITANT(TGT_POS, TGT_CHR)
+	#DIM TGT_POS	; 覗いた先の場所
+	#DIM TGT_CHR	; チェック対象の人物
+	#DIM PTN_CHR	; チェック対象の人物の相手
+
+	IF CFLAG:TGT_CHR:住人同士イベント内容%10 && ((TGT_POS == CFLAG:TGT_CHR:現在位置) || (GETBIT(FLAG:住人同士イベント設定,2)))
+		PTN_CHR = CFLAG:TGT_CHR:住人同士イベント相手
+		;PRINTFORML %CALLNAME:TGT_CHR%と%CALLNAME:PTN_CHR% {CFLAG:TGT_CHR:住人同士イベント内容} {CFLAG:TGT_CHR:住人同士イベントシチュエーション}
+			SELECTCASE CFLAG:TGT_CHR:住人同士イベント内容/10
+				CASE 300
+					PRINTFORML %CALLNAME:TGT_CHR%と%CALLNAME:PTN_CHR%が話をしていた
+				CASE 301
+					PRINTFORML %CALLNAME:TGT_CHR%と%CALLNAME:PTN_CHR%がお茶を飲んでいた
+				CASE 302
+					PRINTFORML %CALLNAME:TGT_CHR%と%CALLNAME:PTN_CHR%がスキンシップを楽しんでいた
+				CASE 310
+					PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のお尻を撫でていた
+				CASE 311
+					PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%に抱きついていた
+				CASE 312
+					PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%にキスをしていた
+				CASE 313
+					PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の胸を撫でていた
+				CASE 314, 315, 316
+					PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の下半身をまさぐっていた
+				CASE 350, 351
+					IF HAS_PENIS(TGT_CHR)
+						IF TA:PTN_CHR:TGT_CHR:TA_好感度 < CFLAG:PTN_CHR:体を許す好感度
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の秘所にペニスを挿入し、犯していた
+							SIF GETBIT(STAIN:PTN_CHR:膣内,2)
+								PRINTFORML %CALLNAME:TGT_CHR%が腰を引く度に二人の結合部から精液が掻き出されていっている
+							PRINTFORML %CALLNAME:PTN_CHR%は押さえ込まれて抵抗できないようだ
+						ELSE
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の秘所にペニスを挿入しセックスしていた
+							SIF GETBIT(STAIN:PTN_CHR:膣内,2)
+								PRINTFORML %CALLNAME:TGT_CHR%が腰を引く度に二人の結合部から精液が掻き出されていっている
+							PRINTFORML %CALLNAME:PTN_CHR%も%CALLNAME:TGT_CHR%を受け入れ腰を揺らしている
+						ENDIF
+					ELSEIF HAS_PENIS(PTN_CHR)
+						IF TA:PTN_CHR:TGT_CHR:TA_好感度 < CFLAG:PTN_CHR:体を許す好感度
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のペニスを秘所で咥え込み、犯していた
+							SIF GETBIT(STAIN:TGT_CHR:膣内,2)
+								PRINTFORML %CALLNAME:TGT_CHR%が腰を引く度に二人の結合部から精液が掻き出されていっている
+							PRINTFORML %CALLNAME:PTN_CHR%は押さえ込まれて抵抗できないようだ
+						ELSE
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のペニスを秘所で咥え込みセックスしていた
+							SIF GETBIT(STAIN:TGT_CHR:膣内,2)
+								PRINTFORML %CALLNAME:TGT_CHR%が腰を引く度に二人の結合部から精液が掻き出されていっている
+							PRINTFORML %CALLNAME:PTN_CHR%も%CALLNAME:TGT_CHR%を受け入れ腰を揺らしている
+						ENDIF
+					ELSE
+						PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%にお互いの秘所を擦りつけていた
+						SIF TA:PTN_CHR:TGT_CHR:TA_好感度 < CFLAG:PTN_CHR:体を許す好感度
+							PRINTFORML %CALLNAME:PTN_CHR%は抵抗しようとしているように見える
+					ENDIF
+				CASE 352, 353
+					IF HAS_PENIS(TGT_CHR)
+						IF TA:PTN_CHR:TGT_CHR:TA_好感度 < CFLAG:PTN_CHR:体を許す好感度
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のアナルにペニスを挿入し、犯していた
+							SIF GETBIT(STAIN:PTN_CHR:腸内,2)
+								PRINTFORML %CALLNAME:TGT_CHR%が腰を引く度に二人の結合部から精液が掻き出されていっている
+							PRINTFORML %CALLNAME:PTN_CHR%は押さえ込まれて抵抗できないようだ
+						ELSE
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%にペニスを挿入しアナルセックスしていた
+							SIF GETBIT(STAIN:PTN_CHR:腸内,2)
+								PRINTFORML %CALLNAME:TGT_CHR%が腰を引く度に二人の結合部から精液が掻き出されていっている
+							PRINTFORML %CALLNAME:PTN_CHR%も%CALLNAME:TGT_CHR%を受け入れ腰を揺らしている
+						ENDIF
+					ELSEIF HAS_PENIS(PTN_CHR)
+						IF TA:PTN_CHR:TGT_CHR:TA_好感度 < CFLAG:PTN_CHR:体を許す好感度
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のペニスをアナルで咥え込み、犯していた
+							SIF GETBIT(STAIN:TGT_CHR:腸内,2)
+								PRINTFORML %CALLNAME:TGT_CHR%が腰を引く度に二人の結合部から精液が掻き出されていっている
+							PRINTFORML %CALLNAME:PTN_CHR%は押さえ込まれて抵抗できないようだ
+						ELSE
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のペニスを咥え込みアナルセックスしていた
+							SIF GETBIT(STAIN:TGT_CHR:腸内,2)
+								PRINTFORML %CALLNAME:TGT_CHR%が腰を引く度に二人の結合部から精液が掻き出されていっている
+							PRINTFORML %CALLNAME:PTN_CHR%も%CALLNAME:TGT_CHR%を受け入れ腰を揺らしている
+						ENDIF
+					ENDIF
+				CASE 354, 355
+					IF CFLAG:TGT_CHR:住人同士イベントシチュエーション == 1
+						IF HAS_PENIS(TGT_CHR)
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の秘所にペニスを挿入したまま余韻と%CALLNAME:PTN_CHR%の体を楽しんでいた
+							PRINTFORML 二人の結合部からは精液が溢れ、零れ落ちている
+						ELSEIF HAS_PENIS(PTN_CHR)
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のペニスを秘所で咥え込んだまま余韻と%CALLNAME:PTN_CHR%の体を楽しんでいた
+							PRINTFORML 二人の結合部からは精液が溢れ、零れ落ちている
+						ELSE
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の体を抱きながらうっとりと余韻を楽しんでいた
+						ENDIF
+					ELSEIF CFLAG:TGT_CHR:住人同士イベントシチュエーション == 2
+						IF HAS_PENIS(TGT_CHR)
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の体にペニスを擦りつけながら余韻と%CALLNAME:PTN_CHR%の体を楽しんでいた
+							PRINTFORML %CALLNAME:PTN_CHR%の秘所からは精液が溢れ、零れ落ちている
+						ELSEIF HAS_PENIS(PTN_CHR)
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のペニスを自分の体に擦りつけながら余韻と%CALLNAME:PTN_CHR%の体を楽しんでいた
+							PRINTFORML %CALLNAME:(TGT_CHR)%の秘所からは精液が溢れ、零れ落ちている
+						ELSE
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の体を抱きながらうっとりと余韻を楽しんでいた
+						ENDIF
+					ELSE
+						PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の体を抱きながらうっとりと余韻を楽しんでいた
+					ENDIF
+				CASE 356, 357
+					IF CFLAG:TGT_CHR:住人同士イベントシチュエーション == 1
+						IF HAS_PENIS(TGT_CHR)
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のアナルにペニスを挿入したまま余韻と%CALLNAME:PTN_CHR%の体を楽しんでいた
+							PRINTFORML 二人の結合部からは精液が溢れ、零れ落ちている
+						ELSEIF HAS_PENIS(PTN_CHR)
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のペニスをアナルで咥え込んだまま余韻と%CALLNAME:PTN_CHR%の体を楽しんでいた
+							PRINTFORML 二人の結合部からは精液が溢れ、零れ落ちている
+						ELSE
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の体を抱きながらうっとりと余韻を楽しんでいた
+						ENDIF
+					ELSEIF CFLAG:TGT_CHR:住人同士イベントシチュエーション == 2
+						IF HAS_PENIS(TGT_CHR)
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の体にペニスを擦りつけながら余韻と%CALLNAME:PTN_CHR%の体を楽しんでいた
+							PRINTFORM %CALLNAME:PTN_CHR%のアナルからは精液が溢れ、零れ落ちている
+						ELSEIF HAS_PENIS(PTN_CHR)
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%のペニスを自分の体に擦りつけながら余韻と%CALLNAME:PTN_CHR%の体を楽しんでいた
+							PRINTFORML %CALLNAME:(TGT_CHR)%のアナルからは精液が溢れ、零れ落ちている
+						ELSE
+							PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の体を抱きながらうっとりと余韻を楽しんでいた
+						ENDIF
+					ELSE
+						PRINTFORML %CALLNAME:TGT_CHR%が%CALLNAME:PTN_CHR%の体を抱きながらうっとりと余韻を楽しんでいた
+					ENDIF
+			ENDSELECT
+		ENDIF

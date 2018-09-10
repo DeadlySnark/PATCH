@@ -1,0 +1,473 @@
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@SHOW_USERCOM
+	#DIM  姿勢フラグ
+	#DIM  コマンド番号
+	#DIMS コマンド名称
+	コマンド番号 = 0
+	TFLAG:100 = !TFLAG:101
+	IF TCVAR:MASTER:112 == 1
+		姿勢フラグ = MASTER_POSE(6,1,1)
+	ELSEIF TCVAR:MASTER:112 == 2
+		姿勢フラグ = MASTER_POSE(7,1,1)
+	ELSE
+		姿勢フラグ = 0
+	ENDIF
+	FOR コマンド番号,0,700
+		RESULT = 0
+		SIF コマンド番号 == 200 && TFLAG:COMABLE管理 == 2
+			PRINTL
+		SIF コマンド番号 == 350 && TFLAG:COMABLE管理 != 2
+			PRINTL
+		SIF コマンド番号 == 400 && TFLAG:COMABLE管理 != 2
+			PRINTL
+		SIF GROUPMATCH(コマンド番号,400,604)
+			CONTINUE
+		TRYCALLFORM COM_ABLE{コマンド番号}
+		IF RESULT
+			IF (コマンド番号 == 42 && TEQUIP:11) || (コマンド番号 == 43 && TEQUIP:12) || (コマンド番号 == 44 && TEQUIP:13) || (コマンド番号 == 45 && TEQUIP:14) || (コマンド番号 == 46 && TEQUIP:15) || (コマンド番号 == 47 && TEQUIP:16) || (コマンド番号 == 48 && TEQUIP:17)
+				PRINTFORMC Release %TRAINNAME:コマンド番号%[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 81 && 姿勢フラグ
+				PRINTFORMC Cleaning Blowjob[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 82 && (TALENT:105 == -2 || TALENT:105 == -1)
+				PRINTFORMC Flatjob[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 10 && TALENT:TARGET:母乳体質
+				PRINTFORMC Breast Milk Drinking[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 11 && TALENT:PLAYER:母乳体質
+				PRINTFORMC Breastfeed[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 60 && !BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC Standing Missionary[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 61 && !BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC Standing Doggy Style[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 62 && !BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC Standing A Missionary[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 63 && !BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC Standing A Doggy[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 73 && TCVAR:PLAYER:イきそう
+			IF TEQUIP:TARGET:体位 == 1 && BEDROOM(CFLAG:PLAYER:現在位置)
+				PRINTFORMC Push Deeper[{LOCAL,3}]
+			ELSEIF TEQUIP:TARGET:体位 == 2
+				IF TALENT:TARGET:危険日
+					PRINTFORMC Mating Press[{LOCAL,3}]
+				ELSE
+					PRINTFORMC Insemination[{LOCAL,3}]
+				ENDIF
+			ELSE
+				PRINTFORMC %TRAINNAME:コマンド番号%[{LOCAL,3}]
+			ENDIF
+			ELSEIF (コマンド番号 == 97 && BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && TALENT:PLAYER:マゾ) || (コマンド番号 == 97 && BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && TALENT:サド)
+				PRINTFORMC Get Missionary[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 <= 1 ) || (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && !TALENT:PLAYER:マゾ) || (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 <= 2) || (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && !TALENT:サド)
+				PRINTFORMC Receive Standing Missionary[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && TALENT:PLAYER:マゾ) || (コマンド番号 == 97 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && TALENT:サド)
+				PRINTFORMC Get Standing Missionary[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 98 && BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && TALENT:PLAYER:マゾ) || (コマンド番号 == 98 && BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && TALENT:サド)
+				PRINTFORMC Get Doggy[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 <= 1 ) || (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && !TALENT:PLAYER:マゾ) || (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 <= 2) || (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && !TALENT:サド)
+				PRINTFORMC Receive Standing Doggy[{コマンド番号,3}]
+			ELSEIF (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:PLAYER:マゾっ気 >= 2 && TALENT:PLAYER:マゾ) || (コマンド番号 == 98 && !BEDROOM(CFLAG:PLAYER:現在位置) && ABL:サドっ気 >= 3 && TALENT:サド)
+				PRINTFORMC Get Standing Doggy[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 200
+				IF EQUIP:上半身上着１
+					コマンド名称 = %CLOTHNAME(12,EQUIP:上半身上着１)%
+				ELSEIF EQUIP:上半身上着２
+					コマンド名称 = %CLOTHNAME(13,EQUIP:上半身上着２)%
+				ELSEIF EQUIP:ボディースーツ
+					コマンド名称 = %CLOTHNAME(14,EQUIP:ボディースーツ)%
+				ELSEIF EQUIP:ワンピース
+					コマンド名称 = %CLOTHNAME(15,EQUIP:ワンピース)%
+				ELSEIF EQUIP:着物
+					コマンド名称 = %CLOTHNAME(16,EQUIP:着物)%
+				ELSEIF EQUIP:レオタード
+					コマンド名称 = %CLOTHNAME(17,EQUIP:レオタード)%
+				ENDIF
+				IF CFLAG:うふふ == 3
+					PRINTFORMC Take Off %コマンド名称%[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC Remove %コマンド名称%[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 201
+				IF EQUIP:下半身上着１
+					コマンド名称 = %CLOTHNAME(7,EQUIP:下半身上着１)%
+				ELSEIF EQUIP:下半身上着２
+					コマンド名称 = %CLOTHNAME(8,EQUIP:下半身上着２)%
+				ELSEIF EQUIP:スカート
+					コマンド名称 = Skirt
+				ENDIF
+				IF CFLAG:うふふ == 3
+					PRINTFORMC Take Off %コマンド名称%[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC Remove %コマンド名称%[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 202
+				IF EQUIP:上半身下着１ == 2
+					PRINTFORMC Unfasten Sarashi[{コマンド番号,3}]
+				ELSEIF EQUIP:上半身下着２ == 6 || EQUIP:上半身下着２ == 7
+					PRINTFORMC Remove Bikini(Top)[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC Remove Bra[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 203
+				IF EQUIP:下半身下着１
+					IF GETBIT(FLAG:匂いフェチ,1) 
+						コマンド名称 = %IRUINAME_SMELL(EQUIP:下半身下着１)%%PANTSNAME(EQUIP:下半身下着１)%
+					ELSE
+						コマンド名称 = %PANTSNAME(EQUIP:下半身下着１)%
+					ENDIF
+				ELSEIF 0 < EQUIP:下半身下着２ && EQUIP:下半身下着２ < 100
+					コマンド名称 = Panties
+				ELSEIF EQUIP:下半身下着２ == 104 || EQUIP:下半身下着２ == 105
+					コマンド名称 = Bikini(Bottom)
+				ELSE
+					IF GETBIT(FLAG:匂いフェチ,1) 
+						コマンド名称 = %IRUINAME_SMELL(EQUIP:下半身下着２)%%PANTSNAME(EQUIP:下半身下着２)%
+					ELSE
+						コマンド名称 = %PANTSNAME(EQUIP:下半身下着２)%
+					ENDIF
+				ENDIF
+				IF CFLAG:うふふ == 3
+					PRINTFORMC Take Off %コマンド名称%[{コマンド番号,3}]
+				ELSE
+					PRINTFORMC Remove %コマンド名称%[{コマンド番号,3}]
+				ENDIF
+			ELSEIF コマンド番号 == 350
+				;ベッドがない
+				IF !BEDROOM(CFLAG:PLAYER:現在位置)
+					コマンド名称 = Draw Closer
+				ELSE
+					コマンド名称 = Push Down
+				ENDIF
+				SIF GET_TARGETNUM() > 1 && GET_TARGETWAKEUP() > 1
+					コマンド名称 = %コマンド名称% Together
+				PRINTFORMC %コマンド名称%[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 351 && CFLAG:TARGET:馴れ合い強度度 > 0
+				SETCOLOR C_AQUA
+				PRINTFORMC %TRAINNAME:コマンド番号%[{コマンド番号,3}]
+				RESETCOLOR
+			ELSEIF コマンド番号 == 403 && REST_IsRestRoom(CFLAG:MASTER:現在位置)
+				PRINTFORMC Use Toilet[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 403 && BATHROOM(CFLAG:MASTER:現在位置)
+				PRINTFORMC Relax In The Bath[{コマンド番号,3}]
+			ELSEIF コマンド番号 == 490 && CFLAG:MASTER:現在位置 > 場所番号最大値
+				PRINTFORMC %"Move["%{コマンド番号,3}%"]"%
+			ELSEIF STRLENS(TRAINNAME:コマンド番号)
+				PRINTFORMC %TRAINNAME:コマンド番号%[{コマンド番号,3}]
+			ENDIF
+		ENDIF
+	NEXT
+	SIF !TFLAG:100
+		GOTO SKIP
+	PRINTL
+	DRAWLINE
+	SETCOLOR C_GREEN
+	RESULT = 0
+	CALL COM_ABLE400
+	SIF RESULT
+		PRINTC Move[400]
+	RESETCOLOR
+	PRINTC View History[800]
+	PRINTC Dirtiness[801]
+	SIF GET_TARGETNUM() > 1
+		PRINTC Change Partner[802]
+	PRINTL
+	PRINTC Abilities[803]
+	PRINTC Abilities(You)[804]
+	PRINTC Command Filter[809]
+	SIF TARGET
+		PRINTC Change Display Format[998]
+	PRINTC Finish The Day[888]
+	PRINTL
+	IF CFLAG:うふふ
+		SIF EQUIP:PLAYER:0
+			PRINTC Remove Your Clothes[820]
+		IF CFLAG:うふふ == 2 || CFLAG:うふふ == 4
+			PRINTC Slip Out[999]
+		ELSEIF CFLAG:うふふ == 3
+			PRINTC Stop Masturbating[999]
+		ELSE
+			PRINTC End The Mischief[999]
+		ENDIF
+	ENDIF
+	$SKIP
+	;IF PREVCOM >= 0
+		PRINTL 
+		PRINTFORM ＜Last\@PREVCOM >= 0 && PREVCOM < 300 ?%" "%training#\@ command: 
+		PRINTS STR:0
+		SIF TFLAG:150
+			PRINT  (Assistant)
+		PRINTL ＞
+	;ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@USERCOM
+	IF RESULT >= 0 && RESULT <= 700
+		IF RESULT == 351
+			CALL COM_ABLE351
+			SIF !RESULT
+				RETURN 0
+			PRINTL Lead Around
+			STR:0 = Lead Around
+			CALL COM351
+			RETURN RESULT
+		ENDIF
+		SIF TRAINNAME:RESULT == ""
+			RETURN 0
+		SELECTCOM = RESULT
+		TFLAG:3 = SELECTCOM
+		TRYCALLFORM COM_ABLE{SELECTCOM}
+		SIF RESULT == 0
+			RETURN 0
+		RESULT = 1
+		TRYCALLFORM CAN_COM{SELECTCOM}(1)
+		IF RESULT == 0
+			TRYCALLFORM CAN_COM{SELECTCOM}
+			RETURN 0
+		ENDIF
+		DOTRAIN 999
+	ELSEIF RESULT >= 701 && RESULT <= 799 && CHARANUM > RESULT - 700 && CFLAG:(RESULT - 700):同室
+		TFLAG:104 = RESULT - 700
+		RETURN 1
+	ELSEIF RESULT == 800
+		CALL SHOW_EQUIP
+		RETURN 1
+	ELSEIF RESULT == 801
+		CALL STAIN_INFO
+		RETURN 1
+	ELSEIF RESULT == 802
+		CALL TARGET_CHANGE
+		RETURN 1
+	ELSEIF RESULT == 803
+		CALL PRINT_STATE(TARGET,1)
+		WAIT
+		RETURN 1
+	ELSEIF RESULT == 804
+		CALL PRINT_STATE(MASTER)
+		WAIT
+		RETURN 1
+	ELSEIF RESULT == 809
+		CALL OPTION_COMMAND_FILTER
+	ELSEIF RESULT == 816
+		FLAG:AA表示 = !FLAG:AA表示
+	ELSEIF RESULT == 817
+		FLAG:挿絵表示 = !FLAG:挿絵表示
+	ELSEIF RESULT == 818
+		FLAG:アニメーション--
+	SIF FLAG:アニメーション < 0
+		FLAG:アニメーション = 5
+	ELSEIF RESULT == 819
+		FLAG:アニメーション++
+	SIF FLAG:アニメーション >= 6
+		FLAG:アニメーション = 0
+	ELSEIF RESULT == 820 && CFLAG:うふふ && EQUIP:PLAYER:0
+		EQUIP:PLAYER:0 = 0
+		CALL CLOTHES_SETTING_TRAIN(PLAYER)
+		RETURN 1
+	ELSEIF RESULT == 888
+		SELECTCASE CFLAG:MASTER:現在位置
+			CASE 場所_訪問者宅,場所_売春宿
+				
+			CASEELSE
+				CFLAG:MASTER:現在位置 = CFLAG:MASTER:開始位置
+		ENDSELECT
+		FLAG:訪問者の現在位置 = 0
+		FLAG:訪問者同行フラグ = 0
+		;起床後即888実行時の補正
+		IF TIME == CFLAG:MASTER:通常起床時間
+			TIME += 1
+		ENDIF
+		BEGIN AFTERTRAIN
+	;Change display format
+	ELSEIF RESULT == 998
+		PRINTFORMW Parameters will be displayed as \@(FLAG:PALAMSHOWINGMETHOD & 2) ? colorful bars # plain numbers\@.
+		FLAG:PALAMSHOWINGMETHOD ^= 2
+		RETURN 1
+	ELSEIF RESULT == 999 && CFLAG:うふふ
+		;なんらかの不具合でTARGET:1があなたになった場合の救済措置として条件を追加
+		IF TARGET:1 != 0
+			IF CFLAG:(TARGET:1):うふふ == 2 && BASE:(TARGET:1):満足 < MAXBASE:(TARGET:1):満足
+				PRINTFORMW %CALLNAME:(TARGET:1)% doesn't let you go...
+				PRINTFORMW Looks like %HE_SHE(TARGET:1)% wants to be satisfied first...
+				RETURN 1
+			ENDIF
+		ENDIF
+		FOR LOCAL,0,CHARANUM
+			CFLAG:LOCAL:うふふ = 0
+		NEXT
+		CALL TOUCH_SET(0,0,0,1)
+		RETURN 1
+	;リソース表示関連
+	ELSEIF RESULT == 3100
+		;表示設定の切り替え
+		FLAG:画像表示設定 = !FLAG:画像表示設定
+	ELSEIF RESULT == 3101
+		;画像表示人数 -
+		FLAG:画像表示 = MAX(FLAG:画像表示-1,1)
+	
+	ELSEIF RESULT == 3102
+		;画像表示人数 +
+		FLAG:画像表示 = MIN(FLAG:画像表示+1,10)
+	
+	ELSEIF RESULT == 3103
+		;表示位置切り替え
+		FLAG:画像表示位置 = !FLAG:画像表示位置
+
+	ELSEIF RESULT == 3104
+		;枠表示 ON/OFF
+		FLAG:画像枠表示 = !FLAG:画像枠表示
+	ELSEIF RESULT == 3105
+		FLAG:立ち絵種類 = !FLAG:立ち絵種類
+	ENDIF
+	RETURN 0
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@TARGET_CHANGE
+	PRINTFORML Currently you're having %CALLNAME:TARGET% as your partner.
+	PRINTL [0] - Return
+	FOR LOCAL,1,CHARANUM
+		SIF CFLAG:LOCAL:同室
+			PRINTFORML [{LOCAL}] - %CALLNAME:LOCAL% (Favorability: {CFLAG:LOCAL:2})
+	NEXT
+	INPUT
+	IF RESULT <= 0 || RESULT >= CHARANUM
+		RETURN 0
+	ELSEIF CFLAG:RESULT:同室
+		TFLAG:104 = RESULT
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@SHOW_EQUIP
+#DIM TARGETS
+#DIM 表示項目数
+表示項目数 = 0
+VARSET LOCAL
+TARGETS = 0
+
+;Showing target's name and juel amount
+IF TARGET > 1
+CALL COLORMESSAGE(@"(%CALLNAME:TARGET%)",C_P_PURPLE,0,1)
+CALL PRINT_STATE_JUEL(TARGET)
+ENDIF
+PRINTL
+IF PREVCOM >= 0 && PREVCOM < 300
+	PRINTL 
+	PRINT ＜Last training command: 
+	PRINTS STR:0
+	SIF TFLAG:150
+		PRINT  (Assistant)
+	PRINTL ＞
+ELSE
+	PRINTL 
+	PRINT ＜Last command: 
+	PRINTS STR:0
+	PRINTL ＞
+ENDIF
+;showing everybody who has tequips attached
+CALL SHOW_EQUIP_1EX
+PRINTL
+;please forgive me my shitty coding, but I'm too lazy to make it better and it jus werks
+FOR TARGETS, 0, CHARANUM
+LOCAL:99 = 0
+	FOR LOCAL, 0, VARSIZE("EX")
+	IF !EX:TARGETS:LOCAL
+		CONTINUE
+	ENDIF
+	;SELECTCASE EXNAME:LOCAL
+	;	CASE "処女喪失チェック", "信頼マイナス蓄積値", "前回の入浴時刻"
+	;	CONTINUE
+	;ENDSELECT
+	IF EX:TARGETS:LOCAL && LOCAL:99 != 1
+	CALL SHOW_EQUIP_EX(TARGETS)
+	LOCAL:99 ++
+	ENDIF
+	NEXT
+NEXT
+WAIT
+
+@SHOW_EQUIP_EX(選択中キャラID)
+#DIM 選択中キャラID
+#DIM 表示項目数
+表示項目数 = 0
+PRINTFORML □ Climax Amount (%CALLNAME:選択中キャラID%) □%"-"*(81-STRLENS(CALLNAME:選択中キャラID))%
+FOR LOCAL, 0, VARSIZE("EX")
+	IF !EX:選択中キャラID:LOCAL
+		CONTINUE
+	ENDIF
+	;SELECTCASE EXNAME:LOCAL
+	;	CASE "処女喪失チェック", "信頼マイナス蓄積値", "前回の入浴時刻"
+	;	CONTINUE
+	;ENDSELECT
+	PRINTFORM 　%EXNAME:LOCAL%
+	LOCALS = {EX:選択中キャラID:LOCAL}
+	LOCAL:98 = 22 - STRLENS(EXNAME:LOCAL) - STRLENS(LOCALS)
+		IF LOCAL:98 > 0
+			SETCOLOR 0x606060
+			PRINTFORM %"." * LOCAL:98%
+			RESETCOLOR
+		ENDIF
+	PRINTFORM {EX:選択中キャラID:LOCAL}
+	表示項目数 ++
+	SIF 表示項目数 % 4 == 0
+		PRINTL
+NEXT
+PRINTL
+
+@SHOW_EQUIP_1EX
+#DIM 選択中キャラID
+;使用中の道具を表示する
+;一度使用したら解除するまで止まらない道具や調教を
+;追加した場合はここに追加をしてください
+FOR 選択中キャラID, 0, CHARANUM
+IF TEQUIP:選択中キャラID:11 || TEQUIP:選択中キャラID:13 || TEQUIP:選択中キャラID:14 || TEQUIP:選択中キャラID:15 || TEQUIP:選択中キャラID:16 || TEQUIP:選択中キャラID:17 || TEQUIP:選択中キャラID:18 || TEQUIP:選択中キャラID:19 || TEQUIP:選択中キャラID:20 || TEQUIP:選択中キャラID:21 || TEQUIP:選択中キャラID:22 || TEQUIP:選択中キャラID:23 || TEQUIP:選択中キャラID:24 || TEQUIP:選択中キャラID:25 || TEQUIP:選択中キャラID:26 || TEQUIP:選択中キャラID:27 || TEQUIP:選択中キャラID:32 || TEQUIP:選択中キャラID:34 || TEQUIP:選択中キャラID:36 || TEQUIP:選択中キャラID:膣鏡
+	PRINTL
+	PRINTFORM In Use (%NAME:選択中キャラID%) 
+	SIF TEQUIP:選択中キャラID:26
+		PRINT [Under Aphrodisiac Effect]
+	SIF TEQUIP:27
+		PRINT [Under Diuretic Effect]
+	SIF TEQUIP:選択中キャラID:11
+		PRINT [Clit Cap]
+	SIF TEQUIP:選択中キャラID:12
+		PRINT [Onahole]
+	SIF TEQUIP:選択中キャラID:13
+		PRINT [Vibrator]
+	SIF TEQUIP:選択中キャラID:14
+		PRINT [Anal Vibrator]
+	SIF TEQUIP:選択中キャラID:15
+		PRINT [Anal Beads]
+	SIF TEQUIP:選択中キャラID:16
+		PRINT [Nipple Cap]
+	SIF TEQUIP:選択中キャラID:17
+		PRINT [Milker]
+	SIF TEQUIP:選択中キャラID:18
+		PRINT [Blindfold]
+	SIF TEQUIP:選択中キャラID:19
+		PRINT [Rope Bondage]
+	SIF TEQUIP:選択中キャラID:20
+		PRINT [Ball Gag]
+	SIF TEQUIP:選択中キャラID:21
+		PRINT [Enema＋Butt Plug]
+	SIF TEQUIP:選択中キャラID:22
+		PRINT [Expansion Balloon]
+	SIF TEQUIP:選択中キャラID:23
+		PRINT [Anal Electrode]
+	SIF TEQUIP:選択中キャラID:24
+		PRINT [Breast Electrodes]
+	;SIF TEQUIP:選択中キャラID:25
+	;	PRINT [Under Restraint]
+	SIF TEQUIP:選択中キャラID:32
+		PRINT [Shower]
+	;SIF TEQUIP:選択中キャラID:挿入禁止
+	;	PRINT [Insertion Prohibition]
+	SIF TEQUIP:選択中キャラID:膣鏡
+			PRINT [Vaginal Speculum]
+ENDIF
+NEXT
+;ココより↑にTEQUIPに登録したものを書き込む
+PRINTL 

@@ -1,0 +1,508 @@
+;--------------------------------------------------
+;ARGÇÕÉ^ÉåÉìÉgî‘çÜÇ…ëŒâû
+;ëÂïîï™ÇÃê‡ñæï∂ÇÕTALENT.CSVÇÃÇªÇÍÇéùÇ¡ÇƒÇ´ÇƒÇ¢Ç‹Ç∑
+;ARGÇÃî‘çÜÇÃëféøÇÃê‡ñæÇï‘Ç∑
+;Warning! Do not use ' or " or & in the description, use Åf or Åh or Åï instead or escape them with \. Warning #2: You were warned.
+@TALENT_INFO(ARG,ARG:1)
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 0
+	;Virginity
+		;Thinks Is Virgin
+		IF ARG:1 == -1
+			RETURNF "This character has lost their virginity, but they donÅft know about that yet. Might be a bit shocking for them when they find that out though."
+		;Virgin
+		ELSEIF ARG:1 == 1
+			RETURNF "MaidenÅfs proof of innocence. This character has never experienced V penetration. Losing it is very painful, so be sure to have some sort of attachment before getting rid of it."
+		;Restored Virgin
+		ELSEIF ARG:1 == 2
+			RETURNF "This characterÅfs vagina has a new fresh hymen, the ÅhproofÅh of her fake virginity. With this you can pretend that you were her first."
+		ENDIF
+	CASE 1
+	;Male Virginity
+		SIF !ARG:1
+		RETURNF "This character never used their penis for penetration."
+	CASE 2
+	;Gender
+		;Herm
+		IF ARG:1 == 3
+			RETURNF "Possible to execute training commands that utilize penis/vagina even if not a male/female."
+		;Male
+		ELSEIF ARG:1 == 2
+			RETURNF "Indicates that this character is a man."
+		ENDIF
+		
+	CASE 3
+	;Love
+		RETURNF "This character has developed a romantic bonds with you. You can call yourself a couple now.\nMakes it much easier to execute commands. More likely to obey you overall."
+	CASE 4
+	;Lewd
+		RETURNF "This character discovered their new self, lusty and degenerate, totally enjoying it and having no regrets."
+	CASE 5
+	;Submission
+		RETURNF "This character submitted themselves at your mercy. You can truly call yourself a master now."
+	CASE 6
+	;Never Kissed
+		SIF ARG:1
+			RETURNF "This character has never experienced kissing yet."
+			
+	CASE 7
+	;Couple
+		RETURNF "YouÅfre now truly a couple. I give you my blessings for your upcoming marriage because you have to take the responsibility. Congratulations."
+	CASE 8
+	;Yearning
+		RETURNF "This character feels a strange yearning for you. If you keep working on your relationship, they may truly fall in love with you.\nMakes it easier to execute commands. More likely to obey you overall."
+	CASE 9
+	;Broken
+		RETURNF "This character has suffered a mental breakdown. TheyÅfre basically a walking zombie now. You better reload."
+		
+	CASE 10
+	;Courage
+		;Timid
+		IF ARG:1 == -1
+			RETURNF "Makes Fear parameter easier to raise. In return Hostility parameter raises faster. Easier to negotiate for raw penetration.\nMore likely to obey you overall. Easier to push down if target has it and harder if master has it. Less likely to push you down. Harder to get a good date results."
+		;Brave
+		ELSEIF ARG:1 == 1
+			RETURNF "Brave, or rather Stubborn. Loyalty, Desire, Submission, Fear and Favour parameters raise slower, Hostility and Depression parameters raise faster.\nMakes it harder to execute commands. Harder to negotiate for raw penetration. More likely to take the lead. Less likely to obey you overall. Harder to push down if target has it and easier if master has it. Easier to get a good date results."
+		ENDIF
+	CASE 11
+	;Attitude
+		;Docile
+		IF ARG:1 == -1
+			RETURNF "Loyalty and Favour parameters raises faster, Hostility parameter raises slower.\nMakes it easier to execute commands. Much easier to negotiate for raw penetration. More likely to obey you overall. Harder to push down if master has it. Less likely to push you down."
+		;Defiant
+		ELSEIF ARG:1 == 1
+			RETURNF "Loyalty, Submission and Favour parameters raise slower, Hostility parameter raises faster. These effects disappear after acquiring Love.\nMakes it harder to execute commands. More likely to walk around on their own. Much harder to negotiate for raw penetration. Less likely to obey you overall."
+		ENDIF	
+	CASE 12
+	;Response
+		;Calm
+		IF ARG:1 == -1	
+			RETURNF "Loyalty and Hostility parameters raise slower. More likely to obey you overall. Easier to push down if target has it."
+		;Cheeky
+		ELSEIF ARG:1 == 1
+			RETURNF "Loyalty and Submission parameters raise slower, Hostility parameter raises faster.\nMore likely to take the lead. Less likely to obey you overall. Easier to push down if master has it."
+		ENDIF
+	CASE 13
+	;Pride
+		;Humble
+		IF ARG:1 == -1
+			RETURNF "Submission and Fear parameters raises faster, Hostility parameter raises slower.\nMakes it easier to execute commands. Easier to negotiate for raw penetration. More likely to obey you overall."
+		;Prideful
+		ELSEIF ARG:1 == 1
+			RETURNF "Submission and Fear parameters raises slower, Hostility parameter raises faster.\nMakes it much harder to execute commands. More likely to take the lead. Harder to negotiate for raw penetration. Less likely to obey you overall."
+		ENDIF	
+	CASE 14
+		;Tsundere
+		RETURNF "Harder to negotiate for raw penetration, Loyalty and Submission parameters raise slower, Hostility parameter raises faster.\nEffect is reversed after having Love (for everything) or Lewd/Submission (only for parameters)."
+	CASE 15
+	;Mood
+		RETURNF "Shows whether this character has a good or bad mood. Bad Mood makes them angry faster and their Favour raise slower. Good Mood makes them raise Favour faster instead."
+		
+	CASE 16
+	;Appearance
+		RETURNF "(Not implemented)"
+		
+	CASE 17
+	;Age
+		RETURNF "Shows the physical age of the character."
+		
+	CASE 18
+	;Sleazy
+		RETURNF "Makes characterÅfs private room dirty faster, showing that their Cleaning Skill is pretty bad."
+	
+	;Moody
+	CASE 19
+		RETURNF "Easier to change the mood. DoesnÅft do anything."
+		
+	CASE 20
+	;Self Control
+		RETURNF "Submission and Fear parameters raise slower. Hostility parameter raises faster. Gets less pleasure from C, V, B and more from M. Harder to make them ejaculate or lactate. Raises less Lust from orgasms. Player gains less SexBehav and Perform sources if they have it.\nLoses Sexual Frustration 2 times faster and acquires it slower. Much harder to get good date results. More resistive and less assertive to sexual commands. Less likely to take the lead."
+	CASE 21
+	;Apathetic
+		RETURNF "Loyalty, Desire, Submission, Favour, Fear and Hostility parameters raise slower. Less likely to push you down. Favorability (only without Love) and Reliability raise 2 times slower."
+	CASE 22
+	;Emotionless
+		RETURNF "All parameters raise slower overall. Favorability and Reliability raise slower. Less likely to get a good effect from drinking alcohol. Cannot gain or lose Obedience ability from acquiring Marks."
+	CASE 23
+	;Sexual Interest
+		;Conservative
+		IF ARG:1 == -1
+			RETURNF "More resistant to sexual commands. Learning parameter raises slower. Deviation source raises slower.\nLess likely to take the lead. Less likely to push you down. Harder to get a good date results."
+		;Curious
+		ELSEIF ARG:1 == 1
+			RETURNF "Less resistant to sexual commands. Learning parameter raises faster. Deviation source raises much faster.\nMore likely to take the lead. More likely to push you down. Easier to get a good date results."
+		ENDIF
+	CASE 24
+	;Cheerful/Gloomy
+		;Gloomy
+		IF ARG:1 == -1	
+			RETURNF "Depression parameter raises faster. Favorability raises faster if both target and player has it."
+		;Cheerful
+		ELSEIF ARG:1 == 1	
+			RETURNF "Depression parameter raises slower. Favorability raises faster if both target and player has it."
+		ENDIF
+	CASE 25
+	;Reserved
+		RETURNF "Makes it harder to raise all abilities, but the effect is reversed after getting Love. Harder to get first kiss event and confession event after dates. Harder to make a successful confession.\nHarder to negotiate for raw penetration (depends on Love Experience). Favorability raises 2 times slower without Love. Harder to push down if master has it."
+	CASE 26
+	;Show-off
+		RETURNF "Makes it easier to execute commands. Loyalty parameter raises faster."
+	CASE 27
+	;Ignorant
+		RETURNF "Indicates the overall sexual ignorance. DoesnÅft know about the pregnancy stuff and will not ask for contraception.\nWill be very scared losing their Virginity and hate you for it more. Disappears after following the Masturbation Addiction event chain."
+	CASE 30
+	;Virtue
+		;Unchaste
+		IF ARG:1 == -1
+			RETURNF "Easier to negotiate for raw penetration. Gains less Hostility from seeing a kiss mark on you. More likely to push you down."
+		;Virtuous
+		ELSEIF ARG:1 == 1
+			RETURNF "Much harder to initiate vaginal sex for player if player has it. Will give lots of Hostility if lost virginity before having a Love.\nHarder to negotiate for raw penetration. Gains more Hostility from seeing a kiss mark on you. Less likely to push you down."
+		ENDIF
+	CASE 31
+	;Openness
+		;Repressed
+		IF ARG:1 == -1
+			RETURNF "Makes it harder to execute commands. Loses Sexual Frustration 2 times faster and acquires it slower. Gains Depression source from almost every sexual command.\nDepression and Hostility parameters raise faster. Desire parameter raises slower. Disappears after having 7 Lust or more."
+		;Liberated
+		ELSEIF ARG:1 == 1
+			RETURNF "Desire and Submission parameters raise faster. Pleasure from CVAB and affection sources raise more."
+		ENDIF
+	CASE 32
+	;Reluctant
+		RETURNF "Makes it harder to execute commands. Gains Depression source from almost every sexual command. Much harder to negotiate for raw penetration. Favorability and Reliability raise slower.\nDepression and Hostility parameters raise faster. Loyalty parameter raises slower. Disappears after having 7 Obedience or more."
+	CASE 33
+	;Shyness
+		;Shameless
+		IF ARG:1 == -1
+			RETURNF "Panics less when sees you intruding the bathroom. More likely to take the lead. More likely to push you down.\nLess likely to panic from embarrassing things. Effect of the exposure-based commands is weaker."
+		;Shy
+		ELSEIF ARG:1 == 1
+			RETURNF "Makes it a bit harder to execute sexual commands. Less likely to take the lead. Less likely to push you down.\nMore likely to panic from embarrassing things. Exposure-based commands are highly effective."
+		ENDIF
+	CASE 34
+	;Weakness
+		RETURNF "Makes it much easier to execute commands."
+	
+	CASE 40
+	;Sense Of Pain
+		;Pain Sensitive
+		IF ARG:1 == -1
+			RETURNF "Pain parameter raises faster."
+		;Pain Resistant
+		ELSEIF ARG:1 == 1
+			RETURNF "Pain parameter raises slower."
+		ENDIF
+	CASE 41
+	;Wet Ease
+		;Hard To Get Wet
+		IF ARG:1 == -1
+			RETURNF "Lubrication parameter raises slower."
+		;Easy To Get Wet
+		ELSEIF ARG:1 == 1
+			RETURNF "Lubrication parameter raises faster."
+		ENDIF	
+	CASE 50
+	;Learning Speed
+		;Slow Learner
+		IF ARG:1 == -1
+			RETURNF "Learning parameter raises slower. Harder to raise sexual techniques."
+		;Fast Learner
+		ELSEIF ARG:1 == 1
+			RETURNF "Learning parameter raises faster. Easier to raise sexual techniques."
+		ENDIF
+	CASE 51
+	;Nimble-fingered
+		RETURNF "Commands that use fingers are highly effective. Easier to raise finger sexual technique."	
+	CASE 52
+	;Skilled Tongue
+		RETURNF "Commands that use tongue are highly effective. Easier to raise tongue sexual technique."	
+	CASE 53
+	;Needle Skill
+		RETURNF "Effectiveness of the commands that utilize needle is increased."	
+	CASE 54
+	;Cat Tongue
+		RETURNF "Commands that use tongue receive some penalties and the effect is changed."	
+	CASE 55
+	;Mixing Knowledge
+		RETURNF "You can purchase special items. Using aphrodisiac consumes less STA and ENE. Can help Eirin with her job. Tea with medicine will more likely to work.\nCan mix Sleeping Pill into the tea. Target will swallow the pill on their own when starting intercourse if target has it."	
+	CASE 56
+	;Drug Resistant
+		RETURNF "Impossible to use aphrodisiac or diuretic on this person."	
+	CASE 57
+	;Peeing Habit
+		RETURNF "Urination command is always available. Will piss everything around when orgasming."	
+	
+	CASE 60
+	;Masturbating
+		RETURNF "Masturbation-related commands are easier to execute. Masturbation Addiction raises faster."	
+	CASE 61	
+		;Clean Freak 
+		IF ARG:1 == -2
+			RETURNF "Harder to execute most sexual commands. Much more likely to visit the bathroom. Some commands may not be executed because of the dirt.\nFavorability and Reliability raise slower if dirt is present. CharacterÅfs private room will be much less dirty."
+		;Smell Sensitive
+		ELSEIF ARG:1 == -1
+			RETURNF "Harder to execute most sexual commands. More likely to visit the bathroom. Some commands may not be executed because of the dirt.\nFavorability and Reliability raise slower if dirt is present. CharacterÅfs private room will be less dirty."
+		;Resistant to Smell
+		ELSEIF ARG:1 == 1
+			RETURNF "Easier to execute most sexual commands. Favorability and Reliability growth get less penalty if dirt is present.\nCharacterÅfs private room will be dirtier."
+		;Ignores Dirt
+		ELSEIF ARG:1 == 2
+			RETURNF "Easier to execute most sexual commands. Favorability and Reliability growth get much less penalty if dirt is present.\nCharacterÅfs private room will be a lot more dirtier."
+		ENDIF
+	CASE 62
+	;Devoted
+		RETURNF "Easier to execute service commands. Submission parameter raises faster.\nFavorability and Reliability raise faster if there wasnÅft any penalty to them."			
+	CASE 70
+	;Pleasure Response
+		IF ARG:1 == -1
+			;Denies Pleasure
+			RETURNF "Makes it harder to execute commands (disappears after having Love or Lewd depending on the command). Gets depressed from feeling pleasure if not Lewd. Harder to make them ejaculate or lactate.\nDesire parameter raises slower. Much harder to negotiate for raw penetration. Favorability raises slower from sexual commands."	
+		ELSEIF ARG:1 == 1
+			;Enjoys Pleasure
+			RETURNF "Makes it easier to execute commands. Easier to make them ejaculate or lactate. Desire parameter raises faster.\nMuch easier to negotiate for raw penetration. Favorability raises faster from sexual commands."
+		ENDIF
+	CASE 71
+	;Easily Addicted
+		RETURNF "Addiction abilities are raised more easily."
+	CASE 72
+	;Submits Easily
+		RETURNF "Much easier to execute commands. All parameters raise 2 times faster, except for Hostility, Discomfort and Depression which raise 2 times slower. Abilities may raise after executing commands."
+	CASE 73
+	;Loves to Masturbate
+		RETURNF "Increases the effect of C type commands and masturbating commands. Desire parameter raises faster."	
+	CASE 74
+	;Lewd Vagina
+		RETURNF "Increases the effect of V type commands. Loyalty parameter raises faster."	
+	CASE 75
+	;Loves Anal
+		RETURNF "Increases the effect of A type commands. Submission parameter raises faster."	
+	CASE 76
+	;Lewd Breasts
+		RETURNF "Increases the effect of B type commands. Embarrassment parameter raises faster."	
+	CASE 77
+	;Kissing Devil
+		RETURNF "Increases the effect of M type commands and kissing. Favour parameter raises faster."	
+	
+	CASE 80
+	;Perverted
+		RETURNF "Easier to negotiate for raw penetration. Submission and Embarrassment parameters raise faster. Easier to receive a Footjob and do A penetration commands on player."
+	CASE 81
+	;Gender Preference
+		;Bisexual
+		IF ARG:1 == -1
+			RETURNF "Easier to execute commands with both genders. Lesbianism/Lesbianism Addiction/BoyLove/BoyLove Addiction are raised more easily."
+		ELSEIF ARG:1 == 3
+			RETURNF "Will never push you down."
+		;Man Hater
+		ELSEIF ARG:1 == 1
+			RETURNF "ThereÅfs a penalty if player is a male. Penalty disappears after getting Love."
+		;Misogynist
+		ELSEIF ARG:1 == 2
+			RETURNF "ThereÅfs a penalty if player is a female. Penalty disappears after getting Love."	
+		ENDIF
+	CASE 82
+	;Sadist
+		RETURNF "Much more likely to take the lead. More likely to cause Pain and Fear with any action. Easier to execute commands if player has it. Bypasses Obedience checks for many commands.\nSadism ability is easier to raise. Easier to push down if player or target or both have it.\nSupremacy parameter raises faster. Fear and Submission parameters raise slower. Gives Abnormal Experience after raising Pain Mark."		
+	CASE 83
+	;Masochist
+		RETURNF "Much less likely to take the lead. Masochism ability is easier to raise. Fear and Submission parameters raise faster.\nDepression parameter raises slower. More likely to get pushed down if player has it."
+	CASE 84
+		;Jealousy
+		RETURNF "(Not implemented)"	
+	CASE 85
+		;Gullible
+		RETURNF "Easier to execute commands. Submission parameter raises faster. Hostility parameter raises slower."
+	CASE 86
+		;Little Devil
+		RETURNF "Easier to receive a Footjob and do A penetration commands on player if target has it. More likely to push you down."
+
+
+	CASE 90
+	;Kitsune
+		RETURNF "Indicates that this person is a Kitsune (fox)."
+	CASE 91
+	;Youko
+		RETURNF "Indicates that this person is a Youko (fox spirit)."
+	CASE 92
+	;Charming
+		RETURNF "Favorability raises faster."	
+	CASE 93
+	;Captivating
+		RETURNF "Favorability raises faster. Easier to execute commands and parameters raise faster if player has it."	
+	CASE 94
+	;Mysterious Charm
+		RETURNF "Favorability raises faster. Easier to execute commands and more parameters raise faster if player has it."
+		
+	CASE 100
+	;Figure
+		RETURNF "Indicates the body size. Many commands are unavailable if body is too big or small without Forbidden Knowledge. Harder to insert if the body size difference is large.\nInchlings get more Pain, less Desire (for majority of the commands), CVABM Pleasure and Lubrication parameters. ItÅfs possible to use Inchlings as onaholes."
+	CASE 101 TO 104, 106
+	;Sensitivity
+		;Insensitive
+		IF ARG:1 == -1
+			RETURNF "Indicates that this parameter is raised harder unless player has a corresponding ÅhIgnores InsensitivityÅh.\nHarder to raise the corresponding ability."
+		;Sensitive
+		ELSEIF ARG:1 == 1
+			RETURNF "Indicates that this parameter is raised easier. Easier to raise the corresponding ability."
+		ENDIF
+	CASE 105
+	;Breast Size
+		RETURNF "Indicates the breast size. Description changes depending on the breast size. Some breast-related commands are impossible to execute if breast is too small.\nIf itÅfs big, itÅfs easier to raise Breast sex technique, easier to lactate and breast-related commands get a bonus."
+	CASE 120
+	;Thick Semen
+		RETURNF "Effect of the ejaculated semen is much stronger. Increases chances of pregnancy."	
+	CASE 121
+	;Alcohol Tolerance
+		RETURNF "Indicates the resistance to the effect of alcohol and how faster they get drunk.\nThose who have little resistance try to avoid drinking since they may get molested while being unconscious. Their DRUNK meter restores much slower as well."	
+	CASE 122
+	;Loves Taste Of Semen
+		RETURNF "Effect of blowjob and handjob commands increases. Deepthroat is especially effective. M Pleasure raises very fast from having semen in mouth."
+	
+	CASE 130
+	;Recovery Speed
+		RETURNF "Affects recovery speed of STA and ENE from every action that restores them (Resting, Sleeping, Pillow Talk, etc.)"	
+	
+	CASE 132
+	;Vampire
+		RETURNF "Increases amount of restored STA and ENE when resting at Night time. Cannot go outside at Noon.\nAbsolutely hate showers because they fear running water. Gets drunk faster. 5 times harder to make them pregnant if never impregnated a Youkai before."
+	CASE 133
+	;Early Bird
+		RETURNF "Increases amount of restored STA and ENE when resting at Noon time."	
+	CASE 134
+	;Night Person
+		RETURNF "Increases amount of restored STA and ENE when resting at Night time."	
+	CASE 135
+	;Treatment
+		RETURNF "Increases amount of restored STA and ENE if assistant has it. DoesnÅft do anything."	
+	CASE 136
+	;Inspiring
+		RETURNF "Easier to execute commands if assistant has it."
+	CASE 137
+	;Insatiable
+		RETURNF "Increases pleasure from eating, gets hungry faster."
+	CASE 138
+	;Mysterious Origin
+		RETURNF "Can become a hermaphrodite if can be assistant. DoesnÅft do anything."	
+	CASE 141
+	;Insane
+		RETURNF "Lowers the cost when selling, Lowers the reward when working. DoesnÅft do anything."	
+	CASE 142
+	;Slut
+		RETURNF "Pushing down attempt is always successful. Desire parameter raises faster. Hostility parameter raises slower.\nFavorability raises faster, but much slower if thereÅfs too much Intimacy."	
+	CASE 143
+	;Animal Ears
+		RETURNF "Can be ÅhIn HeatÅh. DoesnÅft like water and washing. Prefers Doggy Style.\nFavorability and Reliability raise faster with the corresponding Fortune."
+	CASE 144
+	;Forbidden Knowledge
+		RETURNF "Possible to purchase special items and execute special commands. Ignores or makes body/hole size check easier."	
+	CASE 145
+	;Popular
+		RETURNF "Favorability raises faster."
+	CASE 146
+	;Embodiment
+		RETURNF "Can become a hermaphrodite if can be assistant. DoesnÅft do anything."	
+
+	CASE 149
+	;Lactating
+		RETURNF "Breasts can lactate with milk."	
+	CASE 150
+	;Infant Regression
+		RETURNF "Breast-related commands are highly effective."	
+	CASE 151
+	;Childlike
+		RETURNF "Private room gets dirty faster. Loses Sexual Frustration 4 times faster and canÅft get pregnant without First Menstruation.\nBreast-related commands are highly effective if player has it. Spanking commands are highly effective."	
+	CASE 152
+	;Unmatched
+		RETURNF "Can ejaculate 2 times faster."	
+	CASE 153
+	;Pregnant
+		RETURNF "ThereÅfs a growing child in that big belly of hers. Many restrictions to the commands (depends on settings).\nLikes belly caress. Loses Sexual Frustration 4 times faster."	
+	CASE 154
+	;Childcare
+		RETURNF "Indicates that this character is raising a child. Loses Sexual Frustration 2 times faster."	
+	CASE 155
+	;Maternity
+		RETURNF "A maternal love of a mother who gave birth to the child."	
+	CASE 156
+	;First Menstruation
+		RETURNF "Can become pregnant even if child."	
+	CASE 157
+	;Lust Sense
+		RETURNF "Can figure out who has a large Sexual Desire or Frustration. Special command becomes available."	
+	CASE 158
+	;Panty Smuggler
+		RETURNF "You may avoid losing pilfered panties if others try to confiscate them when you didnÅft add them to the collection yet."	
+	CASE 159
+	;Whereabouts Sense
+		RETURNF "Can sense everyoneÅfs position on a current map. Special command becomes available."	
+	CASE 160
+	;Dirtiness Sense
+		RETURNF "Can sense dirtiness of each room on a current map. Special command becomes available."		
+	CASE 161
+	;Musicality
+		RETURNF "Indicates a deep musical or singing knowledge. Musical commands become more effective."	
+	CASE 162
+	;Sense Of Sound
+		RETURNF "Indicates a musical sensitivity. Gets bonus or penalty to musical activities depending on the state of this talent."
+	CASE 163
+	;Aquatic
+		RETURNF "Recovers STA and ENE under rain, gets exhausted under blazing sun."
+	CASE 164
+	;Ice Spirit
+		RETURNF "Recovers STA and ENE under snow, gets exhausted under blazing sun."
+	CASE 166
+	;Were-hakutaku
+		RETURNF "Indicates that this character is a Were-hakutaku, the one who can transform into Hakutaku, a mythical, spiritual beast,\nGenerally depicted as looking somewhat like a massive lion and can be distinguished by the presence of single or double horns."
+	
+	CASE 169 TO 173
+	;Ignores Insensitivity
+		RETURNF "This character ignores a certain insensitivity of other characters. Penalties to corresponding pleasure are removed."	
+	CASE 174
+	;Cleaning Addiction
+		RETURNF "This character is obsessed with cleaning. Bonus to cleaning activities."	
+	CASE 175
+	;Many Visitors
+		RETURNF "Increases probability of visitors appearing on the map."	
+		
+	CASE 183
+	;Twin Dicks
+		RETURNF "Double the fun! Double Penetration becomes available."
+	CASE 184
+	;Passion
+		RETURNF "Similar to Yearning, but based on Lust. Effects are a bit stronger than Yearning. Can become Love after acquiring enough Intimacy."
+	CASE 185
+	;Fuck Buddy
+		RETURNF "One of the falling conditions based on Lust. Stronger if character has Yearning as well. Can become Love after acquiring enough Intimacy."
+
+	CASE 189
+	;Delusion
+		RETURNF "Not a real person, just an imagination. Everything that will happen between you is just a lie."
+	
+	CASE 190
+	;Fairy
+		RETURNF "Indicates that this person is a Fairy. 2 times harder to make them pregnant if never impregnated a Fairy before."
+	CASE 191
+	;Hourai Person
+		RETURNF "Indicates a person cursed with the Immortality. 100 times harder to make them pregnant without Almighty Impregnation.\nSince theyÅfre very sure that they will never get pregnant, will not ask for contraception. Restores STA and ENE much faster than the others."
+	CASE 192
+	;Non-living
+		RETURNF "Indicates a non-living person who is either non-biotic or simply dead. 100 times harder to make them pregnant without Almighty Impregnation.\nSince theyÅfre very sure that they will never get pregnant, will not ask for contraception. Do not get affected by the Pink Wind."
+	CASE 193
+	;Divine Spirit
+		RETURNF "Indicates a Divine Spirit. 10 times harder to make them pregnant if never impregnated a Divine Spirit before."
+	CASE 194
+	;Human
+		RETURNF "Indicates a Human. 2 times easier to make them pregnant. Bonus towards acquiring Almighty Impregnation if it was a Shrine Maiden."
+	CASE 195
+	;Oni
+		RETURNF "Indicates an Oni. Standard chances for pregnancy. Gets drunk faster. Bonus towards acquiring Almighty Impregnation if it was a Shrine Maiden."
+		
+	CASE 264
+	;Almighty Impregnation
+		RETURNF "Makes it possible to impregnate Hourai Persons or Non-living races. Applies standard chances for their impregnation."
+	
+ENDSELECT

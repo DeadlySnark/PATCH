@@ -1,0 +1,331 @@
+;-------------------------------------------------------------------------------
+;事前の予定に従い、訪問者の家へおでかけさせる
+; return 1 でかけた
+; return 0 でかけなかった
+@GoOut_Ready_900(奴隷)
+	#DIM 奴隷
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;訪問者の家へお出かけするかどうかを判定する
+; return 1 でかける
+; return 0 でかけない
+@GoOut_Able_900(奴隷)
+	#DIM 奴隷
+	#DIM 放置時間
+	#DIM 休暇時間
+	#DIM 子宮内精液量
+
+	IF 0 == IS_NTR_TAKINGOUT_ENABLE()
+		;お持ち帰り禁止時は出て行かない
+		RETURN 0
+	ENDIF
+	IF TALENT:奴隷:妊娠 || TALENT:奴隷:育児中
+		;妊娠中、育児中は出て行かない
+		RETURN 0
+	ENDIF
+	IF TALENT:奴隷:浮気公認 < 4 && !TALENT:奴隷:公衆便所
+		;浮気公認４レベル以上、または公衆便所が必要
+		RETURN 0
+	ENDIF
+	IF FLAG:貞操帯鍵購入フラグ == 奴隷
+		;鍵を持っていたら出て行かない
+		RETURN 0
+	ENDIF
+	IF FLAG:訪問者のムード > 0
+		;訪問者が誰かとうふふ中だったら行かない(相手して貰えないので)
+		RETURN 0
+	ENDIF
+
+	;訪問者と最後にセックスした日時を取得(FIXME:浮気日時が取れないのでそのうち修正)
+	放置時間 = (DATETIME() - CFLAG:奴隷:NTR訪問者と最後にセックスした日時)
+
+	;基本休暇13日（2週間に1度の浮気を強要）
+	休暇時間 = 24*60*13
+
+	;子宮内精液量を取得
+	CALL COM417_GetFillingRateByPublicSperm(奴隷)
+	子宮内精液量 = RESULT:0
+
+	;公衆便所
+	IF TALENT:奴隷:公衆便所
+		IF TALENT:奴隷:親愛
+			;親愛は休暇半分
+			休暇時間 /= 2
+		ENDIF
+		;子宮内精液量が少ないほど休暇が減少、公衆便所の子宮には常に誰かの精液が入っていなければならない
+		休暇時間 = 休暇時間 * MIN(子宮内精液量,100) / 100
+	ENDIF
+
+	;休暇時間を増やす
+	休暇時間 += ( 休暇時間 * TALENT:奴隷:恋慕             / 10 )
+
+	;休暇時間を減らす
+	休暇時間 -= ( ABS(休暇時間) * TALENT:奴隷:淫乱             / 10 )
+	休暇時間 -= ( ABS(休暇時間) * TALENT:奴隷:浮気癖           / 10 )
+	休暇時間 -= ( ABS(休暇時間) * TALENT:奴隷:浮気な蜜壷       / 10 )
+	休暇時間 -= ( ABS(休暇時間) * TALENT:奴隷:浮気な尻穴       / 10 )
+	休暇時間 -= ( ABS(休暇時間) * TALENT:奴隷:浮気な唇         / 10 )
+	休暇時間 -= ( ABS(休暇時間) * SQRT(MARK:奴隷:浮気快楽刻印) / 10 )
+	休暇時間 -= CFLAG:奴隷:性欲
+	
+	DEBUGPRINTFORML %CALLNAME:奴隷+"の休暇時間："+TOSTR(休暇時間)%
+	DEBUGPRINTFORML %CALLNAME:奴隷+"の放置時間："+TOSTR(放置時間)%
+	
+	IF 休暇時間 < 放置時間
+		RETURN 1
+	ENDIF
+
+RETURN 0
+
+
+;-------------------------------------------------------------------------------
+;訪問者の家へお出かけするかどうかを判定する
+;子宮内精液量の判定なし
+; return 1 でかける
+; return 0 でかけない
+@GoOut_Able_Check(奴隷)
+	#DIM 奴隷
+	#DIM 放置時間
+	#DIM 休暇時間
+	#DIM 子宮内精液量
+
+	IF 0 == IS_NTR_TAKINGOUT_ENABLE()
+		;お持ち帰り禁止時は出て行かない
+		RETURN 0
+	ENDIF
+	IF TALENT:奴隷:妊娠 || TALENT:奴隷:育児中
+		;妊娠中、育児中は出て行かない
+		RETURN 0
+	ENDIF
+	IF TALENT:奴隷:浮気公認 < 4 && !TALENT:奴隷:公衆便所
+		;浮気公認４レベル以上、または公衆便所が必要
+		RETURN 0
+	ENDIF
+	IF FLAG:貞操帯鍵購入フラグ == 奴隷
+		;鍵を持っていたら出て行かない
+		RETURN 0
+	ENDIF
+	IF FLAG:訪問者のムード > 0
+		;訪問者が誰かとうふふ中だったら行かない(相手して貰えないので)
+		RETURN 0
+	ENDIF
+
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;「あなた」に挨拶してから、訪問者の家へおでかけさせる
+; return 1 でかけた
+; return 0 でかけなかった
+@GoOut_SeeYou_900(奴隷, 強制外出)
+	#DIM 奴隷
+	#DIM 強制外出
+	
+	IF !強制外出
+		CALL GoOut_Able_900(奴隷)
+		IF !RESULT:0
+			RETURN 0
+		ENDIF
+	ENDIF
+	
+	IF TALENT:奴隷:公衆便所 && TALENT:奴隷:親愛
+		CALL GoOut_SeeYou_900_0(奴隷)
+	ELSEIF TALENT:奴隷:公衆便所
+		CALL GoOut_SeeYou_900_1(奴隷)
+	ELSEIF NTR_CHK_FAVORABLY(奴隷, FAV_寝取られ)
+		CALL GoOut_SeeYou_900_2(奴隷)
+	ELSEIF NTR_CHK_FAVORABLY(奴隷, FAV_寝取られ寸前)
+		CALL GoOut_SeeYou_900_3(奴隷)
+	ELSEIF NTR_CHK_FAVORABLY(奴隷, FAV_寝取られそう)
+		CALL GoOut_SeeYou_900_4(奴隷)
+	ELSEIF NTR_CHK_FAVORABLY(奴隷, FAV_主人より高い)
+		CALL GoOut_SeeYou_900_5(奴隷)
+	ELSE
+		CALL GoOut_SeeYou_900_9(奴隷)
+	ENDIF
+	PRINTL
+	;お持ち帰り時初期化処理
+	CALL INIT_TAKINGOUT(奴隷)
+	;処女公衆便所競売
+	IF TALENT:奴隷:公衆便所 && TALENT:奴隷:処女 
+		CALL NTR_VIRGIN_AUCTION(奴隷)
+	ELSE
+		;口上呼び出しの前に口上の特殊な客情報生成があれば実行
+		TRYCALLLIST
+			FUNC NTR_KOJO_K{CFLAG:奴隷:297}_MAKE_CLIENT(奴隷)
+			FUNC NTR_KOJO_K_MAKE_CLIENT(奴隷)
+		ENDFUNC
+		;口上呼び出し、現在の口上は訪問者宅描写が混じっているので訪問者宅を前提とする
+		IF NTR_CHK_VISIBLE(場所_訪問者宅)
+			TRYCALLLIST
+				FUNC NTR_KOJO_K{CFLAG:奴隷:297}_10_0(奴隷)
+				FUNC NTR_KOJO_K_10_0(奴隷)
+			ENDFUNC
+		ENDIF
+	ENDIF
+RETURN 1
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;訪問者の家へおでかけ：[親愛][公衆便所]
+@GoOut_SeeYou_900_0(奴隷)
+	#DIM 奴隷
+	#DIM 同伴 
+	同伴 = (FLAG:訪問者の現在位置 != 場所_訪問者宅)
+	;親愛つき公衆便所はこっそりいなくなる
+	IF 同伴
+		PRINTFORML %NTR_NAME(0)+"に『仕事』の時間だと告げられた"+CALLNAME:奴隷+"は"+CALLNAME:MASTER+"に見つからないよう"+NTR_NAME(0)+"に連れられて出て行った……。"%
+	ELSE
+		PRINTFORML %NTR_NAME(0)+"から『仕事』だという伝言を受け取った"+CALLNAME:奴隷+"は"+CALLNAME:MASTER+"に見つからないよう"+NTR_NAME(0)+"に指定された場所へと向かった……。"%
+	ENDIF
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;訪問者の家へおでかけ：[公衆便所]
+@GoOut_SeeYou_900_1(奴隷)
+	#DIM 奴隷
+	#DIM 同伴 
+	同伴 = (FLAG:訪問者の現在位置 != 場所_訪問者宅)
+	;公衆便所はお仕事として出かける
+
+	TRYCALLLIST
+		FUNC KOJO_MESSAGE_K{奴隷}_SeeYou_900_1(奴隷,同伴)
+		FUNC KOJO_MESSAGE_KU_SeeYou_900_1(奴隷,同伴)
+	ENDFUNC
+	
+	IF 同伴
+		PRINTDATAL
+			DATAFORM %CALLNAME:奴隷+"は見せつけるように"+NTR_NAME(0)+"に寄り添い肩を抱かれながら出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に寄り添い"+NTR_KARE()+"の腕に抱きつきながら出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に肩を抱かれながら嬉しそうな足取りで出て行った・・。"%
+		ENDDATA
+	ELSE
+		PRINTFORML %CALLNAME:奴隷+"は"+CALLNAME:MASTER+"にそう言って"+NTR_NAME(0)+"の家へと行ってしまった・・。"%
+	ENDIF
+
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;訪問者の家へおでかけ：FAV_寝取られ
+@GoOut_SeeYou_900_2(奴隷)
+	#DIM 奴隷
+	#DIM 同伴 
+	同伴 = (FLAG:訪問者の現在位置 != 場所_訪問者宅)
+	;積極的にお出かけする
+
+	TRYCALLLIST
+		FUNC KOJO_MESSAGE_K{奴隷}_SeeYou_900_2(奴隷,同伴)
+		FUNC KOJO_MESSAGE_KU_SeeYou_900_2(奴隷,同伴)
+	ENDFUNC
+
+	IF 同伴
+		PRINTDATAL
+			DATAFORM %CALLNAME:奴隷+"は見せつけるように"+NTR_NAME(0)+"に寄り添い肩を抱かれながら出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に寄り添い"+NTR_KARE()+"の腕に抱きつきながら出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に肩を抱かれながら嬉しそうな足取りで出て行った・・。"%
+		ENDDATA
+	ELSE
+		PRINTFORML %CALLNAME:奴隷+"は"+CALLNAME:MASTER+"にそう言って"+NTR_NAME(0)+"の家へと行ってしまった・・。"%
+	ENDIF
+	
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;訪問者の家へおでかけ：FAV_寝取られ寸前
+@GoOut_SeeYou_900_3(奴隷)
+	#DIM 奴隷
+	#DIM 同伴 
+	同伴 = (FLAG:訪問者の現在位置 != 場所_訪問者宅)
+	
+	TRYCALLLIST
+		FUNC KOJO_MESSAGE_K{奴隷}_SeeYou_900_3(奴隷,同伴)
+		FUNC KOJO_MESSAGE_KU_SeeYou_900_3(奴隷,同伴)
+	ENDFUNC
+	
+	IF 同伴
+		PRINTDATAL
+			DATAFORM %CALLNAME:奴隷+"は見せつけるように"+NTR_NAME(0)+"に寄り添い肩を抱かれながら出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に寄り添い"+NTR_KARE()+"の腕に抱きつきながら出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に肩を抱かれながら嬉しそうな足取りで出て行った・・。"%
+		ENDDATA
+	ELSE
+		PRINTFORML %CALLNAME:奴隷+"は"+CALLNAME:MASTER+"にそう言って"+NTR_NAME(0)+"の家へと行ってしまった・・。"%
+	ENDIF
+	
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;訪問者の家へおでかけ：FAV_寝取られそう
+@GoOut_SeeYou_900_4(奴隷)
+	#DIM 奴隷
+	#DIM 同伴 
+	同伴 = (FLAG:訪問者の現在位置 != 場所_訪問者宅)
+	
+	TRYCALLLIST
+		FUNC KOJO_MESSAGE_K{奴隷}_SeeYou_900_4(奴隷,同伴)
+		FUNC KOJO_MESSAGE_KU_SeeYou_900_4(奴隷,同伴)
+	ENDFUNC
+
+	IF 同伴
+		PRINTDATAL
+			DATAFORM %CALLNAME:奴隷+"は見せつけるように"+NTR_NAME(0)+"と腕を組んで出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に寄り添い腕を組みながら歩いていった・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"と腕を組んで心なしか嬉しそうな足取りで出て行った・・。"%
+		ENDDATA
+	ELSE
+		PRINTFORML %CALLNAME:奴隷+"は"+CALLNAME:MASTER+"にそう言って"+NTR_NAME(0)+"の家へと行ってしまった・・。"%
+	ENDIF
+
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;訪問者の家へおでかけ：FAV_主人より高い
+@GoOut_SeeYou_900_5(奴隷)
+	#DIM 奴隷
+	#DIM 同伴 
+	同伴 = (FLAG:訪問者の現在位置 != 場所_訪問者宅)
+	
+	TRYCALLLIST
+		FUNC KOJO_MESSAGE_K{奴隷}_SeeYou_900_5(奴隷,同伴)
+		FUNC KOJO_MESSAGE_KU_SeeYou_900_5(奴隷,同伴)
+	ENDFUNC
+	
+	IF 同伴
+		PRINTDATAL
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"と手を繋いで出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に寄り添うように出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に従い心なしか嬉しそうな足取りで出て行った・・。"%
+		ENDDATA
+	ELSE
+		PRINTFORML %CALLNAME:奴隷+"は"+CALLNAME:MASTER+"にそう言って"+NTR_NAME(0)+"の家へと行ってしまった・・。"%
+	ENDIF
+
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;訪問者の家へおでかけ：通常
+@GoOut_SeeYou_900_9(奴隷)
+	#DIM 奴隷
+	#DIM 同伴 
+	同伴 = (FLAG:訪問者の現在位置 != 場所_訪問者宅)
+	IF 同伴
+		PRINTFORML %CALLNAME:奴隷+"は"+NTR_NAME(0)+"の家に泊まってくると言い、"+NTR_NAME(0)+"を誘って出て行った……。"%
+	ELSE
+		PRINTFORML %CALLNAME:奴隷+"は"+NTR_NAME(0)+"の家に泊まってくると言って出て行った……。"%
+	ENDIF
+	TRYCALLLIST
+		FUNC KOJO_MESSAGE_K{奴隷}_SeeYou_900_9(奴隷,同伴)
+		FUNC KOJO_MESSAGE_KU_SeeYou_900_9(奴隷,同伴)
+	ENDFUNC
+
+	IF 同伴
+		PRINTDATAL
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"と一緒に出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に連れられ出て行った・・。"%
+			DATAFORM %CALLNAME:奴隷+"は"+NTR_NAME(0)+"に伴われて出て行った・・。"%
+		ENDDATA
+	ELSE
+		PRINTFORML %CALLNAME:奴隷+"は"+CALLNAME:MASTER+"にそう言って"+NTR_NAME(0)+"の家へと行ってしまった・・。"%
+	ENDIF
+
+RETURN 1

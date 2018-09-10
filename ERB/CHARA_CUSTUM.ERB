@@ -1,0 +1,28 @@
+;--------------
+;キャラカスタム
+;---------------
+@CHARA_CUSTUM
+
+	PRINTL You can change character settings here.
+	FOR LOCAL, 0, CHARANUM
+		PRINTFORML [{LOCAL,2}] - %CALLNAME:LOCAL%
+	NEXT
+	PRINTL [99] Finish
+	INPUT
+
+	IF RESULT >= 0 && RESULT < CHARANUM
+		CALL CUSTOM_TERMINAL(RESULT)
+	ELSEIF RESULT == 99
+		PRINTL Is this alright?
+		PRINTL [0] Yes
+		PRINTBUTTON "[ELSE] No", 1
+		PRINTL
+		ONEINPUT
+		IF RESULT == 0
+			CALL CLOTHES_CUSTOM
+			RETURN
+		ENDIF
+	ENDIF
+	RESTART
+RETURN 0
+	

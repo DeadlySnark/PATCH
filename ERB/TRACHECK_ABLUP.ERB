@@ -1,0 +1,107 @@
+@SOURCE_ABLUP(ARG)
+FONTBOLD
+SETCOLOR COLOR("ORANGE")
+IF ABL:ARG:戦闘能力 < 20
+	IF EXP:ARG:戦闘経験 > EXPLV:(ABL:ARG:戦闘能力 + 3) || (EXP:ARG:戦闘経験 > 5 && ABL:ARG:戦闘能力 == 0)
+		ABL:ARG:戦闘能力 ++
+		PRINTFORMW %YOUR(ARG,1)% Combat Ability has been increased to LV{ABL:ARG:戦闘能力}.
+	ENDIF
+ENDIF
+IF ABL:ARG:話術技能 < 10
+	IF EXP:ARG:会話経験 > EXPLV:(ABL:ARG:話術技能 + 3)
+		ABL:ARG:話術技能 ++
+		PRINTFORMW %YOUR(ARG,1)% Speech Skill has been increased to LV{ABL:ARG:話術技能}.
+	ENDIF
+ENDIF
+
+IF ABL:ARG:清掃技能 < 10 && ARG == 0
+	IF EXP:ARG:清掃経験 > EXPLV:(ABL:ARG:清掃技能 + 3)
+		ABL:ARG:清掃技能 ++
+		PRINTFORMW %YOUR(ARG,1)% Cleaning Skill has been increased to LV{ABL:ARG:清掃技能}.
+	ENDIF
+ENDIF
+IF ABL:ARG:教養 < 10 && ARG == 0
+	IF EXP:ARG:学習経験 > EXPLV:(ABL:ARG:教養 + 3) || (EXP:ARG:学習経験 > 5 && ABL:ARG:教養 == 0)
+		ABL:ARG:教養 ++
+		PRINTFORMW %YOUR(ARG,1)% Education has been increased to LV{ABL:ARG:教養}.
+		SIF ABL:ARG:教養 == 1
+			PRINTFORMW %HE_SHE(ARG,1)% is now able to use an aphrodisiac!
+	ENDIF
+ENDIF
+IF ABL:ARG:料理技能 < 10 && ARG == 0
+	IF EXP:ARG:料理経験 > EXPLV:(ABL:ARG:料理技能 + 3) || (EXP:ARG:料理経験 > 5 && ABL:ARG:料理技能== 0)
+		ABL:ARG:料理技能 ++
+		PRINTFORMW %YOUR(ARG,1)% Cooking Skill has been increased to LV{ABL:ARG:料理技能}.
+	ENDIF
+ENDIF
+IF ABL:ARG:指 < 10
+	LOCAL = EXP:ARG:手淫経験
+	LOCAL:1 = 10 + ABL:ARG:技巧 / 2 + TALENT:ARG:器用な指 * 2 + TALENT:ARG:習得速度
+	IF LOCAL * LOCAL:1 / 10 > EXPLV:(ABL:ARG:指 + 3) / 2 && EXP_UP(24,ARG)
+		ABL:ARG:指 ++
+		PRINTFORMW %YOUR(ARG,1)% fingers became more dexterous.
+	ENDIF
+ENDIF
+IF ABL:ARG:指 >= 5 && TALENT:ARG:器用な指 == 0
+	PRINTFORMW %CALLNAME:ARG% became [Nimble-fingered]!
+	TALENT:ARG:器用な指 = 1
+ENDIF
+IF ABL:ARG:舌 < 10
+	LOCAL = EXP:ARG:口淫経験
+	LOCAL:1 = 10 + ABL:ARG:技巧 / 2 + TALENT:ARG:舌使い * 2 + TALENT:ARG:習得速度
+	IF  LOCAL * LOCAL:1 / 10 > EXPLV:(ABL:ARG:舌 + 3) && EXP_UP(25,ARG)
+		ABL:ARG:舌 ++
+		PRINTFORMW %CALLNAME:ARG% got more skillful with %HIS_HER(ARG)% tongue.
+	ENDIF
+ENDIF
+IF ABL:ARG:舌 >= 5 && TALENT:ARG:舌使い == 0
+	PRINTFORMW %CALLNAME:ARG% obtained [Skilled Tongue]!
+	TALENT:ARG:舌使い = 1
+ENDIF
+IF ABL:ARG:胸 < 6
+	LOCAL = EXP:ARG:パイズリ経験 * 2 +  EXP:ARG:Ｂ経験 / 5
+	LOCAL:1 = 10 + ABL:ARG:技巧 / 2 + TALENT:ARG:バストサイズ + TALENT:ARG:習得速度
+	IF LOCAL * LOCAL:1 / 10 > EXPLV:(ABL:ARG:胸 + 3) && EXP:ARG:パイズリ経験 >  EXPLV:(ABL:ARG:胸 + 1) && EXP_UP(26,ARG)
+		ABL:ARG:胸 ++
+		PRINTFORMW %CALLNAME:ARG% learned how to please with %HIS_HER(ARG)% breasts better.
+	ENDIF
+ENDIF
+IF ABL:ARG:胸 >= 5 && TALENT:ARG:淫乳 == 0
+	PRINTFORMW %CALLNAME:ARG% obtained [Lewd Breasts]!
+	TALENT:ARG:淫乳 = 1
+ENDIF
+IF ABL:ARG:腰 < 10
+	LOCAL = EXP:ARG:Ｖ性交経験 +  EXP:ARG:Ａ性交経験
+	LOCAL:1 = 10 + ABL:ARG:技巧 / 2 + TALENT:ARG:習得速度
+	IF LOCAL * LOCAL:1 / 10 > EXPLV:(ABL:ARG:腰 + 3)
+		ABL:ARG:腰 ++
+		PRINTFORMW %CALLNAME:ARG% learned how to move %HIS_HER(ARG)% waist better.
+	ENDIF
+ENDIF
+IF ABL:ARG:膣 < 6
+	;広げすぎるとガバガバになっちゃいますよ
+	LOCAL = EXP:ARG:Ｖ性交経験  * 2 +  EXP:ARG:Ｖ経験 / 5 + (EXP:ARG:Ｖ拡張経験 <= 10 ? EXP:ARG:Ｖ拡張経験 * 5 # 100 - EXP:ARG:Ｖ拡張経験)
+	LOCAL:1 = 10 + ABL:ARG:技巧 / 2 + TALENT:ARG:習得速度
+	IF LOCAL * LOCAL:1 / 10 > EXPLV:(ABL:ARG:膣 + 3) && EXP:ARG:Ｖ性交経験 >  EXPLV:(ABL:ARG:膣 + 1) && EXP_UP(20,ARG)
+		ABL:ARG:膣 ++
+		PRINTFORMW %YOUR(ARG,1)% vaginal sex technique got better.
+	ENDIF
+ENDIF
+IF ABL:ARG:膣 >= 5 && TALENT:ARG:淫壺 == 0
+	PRINTFORMW %CALLNAME:ARG% obtained [Lewd Vagina]!
+	TALENT:ARG:淫壺 = 1
+ENDIF
+IF ABL:ARG:アナル < 6
+	LOCAL = EXP:ARG:Ａ性交経験  * 2 +  EXP:ARG:Ａ経験 / 5 + (EXP:ARG:Ａ拡張経験 <= 25 ? EXP:ARG:Ａ拡張経験 * 2 # 100 - EXP:ARG:Ａ拡張経験)
+	LOCAL:1 = 10 + ABL:ARG:技巧 / 2 + TALENT:ARG:習得速度
+	IF LOCAL * LOCAL:1 / 10 > EXPLV:(ABL:ARG:アナル + 3) && EXP:ARG:Ａ性交経験 > EXPLV:(ABL:ARG:アナル + 1) && EXP_UP(21,ARG)
+		ABL:ARG:アナル ++
+		PRINTFORMW %YOUR(ARG,1)% anal sex technique got better.
+	ENDIF
+ENDIF
+IF ABL:ARG:アナル >= 5 && TALENT:ARG:尻穴狂い == 0
+	PRINTFORMW %CALLNAME:ARG% [Loves Anal] now!
+	TALENT:ARG:尻穴狂い = 1
+ENDIF
+RESETCOLOR
+FONTREGULAR

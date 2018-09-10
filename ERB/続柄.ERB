@@ -1,0 +1,374 @@
+;--------------------------------------------------------------------
+;続柄を出力
+;続柄.ERHに続柄_のBIT位置と間柄_のマクロ定義
+
+@TUDUKIGARA_OUTPUT_ALL(当人 ,相手)
+#FUNCTIONS
+#DIM 当人
+#DIM 相手
+#DIM 多生児人数
+#DIM 多生児の兄弟判定
+
+;PRINTFORM {間柄_相手父},{間柄_相手母},{CHARANUM}
+
+	LOCAL = TUDUKIGARA_CHECK(当人,相手)
+	LOCALS = 
+
+	SIF LOCAL == 0
+		RETURNF LOCALS
+
+	IF GETBIT(LOCAL,続柄_本人)
+		LOCALS += "[Target]"
+		RETURNF LOCALS
+	ENDIF
+
+	;1親等
+	;親
+	SIF GETBIT(LOCAL,続柄_父)
+		LOCALS += "[Father]"
+	SIF GETBIT(LOCAL,続柄_母)
+		LOCALS += "[Mother]"
+
+	;子
+	IF GETBIT(LOCAL,続柄_子)
+		LOCALS += "[" + \@ GETBIT(TALENT:相手:性別,0) ?Daughter#Son\@ + "]"
+	ENDIF
+
+	;2親等
+	;兄弟姉妹
+	IF GETBIT(LOCAL,続柄_兄姉) || GETBIT(LOCAL,続柄_弟妹)
+		LOCALS += "["
+		多生児人数 = 0
+		IF CFLAG:当人:多生児兄弟フラグ > 0 && CFLAG:当人:多生児兄弟フラグ == CFLAG:相手:多生児兄弟フラグ
+			FOR 多生児の兄弟判定, 0, CHARANUM
+				SIF CHILDREM_CHECK(多生児の兄弟判定) && CFLAG:当人:多生児兄弟フラグ == CFLAG:多生児の兄弟判定:多生児兄弟フラグ
+					多生児人数 ++
+			NEXT
+			;多生児表記は対象だけ
+			SELECTCASE 多生児人数
+				CASE 2
+					LOCALS += "Twin"
+				CASE 3
+					LOCALS += "Triplet"
+				CASE 4
+					LOCALS += "Quadruplet"
+				CASE 5
+					LOCALS += "Quintuplet"
+				CASE 6
+					LOCALS += "Sextuplet"
+				CASE 7
+					LOCALS += "Septuplet"
+				CASE 8
+					LOCALS += "Octuplet"
+			ENDSELECT
+			LOCALS += "s"
+			SIF 間柄_実父 != 間柄_相手父
+				LOCALS += "/Different Father"
+		ELSEIF 間柄_実父 == 間柄_相手父 && (間柄_実父 == 人物_客 || 間柄_実父 == 人物_村人) && 多生児人数 == 0
+			LOCALS += "Different Father?"
+		ELSEIF 間柄_実父 != 間柄_相手父
+			LOCALS += "Different Father"
+		ELSEIF 間柄_実母 != 間柄_相手母
+			LOCALS += "Different Mother"
+		ENDIF
+		SIF GETBIT(LOCAL,続柄_兄姉)
+			LOCALS += \@ GETBIT(TALENT:相手:性別,0) ?Older Sister#Older Brother\@
+		SIF GETBIT(LOCAL,続柄_弟妹)
+			LOCALS += \@ GETBIT(TALENT:相手:性別,0) ?Younger Sister#Younger Brother\@
+		LOCALS += "]"
+	ENDIF
+
+	;祖父母
+	SIF GETBIT(LOCAL,続柄_祖父)
+		LOCALS += "[Grandfather]"
+	SIF GETBIT(LOCAL,続柄_祖母)
+		LOCALS += "[Grandmother]"
+
+	;孫
+	SIF GETBIT(LOCAL,続柄_孫)
+		LOCALS += "[" + \@ GETBIT(TALENT:相手:性別,0) ?Granddaughter#Grandson\@ + "]"
+
+	;3親等
+	;曾祖父母
+	SIF GETBIT(LOCAL,続柄_曽祖父)
+		LOCALS += "[Great-grandfather]"
+	SIF GETBIT(LOCAL,続柄_曽祖母)
+		LOCALS += "[Great-grandmother]"
+
+	;曾孫
+	SIF GETBIT(LOCAL,続柄_曽孫)
+		LOCALS += "[Great-grandchild]"
+
+	;伯叔父母
+	SIF GETBIT(LOCAL,続柄_伯父母)
+		LOCALS += "[Older " + \@ GETBIT(TALENT:相手:性別,0) ?Aunt#Uncle\@ + "]"
+	SIF GETBIT(LOCAL,続柄_叔父母)
+		LOCALS += "[Younger " + \@ GETBIT(TALENT:相手:性別,0) ?Aunt#Uncle\@ + "]"
+
+	;甥姪
+	SIF GETBIT(LOCAL,続柄_甥姪)
+		LOCALS += "[" + \@ GETBIT(TALENT:相手:性別,0) ?Niece#Nephew\@ + "]"
+
+	;4親等
+	;高祖父母
+	SIF GETBIT(LOCAL,続柄_高祖父)
+		LOCALS += "[Great-great-grandfather]"
+	SIF GETBIT(LOCAL,続柄_高祖母)
+		LOCALS += "[Great-great-grandmother]"
+
+	;玄孫
+	SIF GETBIT(LOCAL,続柄_玄孫)
+		LOCALS += "[Great-great-grandchild]"
+
+	;従兄弟姉妹
+	IF GETBIT(LOCAL,続柄_従兄姉) || GETBIT(LOCAL,続柄_従弟妹)
+		LOCALS += "["
+		SIF GETBIT(LOCAL,続柄_従兄姉)
+			LOCALS += \@ GETBIT(TALENT:相手:性別,0) ?Elder Female Cousin#Elder Male Cousin\@
+		SIF GETBIT(LOCAL,続柄_従弟妹)
+			LOCALS += \@ GETBIT(TALENT:相手:性別,0) ?Younger Female Cousin#Younger Male Cousin\@
+		LOCALS += "]"
+	ENDIF
+
+	;5親等
+	;高祖父母の親
+	SIF GETBIT(LOCAL,続柄_高祖父母の父) || GETBIT(LOCAL,続柄_高祖父母の母)
+		LOCALS += "[Ancestor of five generations]"
+
+	;耳孫
+	SIF GETBIT(LOCAL,続柄_来孫)
+		LOCALS += "[Great x3-grandchild]"
+
+	;6親等
+	;高祖父母の祖父母
+	SIF GETBIT(LOCAL,続柄_高祖父母の祖父) || GETBIT(LOCAL,続柄_高祖父母の祖母)
+		LOCALS += "[Ancestor of six generations]"
+
+	;昆孫
+	SIF GETBIT(LOCAL,続柄_昆孫)
+		LOCALS += "[Great x4-grandchild]"
+
+	;7親等
+	;仍孫
+	SIF GETBIT(LOCAL,続柄_仍孫)
+		LOCALS += "[Great x5-grandchild]"
+
+	;8親等
+	;雲孫
+	SIF GETBIT(LOCAL,続柄_雲孫)
+		LOCALS += "[Great x6-grandchild]"
+
+	;祖先
+	IF GETBIT(LOCAL,続柄_祖先)
+		LOCALS += "[Ancestor]"
+	;子孫
+	ELSEIF GETBIT(LOCAL,続柄_子孫)
+		LOCALS += "[Descendant]"
+	ENDIF
+
+RETURNF LOCALS
+
+
+;続柄のBITを立てて返します 
+@TUDUKIGARA_CHECK(当人 ,相手)
+#FUNCTION
+#DIM 当人
+#DIM 相手
+
+LOCAL = 0
+
+	IF 当人 == 相手
+		SETBIT LOCAL,続柄_本人 
+		RETURNF LOCAL
+	ENDIF
+
+	;尊属
+	LOCAL |= SONZOKU_CHECK(当人, 相手)
+
+	;卑属
+	LOCAL |= HIZOKU_CHECK(当人, 相手)
+
+	;傍系
+	LOCAL |= BOUKEI_CHECK(当人, 相手)
+
+	;傍系尊属
+	;伯叔父母
+	IF CHILDREM_CHECK(当人)
+		IF CHILDREM_CHECK(相手)
+			IF CHILDREM_CHECK(間柄_実父)
+				IF 間柄_父方祖父 == 間柄_相手父 || 間柄_父方祖父 == 間柄_相手母 || 間柄_父方祖母 == 間柄_相手父 || 間柄_父方祖母 == 間柄_相手母
+					IF 間柄_実父 > 相手
+						SETBIT LOCAL,続柄_伯父母
+					ELSE
+						SETBIT LOCAL,続柄_叔父母
+					ENDIF
+				ENDIF
+			ENDIF
+			IF CHILDREM_CHECK(間柄_実母)
+				IF 間柄_母方祖父 == 間柄_相手父 || 間柄_母方祖父 == 間柄_相手母 || 間柄_母方祖母 == 間柄_相手父 || 間柄_母方祖母 == 間柄_相手母
+					IF 間柄_実母 > 相手
+						SETBIT LOCAL,続柄_伯父母
+					ELSE
+						SETBIT LOCAL,続柄_叔父母
+					ENDIF
+				ENDIF
+			ENDIF
+		ELSEIF (間柄_実父 == 人物_レミリア || 間柄_実母 == 人物_レミリア) && 相手 == 人物_フラン
+			SETBIT LOCAL,続柄_叔父母
+		ELSEIF (間柄_実父 == 人物_フラン || 間柄_実母 == 人物_フラン) && 相手 == 人物_レミリア
+			SETBIT LOCAL,続柄_伯父母
+		ENDIF
+	ENDIF
+
+	;傍系卑属
+	;甥姪
+	IF CHILDREM_CHECK(相手)
+		IF CHILDREM_CHECK(当人)
+			IF CHILDREM_CHECK(間柄_相手父)
+				IF 間柄_実父 == 間柄_相手父方祖父 || 間柄_実父 == 間柄_相手父方祖母 || 間柄_実母 == 間柄_相手父方祖父 || 間柄_実母 == 間柄_相手父方祖母
+					SETBIT LOCAL,続柄_甥姪
+				ENDIF
+			ENDIF
+			IF CHILDREM_CHECK(間柄_相手母)
+				IF 間柄_実父 == 間柄_相手母方祖父 || 間柄_実父 == 間柄_相手母方祖母 || 間柄_実母 == 間柄_相手母方祖父 || 間柄_実母 == 間柄_相手母方祖母
+					SETBIT LOCAL,続柄_甥姪
+				ENDIF
+			ENDIF
+		ELSEIF 当人 == 人物_レミリア && (間柄_相手父 == 人物_フラン || 間柄_相手母 == 人物_フラン)
+			SETBIT LOCAL,続柄_甥姪
+		ELSEIF 当人 == 人物_フラン && (間柄_相手父 == 人物_レミリア || 間柄_相手母 == 人物_レミリア)
+			SETBIT LOCAL,続柄_甥姪
+		ENDIF
+	ENDIF
+
+RETURNF LOCAL
+
+
+;尊属判定	父方祖父==母方祖母、母方祖父==父方祖母の可能性があるため複数判定
+@SONZOKU_CHECK(判定対象, 相手, 親等判定=0, 親等=1)
+#FUNCTION
+#DIM DYNAMIC 判定対象
+#DIM DYNAMIC 相手
+#DIM DYNAMIC 親等判定
+#DIM DYNAMIC 親等
+LOCAL = 親等判定
+
+	IF CHILDREM_CHECK(判定対象)
+		IF 親等 <= 尊属探索_上限
+
+;PRINTFORML
+;PRINTFORM 尊属_親等{親等},対象{判定対象},父{CFLAG:判定対象:父親},母{CFLAG:判定対象:母親},相手{相手}
+
+			SIF CFLAG:判定対象:父親 == 相手
+				SETBIT LOCAL,(続柄_尊属_父 + 親等)
+			SIF CFLAG:判定対象:母親 == 相手
+				SETBIT LOCAL,(続柄_尊属_母 + 親等)
+
+			LOCAL |= SONZOKU_CHECK(CFLAG:判定対象:父親, 相手, LOCAL, 親等 + 1)
+			LOCAL |= SONZOKU_CHECK(CFLAG:判定対象:母親, 相手, LOCAL, 親等 + 1)
+		ELSEIF LOCAL == 0
+			IF CFLAG:判定対象:父親 == 相手 || CFLAG:判定対象:母親 == 相手
+				SETBIT LOCAL,(続柄_祖先)
+			ELSE
+				LOCAL |= SONZOKU_CHECK(CFLAG:判定対象:父親, 相手, LOCAL, 尊属探索_上限 + 1)
+				LOCAL |= SONZOKU_CHECK(CFLAG:判定対象:母親, 相手, LOCAL, 尊属探索_上限 + 1)
+			ENDIF
+		ENDIF
+	ENDIF
+
+	SIF 親等 == 1 && LOCAL != (1 << 続柄_祖先)
+		CLEARBIT LOCAL, 続柄_祖先
+RETURNF LOCAL
+
+
+;卑属判定
+@HIZOKU_CHECK(当人, 判定対象, 親等判定=0, 親等=1)
+#FUNCTION
+#DIM DYNAMIC 当人
+#DIM DYNAMIC 判定対象
+#DIM DYNAMIC 親等判定
+#DIM DYNAMIC 親等
+LOCAL = 親等判定
+
+	IF CHILDREM_CHECK(判定対象)
+		IF 親等 <= 卑属探索_上限
+
+;PRINTFORML
+;PRINTFORM 卑属_親等{親等},当人{当人},対象{判定対象},父{CFLAG:判定対象:父親},母{CFLAG:判定対象:母親}
+
+			SIF 当人 == CFLAG:判定対象:父親 || 当人 == CFLAG:判定対象:母親
+				SETBIT LOCAL,(続柄_卑属 + 親等)
+
+			LOCAL |= HIZOKU_CHECK(当人, CFLAG:判定対象:父親, LOCAL, 親等 + 1)
+			LOCAL |= HIZOKU_CHECK(当人, CFLAG:判定対象:母親, LOCAL, 親等 + 1)
+		ELSEIF LOCAL == 0
+			IF 当人 == CFLAG:判定対象:父親 || 当人 == CFLAG:判定対象:母親
+				SETBIT LOCAL,(続柄_子孫)
+			ELSE
+				LOCAL |= HIZOKU_CHECK(当人, CFLAG:判定対象:父親, LOCAL, 卑属探索_上限 + 1)
+				LOCAL |= HIZOKU_CHECK(当人, CFLAG:判定対象:母親, LOCAL, 卑属探索_上限 + 1)
+			ENDIF
+		ENDIF
+	ENDIF
+
+	SIF 親等 == 1 && LOCAL != (1 << 続柄_子孫)
+		CLEARBIT LOCAL, 続柄_子孫
+RETURNF LOCAL
+
+
+;傍系
+;傍系探索_上限に2を設定すれば従兄弟も表示されるはず
+@BOUKEI_CHECK(当人, 相手, 親等判定=0, 親等=1, 判定対象1=-1, 判定対象2=-1)
+#FUNCTION
+#DIM 当人
+#DIM 相手
+#DIM DYNAMIC 親等判定
+#DIM DYNAMIC 親等
+#DIM DYNAMIC 判定対象1
+#DIM DYNAMIC 判定対象2
+LOCAL = 親等判定
+IF 判定対象1 == -1 && 判定対象2 == -1
+	判定対象1 = 当人
+	判定対象2 = 相手
+ENDIF
+
+	IF 親等 <= 傍系探索_上限 && 判定対象1 != 判定対象2 && !(GETBIT(LOCAL,(続柄_兄姉 + ((親等 - 1) * 2)))) && !(GETBIT(LOCAL,(続柄_弟妹 + ((親等 - 1) * 2))))
+		IF CHILDREM_CHECK(判定対象1) && CHILDREM_CHECK(判定対象2)
+
+;PRINTFORML
+;PRINTFORML 傍系_親等{(親等 * 2)},当人{当人},相手{相手}
+;PRINTFORM 　対象a{判定対象1},a父{CFLAG:判定対象1:父親},a母{CFLAG:判定対象1:母親},対象b{判定対象2},b父{CFLAG:判定対象2:父親},b母{CFLAG:判定対象2:母親}
+
+			IF CFLAG:判定対象1:父親 == CFLAG:判定対象2:父親 || CFLAG:判定対象1:父親 == CFLAG:判定対象2:母親 || CFLAG:判定対象1:母親 == CFLAG:判定対象2:父親 || CFLAG:判定対象1:母親 == CFLAG:判定対象2:母親
+				IF 当人 > 相手
+					SETBIT LOCAL,(続柄_兄姉 + ((親等 - 1) * 2))
+				ELSE
+					SETBIT LOCAL,(続柄_弟妹 + ((親等 - 1) * 2))
+				ENDIF
+			ENDIF
+			IF 親等 < 傍系探索_上限 && !(GETBIT(LOCAL,(続柄_兄姉 + ((親等 - 1) * 2)))) && !(GETBIT(LOCAL,(続柄_弟妹 + ((親等 - 1) * 2))))
+				LOCAL |= BOUKEI_CHECK(当人, 相手, LOCAL, 親等 + 1, CFLAG:判定対象1:父親, CFLAG:判定対象2:父親)
+				LOCAL |= BOUKEI_CHECK(当人, 相手, LOCAL, 親等 + 1, CFLAG:判定対象1:父親, CFLAG:判定対象2:母親)
+				LOCAL |= BOUKEI_CHECK(当人, 相手, LOCAL, 親等 + 1, CFLAG:判定対象1:母親, CFLAG:判定対象2:父親)
+				LOCAL |= BOUKEI_CHECK(当人, 相手, LOCAL, 親等 + 1, CFLAG:判定対象1:母親, CFLAG:判定対象2:母親)
+			ENDIF
+		ELSE
+			IF 判定対象1 == 人物_レミリア && 判定対象2 == 人物_フラン
+				SETBIT LOCAL,(続柄_弟妹 + ((親等 - 1) * 2))
+			ELSEIF 判定対象1 == 人物_フラン && 判定対象2 == 人物_レミリア
+				SETBIT LOCAL,(続柄_兄姉 + ((親等 - 1) * 2))
+			ENDIF
+		ENDIF
+	ENDIF
+
+RETURNF LOCAL
+
+
+;キャラ番号が子供(娘、息子)かであることを判定
+@CHILDREM_CHECK(ARG)
+#FUNCTION
+	SIF ARG >= CHARANUM
+		RETURNF 0
+	SIF NO:ARG == 148 || NO:ARG == 149
+		RETURNF 1
+RETURNF 0

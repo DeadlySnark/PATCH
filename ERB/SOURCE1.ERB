@@ -1,0 +1,1963 @@
+;-------------------------------------------------------------------------------
+;”ñTARGETˆË‘¶«SOURCE
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_EXP(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	SIF SOURCE:“z—ê:‰õ‚b
+		EXP:“z—ê:‚bŒoŒ± ++
+	IF SOURCE:“z—ê:‰õ‚u && (!TALENT:“z—ê:ˆ— || !TFLAG:2)
+		EXP:“z—ê:‚uŒoŒ± ++
+	ENDIF
+	SIF SOURCE:“z—ê:‰õ‚`
+		EXP:“z—ê:‚`ŒoŒ± ++
+	SIF SOURCE:“z—ê:‰õ‚a
+		EXP:“z—ê:‚aŒoŒ± ++
+	SIF CFLAG:“z—ê:ƒ[ƒ^[‘}“ü && EXP_UP(1,“z—ê) > 0
+		EXP:“z—ê:‚uŒoŒ± --
+	SIF CFLAG:“z—ê:ƒ[ƒ^[A‘}“ü && EXP_UP(2,“z—ê) > 0
+		EXP:“z—ê:‚`ŒoŒ± --
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‰õ‚b(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;‚b•qŠ´‚Æ‚b“ÝŠ´‚Í‚±‚±‚Åˆ—
+	SOURCE:“z—ê:‰õ‚b = SOURCE:“z—ê:‰õ‚b * (2 + TALENT:“z—ê:‚bŠ´“x) / 2
+	;CŠ´Šo
+	SOURCE:“z—ê:‰õ‚b = SOURCE:“z—ê:‰õ‚b * SOURCE_REVISION1(ABL:“z—ê:‚bŠ´Šo) / 10
+	LOCAL = SOURCE:“z—ê:‰õ‚b
+	;PALAM:—~î‚ð‚Ý‚é
+	IF PALAM:“z—ê:—~î < PALAMLV:1
+		TIMES LOCAL , 0.80
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:2
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:3
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:4
+		TIMES LOCAL , 1.40
+	ELSEIF PALAM:“z—ê:—~î >= PALAMLV:4
+		TIMES LOCAL , 1.60
+	ENDIF
+	CUP:“z—ê:‰õ‚b += LOCAL
+	LOCAL = SOURCE:“z—ê:‰õ‚b
+	;ABL:—~–]‚ð‚Ý‚é
+	LOCAL = LOCAL * SOURCE_REVISION2(ABL:“z—ê:—~–]) / 100
+	CUP:“z—ê:—~î += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‰õ‚u(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;‚u•qŠ´‚Æ‚u“ÝŠ´‚Í‚±‚±‚Åˆ—
+	SOURCE:“z—ê:‰õ‚u = SOURCE:“z—ê:‰õ‚u * (2 + TALENT:“z—ê:‚uŠ´“x) / 2
+	;VŠ´Šo
+	SOURCE:“z—ê:‰õ‚u = SOURCE:“z—ê:‰õ‚u * SOURCE_REVISION1(ABL:“z—ê:‚uŠ´Šo) / 10
+	;EXP:‚uŒoŒ±‚ð‚Ý‚é
+	IF EXP:“z—ê:‚uŒoŒ± < EXPLV:1
+		TIMES SOURCE:“z—ê:‰õ‚u , 0.30
+	ELSEIF EXP:“z—ê:‚uŒoŒ± < EXPLV:2
+		TIMES SOURCE:“z—ê:‰õ‚u , 0.50
+	ELSEIF EXP:“z—ê:‚uŒoŒ± < EXPLV:3
+		TIMES SOURCE:“z—ê:‰õ‚u , 0.80
+	ELSEIF EXP:“z—ê:‚uŒoŒ± < EXPLV:4
+		TIMES SOURCE:“z—ê:‰õ‚u , 1.00
+	ELSEIF EXP:“z—ê:‚uŒoŒ± < EXPLV:5
+		TIMES SOURCE:“z—ê:‰õ‚u , 1.20
+	ELSEIF EXP:“z—ê:‚uŒoŒ± >= EXPLV:5
+		TIMES SOURCE:“z—ê:‰õ‚u , 1.50
+	ENDIF
+	;PALAM:ŠŠ‚ð‚Ý‚é
+	IF PALAM:“z—ê:ŠŠ < PALAMLV:1
+		TIMES SOURCE:“z—ê:‰õ‚u , 0.10
+	ELSEIF PALAM:“z—ê:ŠŠ < PALAMLV:2
+		TIMES SOURCE:“z—ê:‰õ‚u , 0.40
+	ELSEIF PALAM:“z—ê:ŠŠ < PALAMLV:3
+		TIMES SOURCE:“z—ê:‰õ‚u , 0.60
+	ELSEIF PALAM:“z—ê:ŠŠ < PALAMLV:4
+		TIMES SOURCE:“z—ê:‰õ‚u , 0.80
+	ELSEIF PALAM:“z—ê:ŠŠ >= PALAMLV:4
+		TIMES SOURCE:“z—ê:‰õ‚u , 1.00
+	ENDIF
+	LOCAL = SOURCE:“z—ê:‰õ‚u
+	LOCAL:1 = SOURCE:“z—ê:‰õ‚u
+	;PALAM:—~î‚ð‚Ý‚é
+	IF PALAM:“z—ê:—~î < PALAMLV:1
+		TIMES LOCAL , 0.60
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:2
+		TIMES LOCAL , 0.80
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:3
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:4
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:“z—ê:—~î >= PALAMLV:4
+		TIMES LOCAL , 1.50
+	ENDIF
+	;’÷‚è‹ï‡
+	IF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚uŠÉ‚³) == "‚«‚ã‚Á‚«‚ã‚Á"
+		TIMES LOCAL, 0.85
+	ELSEIF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚uŠÉ‚³) == "‚«‚ã‚¤‚«‚ã‚¤"
+		TIMES LOCAL, 0.70
+	ELSEIF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚uŠÉ‚³) == "Normal"
+		TIMES LOCAL, 0.63
+	ELSEIF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚uŠÉ‚³) == "‚ª‚Î‚ª‚Î"
+		TIMES LOCAL, 0.55
+	ELSEIF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚uŠÉ‚³) == "‚Û‚Á‚©‚è"
+		TIMES LOCAL, 0.40
+	ENDIF
+	;ABL:—~–]‚ð‚Ý‚é
+	LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:“z—ê:—~–]) / 100
+	;¬l‘ÌŒ^
+	IF TALENT:“z—ê:‘ÌŒ^ < -2
+		TIMES LOCAL , 0.80
+		TIMES LOCAL:1 , 1.20
+	ENDIF
+	CUP:“z—ê:‰õ‚u += LOCAL
+	CUP:“z—ê:—~î += LOCAL:1
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‰õ‚`(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;‚`•qŠ´‚Æ‚`“ÝŠ´‚Í‚±‚±‚Åˆ—
+	SOURCE:“z—ê:‰õ‚` = SOURCE:“z—ê:‰õ‚` * (2 + TALENT:“z—ê:‚`Š´“x) / 2
+	;AŠ´Šo
+	SOURCE:“z—ê:‰õ‚` = SOURCE:“z—ê:‰õ‚` * SOURCE_REVISION1(ABL:“z—ê:‚`Š´Šo) / 10
+	;EXP:‚`ŒoŒ±‚ð‚Ý‚é
+	IF EXP:“z—ê:‚`ŒoŒ± < EXPLV:1
+		TIMES SOURCE:“z—ê:‰õ‚` , 0.30
+	ELSEIF EXP:“z—ê:‚`ŒoŒ± < EXPLV:2
+		TIMES SOURCE:“z—ê:‰õ‚` , 0.50
+	ELSEIF EXP:“z—ê:‚`ŒoŒ± < EXPLV:3
+		TIMES SOURCE:“z—ê:‰õ‚` , 0.80
+	ELSEIF EXP:“z—ê:‚`ŒoŒ± < EXPLV:4
+		TIMES SOURCE:“z—ê:‰õ‚` , 1.00
+	ELSEIF EXP:“z—ê:‚`ŒoŒ± < EXPLV:5
+		TIMES SOURCE:“z—ê:‰õ‚` , 1.20
+	ELSEIF EXP:“z—ê:‚`ŒoŒ± >= EXPLV:5
+		TIMES SOURCE:“z—ê:‰õ‚` , 1.50
+	ENDIF
+	;PALAM:ŠŠ‚ð‚Ý‚é
+	IF PALAM:“z—ê:ŠŠ < PALAMLV:1
+		TIMES SOURCE:“z—ê:‰õ‚` , 0.40
+	ELSEIF PALAM:“z—ê:ŠŠ < PALAMLV:2
+		TIMES SOURCE:“z—ê:‰õ‚` , 0.60
+	ELSEIF PALAM:“z—ê:ŠŠ < PALAMLV:3
+		TIMES SOURCE:“z—ê:‰õ‚` , 0.80
+	ELSEIF PALAM:“z—ê:ŠŠ < PALAMLV:4
+		TIMES SOURCE:“z—ê:‰õ‚` , 0.90
+	ELSEIF PALAM:“z—ê:ŠŠ >= PALAMLV:4
+		TIMES SOURCE:“z—ê:‰õ‚` , 1.00
+	ENDIF
+	LOCAL = SOURCE:“z—ê:‰õ‚`
+	LOCAL:1 = SOURCE:“z—ê:‰õ‚`
+	;PALAM:—~î‚ð‚Ý‚é
+	;‰õ‚`‚Í‚ ‚Ü‚èPALAM:—~î‚Å‚Í·‚ªo‚È‚¢
+	IF PALAM:“z—ê:—~î < PALAMLV:1
+		TIMES LOCAL , 0.90
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:2
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:3
+		TIMES LOCAL , 1.10
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:4
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:“z—ê:—~î >= PALAMLV:4
+		TIMES LOCAL , 1.30
+	ENDIF
+	;’÷‚è‹ï‡
+	IF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚`ŠÉ‚³) == "‚«‚ã‚Á‚«‚ã‚Á"
+		TIMES LOCAL, 0.85
+	ELSEIF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚`ŠÉ‚³) == "‚«‚ã‚¤‚«‚ã‚¤"
+		TIMES LOCAL, 0.70
+	ELSEIF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚`ŠÉ‚³) == "Normal"
+		TIMES LOCAL, 0.63
+	ELSEIF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚`ŠÉ‚³) == "‚ª‚Î‚ª‚Î"
+		TIMES LOCAL, 0.55
+	ELSEIF ’÷‚è‹ï‡–¼Ì(BASE:“z—ê:‚`ŠÉ‚³) == "‚Û‚Á‚©‚è"
+		TIMES LOCAL, 0.40
+	ENDIF
+	;ABL:—~–]‚ð‚Ý‚é
+	LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:“z—ê:—~–]) / 100
+	;¬l‘ÌŒ^
+	IF TALENT:“z—ê:‘ÌŒ^ < -2
+		TIMES LOCAL , 0.50
+		TIMES LOCAL:1 , 1.50
+	ENDIF
+	;‰õA‚Ìƒ\[ƒX‚ª0ˆÈã‚Åˆ—‚Å’å‘€ŠÏ”O‚Ì‚Æ‚«A‹ü•ž‚Ìƒ\[ƒX‚ðŽO•ª‚Ìˆê‚É‚·‚é
+	IF EXP:“z—ê:‚uŒoŒ± == 0 && TALENT:“z—ê:’å‘€ > 0 && SOURCE:“z—ê:‰õ‚` > 0
+		SOURCE:“z—ê:‹ü] /= 3
+	ENDIF
+	CUP:“z—ê:‰õ‚` += LOCAL
+	CUP:“z—ê:—~î += LOCAL:1
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‰õ‚a(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;‚a•qŠ´‚Æ‚a“ÝŠ´‚Í‚±‚±‚Åˆ—
+	SOURCE:“z—ê:‰õ‚a = SOURCE:“z—ê:‰õ‚a * (2 + TALENT:“z—ê:‚aŠ´“x) / 2
+	;BŠ´Šo
+	SOURCE:“z—ê:‰õ‚a = SOURCE:“z—ê:‰õ‚a * SOURCE_REVISION1(ABL:“z—ê:‚aŠ´Šo) / 10
+	LOCAL = SOURCE:“z—ê:‰õ‚a
+	;PALAM:—~î‚ð‚Ý‚é
+	IF PALAM:“z—ê:—~î < PALAMLV:1
+		TIMES LOCAL , 0.80
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:2
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:3
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:“z—ê:—~î < PALAMLV:4
+		TIMES LOCAL , 1.40
+	ELSEIF PALAM:“z—ê:—~î >= PALAMLV:4
+		TIMES LOCAL , 1.60
+	ENDIF
+	CUP:“z—ê:‰õ‚a += LOCAL
+	LOCAL = SOURCE:“z—ê:‰õ‚a
+	;ABL:—~–]‚ð‚Ý‚é
+	LOCAL = LOCAL * SOURCE_REVISION2(ABL:“z—ê:—~–]) / 100
+	CUP:“z—ê:—~î += LOCAL
+
+;-----------------------------------------------------
+;—^‰õCVAB
+;-----------------------------------------------------
+@SOURCE_—^‰õ‚b(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;‚b•qŠ´‚Æ‚b“ÝŠ´‚Í‚±‚±‚Åˆ—
+	SOURCE:“z—ê:—^‰õ‚b = SOURCE:“z—ê:—^‰õ‚b * (2 + TALENT:Žål:‚bŠ´“x) / 2
+	;CŠ´Šo
+	SOURCE:“z—ê:—^‰õ‚b = SOURCE:“z—ê:—^‰õ‚b * SOURCE_REVISION1(ABL:Žål:‚bŠ´Šo) / 10
+	LOCAL = SOURCE:“z—ê:—^‰õ‚b
+	;PALAM:—~î‚ð‚Ý‚é
+	IF PALAM:Žål:—~î < PALAMLV:1
+		TIMES LOCAL , 0.80
+	ELSEIF PALAM:Žål:—~î < PALAMLV:2
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:Žål:—~î < PALAMLV:3
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:Žål:—~î < PALAMLV:4
+		TIMES LOCAL , 1.40
+	ELSEIF PALAM:Žål:—~î >= PALAMLV:4
+		TIMES LOCAL , 1.60
+	ENDIF
+	CUP:Žål:‰õ‚b += LOCAL
+	LOCAL = SOURCE:“z—ê:—^‰õ‚b
+	;ABL:—~–]‚ð‚Ý‚é
+	LOCAL = LOCAL * SOURCE_REVISION2(ABL:Žål:—~–]) / 100
+	CUP:Žål:—~î += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_—^‰õ‚u(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;‚u•qŠ´‚Æ‚u“ÝŠ´‚Í‚±‚±‚Åˆ—
+	SOURCE:“z—ê:—^‰õ‚u = SOURCE:“z—ê:—^‰õ‚u * (2 + TALENT:Žål:‚uŠ´“x) / 2
+	;VŠ´Šo
+	SOURCE:“z—ê:—^‰õ‚u = SOURCE:“z—ê:—^‰õ‚u * SOURCE_REVISION1(ABL:Žål:‚uŠ´Šo) / 10
+	;EXP:‚uŒoŒ±‚ð‚Ý‚é
+	IF EXP:Žål:‚uŒoŒ± < EXPLV:1
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 0.30
+	ELSEIF EXP:Žål:‚uŒoŒ± < EXPLV:2
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 0.50
+	ELSEIF EXP:Žål:‚uŒoŒ± < EXPLV:3
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 0.80
+	ELSEIF EXP:Žål:‚uŒoŒ± < EXPLV:4
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 1.00
+	ELSEIF EXP:Žål:‚uŒoŒ± < EXPLV:5
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 1.20
+	ELSEIF EXP:Žål:‚uŒoŒ± >= EXPLV:5
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 1.50
+	ENDIF
+	;PALAM:ŠŠ‚ð‚Ý‚é
+	IF PALAM:Žål:ŠŠ < PALAMLV:1
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 0.10
+	ELSEIF PALAM:Žål:ŠŠ < PALAMLV:2
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 0.40
+	ELSEIF PALAM:Žål:ŠŠ < PALAMLV:3
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 0.60
+	ELSEIF PALAM:Žål:ŠŠ < PALAMLV:4
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 0.80
+	ELSEIF PALAM:Žål:ŠŠ >= PALAMLV:4
+		TIMES SOURCE:“z—ê:—^‰õ‚u , 1.00
+	ENDIF
+	LOCAL = SOURCE:“z—ê:—^‰õ‚u
+	LOCAL:1 = SOURCE:“z—ê:—^‰õ‚u
+	;PALAM:—~î‚ð‚Ý‚é
+	IF PALAM:Žål:—~î < PALAMLV:1
+		TIMES LOCAL , 0.60
+	ELSEIF PALAM:Žål:—~î < PALAMLV:2
+		TIMES LOCAL , 0.80
+	ELSEIF PALAM:Žål:—~î < PALAMLV:3
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:Žål:—~î < PALAMLV:4
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:Žål:—~î >= PALAMLV:4
+		TIMES LOCAL , 1.50
+	ENDIF
+	;ABL:—~–]‚ð‚Ý‚é
+	LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:Žål:—~–]) / 100
+	;¬l‘ÌŒ^
+	IF TALENT:Žål:‘ÌŒ^ < -2
+		TIMES LOCAL , 0.80
+		TIMES LOCAL:1 , 1.20
+	ENDIF
+	CUP:Žål:‰õ‚u += LOCAL
+	CUP:Žål:—~î += LOCAL:1
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_—^‰õ‚`(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;‚`•qŠ´‚Æ‚`“ÝŠ´‚Í‚±‚±‚Åˆ—
+	SOURCE:“z—ê:—^‰õ‚` = SOURCE:“z—ê:—^‰õ‚` * (2 + TALENT:Žål:‚`Š´“x) / 2
+	;AŠ´Šo
+	SOURCE:“z—ê:—^‰õ‚` = SOURCE:“z—ê:—^‰õ‚` * SOURCE_REVISION1(ABL:Žål:‚`Š´Šo) / 10
+	;EXP:‚`ŒoŒ±‚ð‚Ý‚é
+	IF EXP:Žål:‚`ŒoŒ± < EXPLV:1
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 0.30
+	ELSEIF EXP:Žål:‚`ŒoŒ± < EXPLV:2
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 0.50
+	ELSEIF EXP:Žål:‚`ŒoŒ± < EXPLV:3
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 0.80
+	ELSEIF EXP:Žål:‚`ŒoŒ± < EXPLV:4
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 1.00
+	ELSEIF EXP:Žål:‚`ŒoŒ± < EXPLV:5
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 1.20
+	ELSEIF EXP:Žål:‚`ŒoŒ± >= EXPLV:5
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 1.50
+	ENDIF
+	;PALAM:ŠŠ‚ð‚Ý‚é
+	IF PALAM:Žål:ŠŠ < PALAMLV:1
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 0.40
+	ELSEIF PALAM:Žål:ŠŠ < PALAMLV:2
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 0.60
+	ELSEIF PALAM:Žål:ŠŠ < PALAMLV:3
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 0.80
+	ELSEIF PALAM:Žål:ŠŠ < PALAMLV:4
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 0.90
+	ELSEIF PALAM:Žål:ŠŠ >= PALAMLV:4
+		TIMES SOURCE:“z—ê:—^‰õ‚` , 1.00
+	ENDIF
+	LOCAL = SOURCE:“z—ê:—^‰õ‚`
+	LOCAL:1 = SOURCE:“z—ê:—^‰õ‚`
+	;PALAM:—~î‚ð‚Ý‚é
+	;‰õ‚`‚Í‚ ‚Ü‚èPALAM:—~î‚Å‚Í·‚ªo‚È‚¢
+	IF PALAM:Žål:—~î < PALAMLV:1
+		TIMES LOCAL , 0.90
+	ELSEIF PALAM:Žål:—~î < PALAMLV:2
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:Žål:—~î < PALAMLV:3
+		TIMES LOCAL , 1.10
+	ELSEIF PALAM:Žål:—~î < PALAMLV:4
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:Žål:—~î >= PALAMLV:4
+		TIMES LOCAL , 1.30
+	ENDIF
+	;ABL:—~–]‚ð‚Ý‚é
+	LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:Žål:—~–]) / 100
+	;¬l‘ÌŒ^
+	IF TALENT:Žål:‘ÌŒ^ < -2
+		TIMES LOCAL , 0.50
+		TIMES LOCAL:1 , 1.50
+	ENDIF
+	CUP:Žål:‰õ‚` += LOCAL
+	CUP:Žål:—~î += LOCAL:1
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_—^‰õ‚a(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;‚a•qŠ´‚Æ‚a“ÝŠ´‚Í‚±‚±‚Åˆ—
+	SOURCE:“z—ê:—^‰õ‚a = SOURCE:“z—ê:—^‰õ‚a * (2 + TALENT:Žål:‚aŠ´“x) / 2
+	;BŠ´Šo
+	SOURCE:“z—ê:—^‰õ‚a = SOURCE:“z—ê:—^‰õ‚a * SOURCE_REVISION1(ABL:Žål:‚aŠ´Šo) / 10
+	LOCAL = SOURCE:“z—ê:—^‰õ‚a
+	;PALAM:—~î‚ð‚Ý‚é
+	IF PALAM:Žål:—~î < PALAMLV:1
+		TIMES LOCAL , 0.80
+	ELSEIF PALAM:Žål:—~î < PALAMLV:2
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:Žål:—~î < PALAMLV:3
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:Žål:—~î < PALAMLV:4
+		TIMES LOCAL , 1.40
+	ELSEIF PALAM:Žål:—~î >= PALAMLV:4
+		TIMES LOCAL , 1.60
+	ENDIF
+	CUP:Žål:‰õ‚a += LOCAL
+	LOCAL = SOURCE:“z—ê:—^‰õ‚a
+	;ABL:—~–]‚ð‚Ý‚é
+	LOCAL = LOCAL * SOURCE_REVISION2(ABL:Žål:—~–]) / 100
+	CUP:Žål:—~î += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_CVAB_EXTRA(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;-------------------------------------------------
+	;‹C—Í‚O‚É‚æ‚éã‰º‚Ìˆ—i‰õŠyŒnj
+	;-------------------------------------------------
+	IF BASE:“z—ê:‹C—Í <= 0
+		;UP:0,1,2,3‚Íâ’¸‚É—‚Þ‚Ì‚Åæ‚Éˆ—‚µ‚Ä‚ ‚é
+		CUP:“z—ê:‰õ‚b /= 2
+		CUP:“z—ê:‰õ‚u /= 2
+		CUP:“z—ê:‰õ‚` /= 2
+		CUP:“z—ê:‰õ‚a /= 2
+	ENDIF
+	;-------------------------------------------------
+	;‘Š«‚É‚æ‚éã‰º‚Ìˆ—i‰õŠyŒnj
+	;-------------------------------------------------
+	IF Žål < CHARANUM && RELATION:“z—ê:(NO:Žål) != 0
+		CUP:“z—ê:‰õ‚b *= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:‰õ‚b /= 100
+		CUP:“z—ê:‰õ‚u *= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:‰õ‚u /= 100
+		CUP:“z—ê:‰õ‚` *= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:‰õ‚` /= 100
+		CUP:“z—ê:‰õ‚a *= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:‰õ‚a /= 100
+	ENDIF
+	;-------------------------------------------------
+	;‰õŠ´‚Ì”Û’è‚ÍA‰õƒ\[ƒX‚Ì”’l‚É‰ž‚¶‚ÄA—}ŸT‘‰Áiˆú—‚Å–³Œøj
+	;-------------------------------------------------
+	SIF TALENT:“z—ê:‰õŠ´‰ž“š < 0 && !TALENT:“z—ê:ˆú—
+		SOURCE:“z—ê:ŸT‹ü += (CUP:“z—ê:‰õ‚b + CUP:“z—ê:‰õ‚u + CUP:“z—ê:‰õ‚` + CUP:“z—ê:‰õ‚a)/10
+	;-------------------------------------------------
+	;‘fŽ¿‚È‚Ç‚É‚æ‚éã‰º‚Ìˆ—i‰õŠyŒnj
+	;-------------------------------------------------
+	;›Z–ò
+	IF TEQUIP:“z—ê:›Z–ò
+		TIMES CUP:“z—ê:‰õ‚b , 2.00
+		TIMES CUP:“z—ê:‰õ‚u , 2.00
+		TIMES CUP:“z—ê:‰õ‚` , 2.00
+		TIMES CUP:“z—ê:‰õ‚a , 2.00
+	ENDIF
+	;—˜”AÜ
+	IF TEQUIP:“z—ê:—˜”AÜ
+		TIMES CUP:“z—ê:‰õ‚b , 0.70
+		TIMES CUP:“z—ê:‰õ‚u , 0.70
+		TIMES CUP:“z—ê:‰õ‚` , 0.70
+		TIMES CUP:“z—ê:‰õ‚a , 0.70
+	ENDIF
+	;-------------------------------------------------
+	;Š×—Ž‘fŽ¿
+	;-------------------------------------------------
+	;ˆú—
+	IF TALENT:“z—ê:ˆú—
+		TIMES CUP:“z—ê:‰õ‚b , 1.20
+		TIMES CUP:“z—ê:‰õ‚u , 1.20
+		TIMES CUP:“z—ê:‰õ‚` , 1.20
+		TIMES CUP:“z—ê:‰õ‚a , 1.20
+	ENDIF
+	;-------------------------------------------------
+	;‘fŽ¿
+	;-------------------------------------------------
+	;Ž©§S
+	IF TALENT:“z—ê:Ž©§S
+		TIMES CUP:“z—ê:‰õ‚b , 0.70
+		TIMES CUP:“z—ê:‰õ‚u , 0.90
+		TIMES CUP:“z—ê:‰õ‚` , 1.00
+		TIMES CUP:“z—ê:‰õ‚a , 0.70
+	ENDIF
+	;‘¦—Ž‚¿
+	IF TALENT:“z—ê:‘¦—Ž‚¿
+		TIMES CUP:“z—ê:‰õ‚b , 2.00
+		TIMES CUP:“z—ê:‰õ‚u , 2.00
+		TIMES CUP:“z—ê:‰õ‚` , 2.00
+		TIMES CUP:“z—ê:‰õ‚a , 2.00
+	ENDIF
+	;Ž©ˆÔ‹¶‚¢
+	SIF TALENT:“z—ê:Ž©ˆÔ‹¶‚¢
+		TIMES CUP:“z—ê:‰õ‚b , 1.20
+	;ˆúšâ
+	SIF TALENT:“z—ê:ˆúšâ
+		TIMES CUP:“z—ê:‰õ‚u , 1.20
+	;KŒŠ‹¶‚¢
+	SIF TALENT:“z—ê:KŒŠ‹¶‚¢
+		TIMES CUP:“z—ê:‰õ‚` , 1.20
+	;ˆú“û
+	SIF TALENT:“z—ê:ˆú“û
+		TIMES CUP:“z—ê:‰õ‚a , 1.20
+	;ƒIƒgƒR
+	IF !(HAS_VAGINA(“z—ê))
+		TIMES CUP:“z—ê:‰õ‚` , 1.30
+	ENDIF
+	;-------------------------------------------------
+	;“ïˆÕ“x‚É‚æ‚éã‰º‚Ìˆ—i‰õŠyŒnj
+	;-------------------------------------------------
+	CUP:“z—ê:‰õ‚b = CUP:“z—ê:‰õ‚b * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:‰õ‚u = CUP:“z—ê:‰õ‚u * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:‰õ‚` = CUP:“z—ê:‰õ‚` * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:‰õ‚a = CUP:“z—ê:‰õ‚a * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	;-------------------------------------------------
+	;ˆ¤‰tˆ—
+	;-------------------------------------------------
+	LOCAL:1 = CUP:“z—ê:‰õ‚b + CUP:“z—ê:‰õ‚u + CUP:“z—ê:‰õ‚` + CUP:“z—ê:‰õ‚a
+	;‰õ‚b{‰õ‚u{‰õ‚`{‰õ‚a‚ª‡‚í‚¹‚Ä100ˆÈãã¸‚È‚ç‚»‚Ì20%‚Ì‰t‘Ì‚Ìƒ\[ƒX‚ª‰Á‚í‚é
+	IF LOCAL:1 > 100
+		;”G‚ê‚â‚·‚¢‚Æ”G‚ê‚É‚­‚¢‚Í‚±‚±‚Åˆ—
+		LOCAL:1 = LOCAL:1 * (10 + 5 * TALENT:“z—ê:”G‚ê‚â‚·‚³) / 10
+		SOURCE:“z—ê:‰t‘Ì += LOCAL:1 / 5
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_îˆ¤(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:îˆ¤
+	;ABL:]‡‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:]‡
+		CASE 0
+			TIMES LOCAL , 0.10
+		CASE 1
+			TIMES LOCAL , 0.50
+		CASE 2
+			TIMES LOCAL , 1.00
+		CASE 3
+			TIMES LOCAL , 1.50
+		CASE 4
+			TIMES LOCAL , 2.00
+		CASE 5
+			TIMES LOCAL , 2.50
+		CASE 6
+			TIMES LOCAL , 3.00
+		CASE 7
+			TIMES LOCAL , 3.50
+		CASE 8
+			TIMES LOCAL , 4.00
+		CASE 9
+			TIMES LOCAL , 5.00
+		CASEELSE
+			TIMES LOCAL , 6.00
+	ENDSELECT
+	CUP:“z—ê:‹±‡ += LOCAL
+	LOCAL = SOURCE:“z—ê:îˆ¤
+	;—~–]‚ðŒ©‚é
+	SELECTCASE ABL:“z—ê:—~–]
+		CASE 0
+			TIMES LOCAL , 0.00
+		CASE 1
+			TIMES LOCAL , 0.40
+		CASE 2
+			TIMES LOCAL , 0.80
+		CASE 3
+			TIMES LOCAL , 1.20
+		CASE 4
+			TIMES LOCAL , 1.60
+		CASE 5
+			TIMES LOCAL , 2.00
+		CASE 6
+			TIMES LOCAL , 2.40
+		CASE 7
+			TIMES LOCAL , 2.80
+		CASE 8
+			TIMES LOCAL , 3.20
+		CASE 9
+			TIMES LOCAL , 3.60
+		CASEELSE
+			TIMES LOCAL , 5.00
+	ENDSELECT
+	CUP:“z—ê:—~î += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_«s“®(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:«s“®
+	;ABL:‹ZI‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:‹ZI
+		CASE 0
+			TIMES LOCAL , 0.60
+		CASE 1
+			TIMES LOCAL , 1.20
+		CASE 2
+			TIMES LOCAL , 1.80
+		CASE 3
+			TIMES LOCAL , 2.40
+		CASE 4
+			TIMES LOCAL , 3.00
+		CASE 5
+			TIMES LOCAL , 3.60
+		CASE 6
+			TIMES LOCAL , 4.20
+		CASE 7
+			TIMES LOCAL , 4.80
+		CASE 8
+			TIMES LOCAL , 5.40
+		CASE 9
+			TIMES LOCAL , 6.00
+		CASEELSE
+			TIMES LOCAL , 7.00
+	ENDSELECT
+	;ABL:•òŽd¸_‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:•òŽd¸_
+		CASE 0
+			TIMES LOCAL , 0.60
+		CASE 1
+			TIMES LOCAL , 0.80
+		CASE 2
+			TIMES LOCAL , 1.00
+		CASE 3
+			TIMES LOCAL , 1.20
+		CASE 4
+			TIMES LOCAL , 1.40
+		CASE 5
+			TIMES LOCAL , 1.70
+		CASE 6
+			TIMES LOCAL , 2.00
+		CASE 7
+			TIMES LOCAL , 2.40
+		CASE 8
+			TIMES LOCAL , 2.80
+		CASE 9
+			TIMES LOCAL , 4.00
+		CASEELSE
+			TIMES LOCAL , 5.00
+	ENDSELECT
+	CUP:“z—ê:K“¾ += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_’B¬(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:’B¬
+	;ABL:]‡‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:]‡
+		CASE 0
+			TIMES LOCAL , 0.50
+		CASE 1
+			TIMES LOCAL , 1.00
+		CASE 2
+			TIMES LOCAL , 1.50
+		CASE 3
+			TIMES LOCAL , 2.00
+		CASE 4
+			TIMES LOCAL , 2.50
+		CASE 5
+			TIMES LOCAL , 3.00
+		CASE 6
+			TIMES LOCAL , 3.50
+		CASE 7
+			TIMES LOCAL , 4.00
+		CASE 8
+			TIMES LOCAL , 4.50
+		CASE 9
+			TIMES LOCAL , 5.00
+		CASEELSE
+			TIMES LOCAL , 6.00
+	ENDSELECT
+	;ABL:•òŽd¸_‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:•òŽd¸_
+		CASE 0
+			TIMES LOCAL , 0.00
+		CASE 1
+			TIMES LOCAL , 0.50
+		CASE 2
+			TIMES LOCAL , 1.00
+		CASE 3
+			TIMES LOCAL , 1.50
+		CASE 4
+			TIMES LOCAL , 2.00
+		CASE 5
+			TIMES LOCAL , 2.50
+		CASE 6
+			TIMES LOCAL , 3.00
+		CASE 7
+			TIMES LOCAL , 3.50
+		CASE 8
+			TIMES LOCAL , 4.00
+		CASE 9
+			TIMES LOCAL , 4.50
+		CASEELSE
+			TIMES LOCAL , 6.00
+	ENDSELECT
+	CUP:“z—ê:‹±‡ += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‹ê’É(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:‹ê’É
+	LOCAL:1 = SOURCE:“z—ê:‹ê’É
+	LOCAL:2 = SOURCE:“z—ê:‹ê’É / 20
+	;ƒ}ƒ]‚Á‹C
+	SELECTCASE ABL:“z—ê:ƒ}ƒ]‚Á‹C
+		CASE 0
+			TIMES LOCAL:1 , 0.00
+		CASE 1
+			TIMES LOCAL:1 , 0.10
+		CASE 2
+			TIMES LOCAL:1 , 0.20
+		CASE 3
+			TIMES LOCAL:1 , 0.30
+		CASE 4
+			TIMES LOCAL:1 , 0.45
+		CASE 5
+			TIMES LOCAL:1 , 0.60
+		CASE 6
+			TIMES LOCAL:1 , 0.75
+		CASE 7
+			TIMES LOCAL:1 , 0.90
+		CASE 8
+			TIMES LOCAL:1 , 1.20
+		CASE 9
+			TIMES LOCAL:1 , 1.50
+		CASEELSE
+			TIMES LOCAL:1 , 3.00
+	ENDSELECT
+	;¬l‘ÌŒ^
+	IF TALENT:“z—ê:‘ÌŒ^ < -2
+		TIMES LOCAL , 2.00
+		TIMES LOCAL:1 , 0.75
+	ENDIF
+	;’²‹³ŽÒ‚ªyƒTƒhz
+	IF Žål < CHARANUM && TALENT:Žål:ƒTƒh
+		TIMES LOCAL:1 , 2.50
+	ELSEIF Žål == l•¨_‹q ;‹q‚ÍyƒTƒhz‚Å‚ ‚é‚Æ‰¼’è
+		TIMES LOCAL:1 , 2.50
+	ELSEIF Žål == l•¨_–K–âŽÒ ;–K–âŽÒ‚ÍyƒTƒhz‚Å‚ ‚é‚Æ‰¼’è
+		TIMES LOCAL:1 , 2.50
+	ENDIF
+	;‰°•a
+	SIF TALENT:“z—ê:“x‹¹ < 0
+		TIMES LOCAL:2 , 2.00
+	;ƒ}ƒ]‚Á‹C‚ª‚ ‚é‚ÆPALAM:—~î‚àã‚ª‚é
+	;‚»‚Ì‚Æ‚«’²‹³ŽÒ‚ªyƒTƒhz‚¾‚ÆŒø‰Ê“I
+	;‹ê’É‚É‰ž‚¶‚Ä‹°•|‚Ìƒ\[ƒX‚ª‘‰Á‚·‚é
+	CUP:“z—ê:‹ê’É += LOCAL
+	CUP:“z—ê:—~î += LOCAL:1
+	CUP:“z—ê:‹°•| += LOCAL:2
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‹°•|(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL= SOURCE:“z—ê:‹°•|
+	;ABL:]‡‚ð‚Ý‚éi‹°•|‚æ‚è‚ÍˆØ•|‚É‹ß‚¢‚Æ‰ðŽßj
+	SELECTCASE ABL:“z—ê:]‡
+		CASE 0
+			TIMES LOCAL, 1.00
+		CASE 1
+			TIMES LOCAL, 1.50
+		CASE 2
+			TIMES LOCAL, 2.00
+		CASE 3
+			TIMES LOCAL, 2.50
+		CASE 4
+			TIMES LOCAL, 3.00
+		CASE 5
+			TIMES LOCAL, 3.50
+		CASE 6
+			TIMES LOCAL, 4.00
+		CASE 7
+			TIMES LOCAL, 4.50
+		CASE 8
+			TIMES LOCAL, 5.00
+		CASE 9
+			TIMES LOCAL, 5.50
+		CASEELSE
+			TIMES LOCAL, 7.00
+	ENDSELECT
+	CUP:“z—ê:‹°•| += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‰t‘Ì(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:‰t‘Ì
+	;¬l‘ÌŒ^
+	IF TALENT:“z—ê:‘ÌŒ^ < -2
+		SIF SELECTCOM != 50 && SELECTCOM != 180
+			TIMES LOCAL , 0.40
+	ENDIF
+	CUP:“z—ê:ŠŠ += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_—~î(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:—~î
+	;—~–]‚ðŒ©‚é
+	SELECTCASE ABL:“z—ê:—~–]
+		CASE 0
+			TIMES LOCAL , 0.20
+		CASE 1
+			TIMES LOCAL , 0.40
+		CASE 2
+			TIMES LOCAL , 0.80
+		CASE 3
+			TIMES LOCAL , 1.20
+		CASE 4
+			TIMES LOCAL , 1.60
+		CASE 5
+			TIMES LOCAL , 2.00
+		CASE 6
+			TIMES LOCAL , 2.40
+		CASE 7
+			TIMES LOCAL , 2.80
+		CASE 8
+			TIMES LOCAL , 3.20
+		CASE 9
+			TIMES LOCAL , 3.60
+		CASEELSE
+			TIMES LOCAL , 5.00
+	ENDSELECT
+	CUP:“z—ê:—~î += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‹±‡(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:‹±‡
+	;ABL:]‡‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:]‡
+		CASE 0
+			TIMES LOCAL , 0.50
+		CASE 0
+			TIMES LOCAL , 0.80
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 0
+			TIMES LOCAL , 1.20
+		CASE 0
+			TIMES LOCAL , 1.40
+		CASE 0
+			TIMES LOCAL , 1.60
+		CASE 0
+			TIMES LOCAL , 1.80
+		CASE 0
+			TIMES LOCAL , 2.00
+		CASE 0
+			TIMES LOCAL , 2.40
+		CASE 0
+			TIMES LOCAL , 3.00
+		CASE 0
+			TIMES LOCAL , 5.00
+	ENDSELECT
+	CUP:“z—ê:‹±‡ += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_˜Io(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;’p‚¶‚ç‚¢‚Æ’p”–‚¢‚Í‚±‚±‚Åˆ—
+	SIF TALENT:“z—ê:ãµ’pS > 0
+		TIMES SOURCE:“z—ê:˜Io , 2.00
+	SIF TALENT:“z—ê:ãµ’pS < 0
+		TIMES SOURCE:“z—ê:˜Io , 0.50
+	;ŠŠƒAƒbƒv‚Ì50“‚ð˜Io‚Ìƒ\[ƒX‚É‰Á‚¦‚é
+	;‚½‚¾‚µ‰t‘Ì’Ç‰Á‚Ìƒ\[ƒX‚Ì‚Ô‚ñ‚Íˆø‚­
+	SOURCE:“z—ê:˜Io += (CUP:“z—ê:ŠŠ - SOURCE:“z—ê:‰t‘Ì) / 2
+	LOCAL = SOURCE:“z—ê:˜Io
+	;ABL:˜Io•È‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:˜Io•È
+		CASE 0
+			TIMES LOCAL , 0.00
+		CASE 1
+			TIMES LOCAL , 0.10
+		CASE 2
+			TIMES LOCAL , 0.20
+		CASE 3
+			TIMES LOCAL , 0.40
+		CASE 4
+			TIMES LOCAL , 0.60
+		CASE 5
+			TIMES LOCAL , 0.80
+		CASE 6
+			TIMES LOCAL , 1.00
+		CASE 7
+			TIMES LOCAL , 1.20
+		CASE 8
+			TIMES LOCAL , 1.40
+		CASE 9
+			TIMES LOCAL , 1.60
+		CASEELSE
+			TIMES LOCAL , 2.00
+	ENDSELECT
+	CUP:“z—ê:—~î += LOCAL
+	LOCAL = SOURCE:“z—ê:˜Io
+	;PALAM:’pî‚ð‚Ý‚é
+	;’p‚¸‚©‚µ‚³‚ðŠ´‚¶‚ê‚ÎŠ´‚¶‚é‚Ù‚Ç‚ ‚Ü‚è’p‚¸‚©‚µ‚­‚È‚­‚È‚é
+	IF PALAM:“z—ê:’pî < PALAMLV:1
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:“z—ê:’pî < PALAMLV:2
+		TIMES LOCAL , 0.90
+	ELSEIF PALAM:“z—ê:’pî < PALAMLV:3
+		TIMES LOCAL , 0.80
+	ELSEIF PALAM:“z—ê:’pî < PALAMLV:4
+		TIMES LOCAL , 0.70
+	ELSEIF PALAM:“z—ê:’pî >= PALAMLV:4
+		TIMES LOCAL , 0.60
+	ENDIF
+	CUP:“z—ê:’pî += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‹ü](“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:‹ü]
+	;ABL:]‡‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:]‡
+		CASE 0
+			TIMES LOCAL , 0.50
+		CASE 1
+			TIMES LOCAL , 1.00
+		CASE 2
+			TIMES LOCAL , 1.50
+		CASE 3
+			TIMES LOCAL , 2.00
+		CASE 4
+			TIMES LOCAL , 2.50
+		CASE 5
+			TIMES LOCAL , 3.00
+		CASE 6
+			TIMES LOCAL , 3.50
+		CASE 7
+			TIMES LOCAL , 4.00
+		CASE 8
+			TIMES LOCAL , 4.50
+		CASE 9
+			TIMES LOCAL , 5.00
+		CASEELSE
+			TIMES LOCAL , 6.00
+	ENDSELECT
+	;ABL:•òŽd¸_‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:•òŽd¸_
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 1.50
+		CASE 2
+			TIMES LOCAL , 2.00
+		CASE 3
+			TIMES LOCAL , 2.50
+		CASE 4
+			TIMES LOCAL , 3.00
+		CASE 5
+			TIMES LOCAL , 3.50
+		CASE 6
+			TIMES LOCAL , 4.00
+		CASE 7
+			TIMES LOCAL , 4.50
+		CASE 8
+			TIMES LOCAL , 5.00
+		CASE 9
+			TIMES LOCAL , 5.50
+		CASEELSE
+			TIMES LOCAL , 7.00
+	ENDSELECT
+	CUP:“z—ê:‹ü•ž += LOCAL
+
+;---------------------------------------------------
+;PLAYER‚É‚à‰e‹¿‚ð—^‚¦‚éSOURCE
+;---------------------------------------------------
+@SOURCE_Š½Šy(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:Š½Šy
+	;—ö•ç
+	LOCAL = LOCAL * (10 + 5 * TALENT:“z—ê:—ö•ç) / 10
+	;ABL:e–§‚ð‚Ý‚é
+	IF LOCAL < 100000
+		LOCAL = LOCAL * (ABL:“z—ê:e–§ * 5 + 100) / 100
+	ELSEIF LOCAL < 100000000
+		LOCAL = LOCAL / 100 * (ABL:“z—ê:e–§ * 5 + 100)
+	ENDIF
+	;ABL:—~–]‚ð‚Ý‚é
+	IF LOCAL < 100000
+		LOCAL = LOCAL * (ABL:“z—ê:—~–] * 5 + 100) / 100
+	ELSEIF LOCAL < 100000000
+		LOCAL = LOCAL / 100 * (ABL:“z—ê:—~–] * 5 + 100)
+	ENDIF
+	;DŠ´“x‚ðŒ©‚é
+	IF CFLAG:“z—ê:DŠ´“x <= 10
+		TIMES LOCAL , 0.50
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 50
+		TIMES LOCAL , 0.80
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 100
+		TIMES LOCAL , 1.00
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 300
+		TIMES LOCAL , 1.10
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 500
+		TIMES LOCAL , 1.20
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 700
+		TIMES LOCAL , 1.30
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 1000
+		TIMES LOCAL , 1.40
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 3000
+		TIMES LOCAL , 1.50
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 5000
+		TIMES LOCAL , 1.70
+	ELSEIF CFLAG:“z—ê:DŠ´“x <= 500000
+		IF LOCAL < 100000
+			LOCAL = LOCAL * (CFLAG:“z—ê:DŠ´“x / 50 + 100) / 100
+		ELSEIF LOCAL < 10000000
+			LOCAL = LOCAL / 100 * (CFLAG:“z—ê:DŠ´“x / 50 + 100)
+		ELSEIF LOCAL < 100000000
+			IF CFLAG:“z—ê:DŠ´“x <= 50000
+				LOCAL = LOCAL / 100 * (CFLAG:“z—ê:DŠ´“x / 50 + 100)
+			ELSE
+				LOCAL = 1000000000
+			ENDIF
+		ENDIF
+	ENDIF
+	CUP:“z—ê:DˆÓ += LOCAL
+	IF Žål < CHARANUM
+		CUP:Žål:—~î += MIN(LOCAL / 10 , 100)
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_ª•ž(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;’nˆÊ‚Å•ªŠò
+	IF Žål < CHARANUM && CFLAG:“z—ê:310 > CFLAG:Žål:310
+		;‚ˆÊ‚ÌƒLƒƒƒ‰
+		LOCAL:1 = SOURCE:“z—ê:ª•ž / 4
+		;ABL:—~–]‚ð‚Ý‚é
+		SELECTCASE ABL:“z—ê:—~–]
+			CASE 0
+				TIMES LOCAL:1 , 0.10
+			CASE 1
+				TIMES LOCAL:1 , 0.15
+			CASE 2
+				TIMES LOCAL:1 , 0.20
+			CASE 3
+				TIMES LOCAL:1 , 0.25
+			CASE 4
+				TIMES LOCAL:1 , 0.30
+			CASEELSE
+				IF LOCAL:1 < 100000
+					LOCAL:1 = LOCAL:1 * (ABL:“z—ê:—~–] * 5 + 15) / 100
+				ELSEIF LOCAL:1 < 100000000
+					LOCAL:1 = LOCAL:1 / 100 * (ABL:“z—ê:—~–] * 5 + 15)
+				ENDIF
+		ENDSELECT
+		;ABL:ƒTƒh‚Á‹C‚ð‚Ý‚é
+		IF LOCAL:1 < 100000
+			LOCAL:1 = LOCAL:1 * (ABL:“z—ê:ƒTƒh‚Á‹C * 30 + 100) / 100
+		ELSEIF LOCAL:1 < 100000000
+			LOCAL:1 = LOCAL:1 / 100 * (ABL:“z—ê:ƒTƒh‚Á‹C * 30 + 100)
+		ENDIF
+	ELSE
+		;’áˆÊ‚ÌƒLƒƒƒ‰
+		LOCAL:2 = SOURCE:“z—ê:ª•ž / 2
+		;ABL:e–§‚ð‚Ý‚é
+		SELECTCASE ABL:“z—ê:e–§
+			CASE 0
+				TIMES LOCAL:2 , 0.10
+			CASE 1
+				TIMES LOCAL:2 , 0.15
+			CASE 2
+				TIMES LOCAL:2 , 0.20
+			CASE 3
+				TIMES LOCAL:2 , 0.25
+			CASE 4
+				TIMES LOCAL:2 , 0.30
+			CASEELSE
+				IF LOCAL:2 < 100000
+					LOCAL:2 = LOCAL:2 * (ABL:“z—ê:e–§ * 5 + 15) / 100
+				ELSEIF LOCAL:2 < 100000000
+					LOCAL:2 = LOCAL:2 / 100 * (ABL:“z—ê:e–§ * 5 + 15)
+				ENDIF
+		ENDSELECT
+	ENDIF
+	LOCAL = SOURCE:“z—ê:ª•ž
+	;ABL:ƒTƒh‚Á‹C‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:ƒTƒh‚Á‹C
+		CASE 0
+			TIMES LOCAL , 0.70
+		CASE 1
+			TIMES LOCAL , 1.00
+		CASE 2
+			TIMES LOCAL , 1.30
+		CASE 3
+			TIMES LOCAL , 1.70
+		CASE 4
+			TIMES LOCAL , 2.00
+		CASEELSE
+			IF LOCAL < 100000
+				LOCAL = LOCAL * (ABL:“z—ê:ƒTƒh‚Á‹C * 15 + 175) / 100
+			ELSEIF LOCAL < 100000000
+				LOCAL = LOCAL / 100 * (ABL:“z—ê:ƒTƒh‚Á‹C * 15 + 175)
+			ENDIF
+	ENDSELECT
+	CUP:“z—ê:—D‰z += LOCAL
+	CUP:“z—ê:—~î += LOCAL:1
+	IF Žål < CHARANUM
+		CUP:Žål:‹ü•ž += LOCAL:1
+	ENDIF
+	CUP:“z—ê:’pî += LOCAL:2
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_Žó“®(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	IF Žål > CHARANUM || CFLAG:“z—ê:310 > CFLAG:Žål:310
+		;‚ˆÊ‚ÌƒLƒƒƒ‰
+		LOCAL:1 = SOURCE:“z—ê:Žó“® / 3
+		;ABL:—~–]‚ð‚Ý‚é
+		SELECTCASE ABL:“z—ê:—~–]
+			CASE 0
+				TIMES LOCAL:1 , 0.30
+			CASE 1
+				TIMES LOCAL:1 , 0.35
+			CASE 2
+				TIMES LOCAL:1 , 0.40
+			CASE 3
+				TIMES LOCAL:1 , 0.45
+			CASE 4
+				TIMES LOCAL:1 , 0.50
+			CASEELSE
+				IF LOCAL:1 < 100000
+					LOCAL:1 = LOCAL:1 * (ABL:“z—ê:—~–] * 10 + 10) / 100
+				ELSEIF LOCAL:1 < 100000000
+					LOCAL:1 = LOCAL:1 / 100 * (ABL:“z—ê:—~–] * 10 + 10)
+				ENDIF
+		ENDSELECT
+	ELSE
+		LOCAL:2 = SOURCE:“z—ê:Žó“® / 2
+		;ABL:•òŽd¸_‚ð‚Ý‚é
+		SELECTCASE ABL:“z—ê:•òŽd¸_
+			CASE 0
+				TIMES LOCAL:2 , 0.30
+			CASE 1
+				TIMES LOCAL:2 , 0.35
+			CASE 2
+				TIMES LOCAL:2 , 0.40
+			CASE 3
+				TIMES LOCAL:2 , 0.45
+			CASE 4
+				TIMES LOCAL:2 , 0.50
+			CASEELSE
+				IF LOCAL:2 < 100000
+					LOCAL:2 = LOCAL:2 * (ABL:“z—ê:•òŽd¸_ * 10 + 10) / 100
+				ELSEIF LOCAL:2 < 100000000
+					LOCAL:2 = LOCAL:2 / 100 * (ABL:“z—ê:•òŽd¸_ * 10 + 10)
+				ENDIF
+		ENDSELECT
+	ENDIF
+	LOCAL = SOURCE:“z—ê:Žó“®
+	;ABL:e–§‚ð‚Ý‚é
+	IF LOCAL < 100000
+		LOCAL = LOCAL * (ABL:“z—ê:e–§ * 10 + 70) / 100
+	ELSEIF LOCAL < 100000000
+		LOCAL = LOCAL / 100 * (ABL:“z—ê:e–§ * 10 + 70)
+	ENDIF
+	CUP:“z—ê:DˆÓ += LOCAL
+	CUP:“z—ê:‹ü•ž += LOCAL:1
+	IF Žål < CHARANUM
+		CUP:Žål:‹±‡ += LOCAL:1
+	ENDIF
+	CUP:“z—ê:‹±‡ += LOCAL:2
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_—U˜f(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	SOURCE:“z—ê:—U˜f = SOURCE:“z—ê:—U˜f * GET_REVISION(ABL:“z—ê:—~–] + 2, 500, 10) / 100
+	LOCAL = SOURCE:“z—ê:—U˜f
+	LOCAL:1 = SOURCE:“z—ê:—U˜f
+	LOCAL = LOCAL * (100 + GET_REVISION(ABL:Žål:—~–], 500, 20)) / 100
+	CUP:Žål:—~î += LOCAL
+	LOCAL:1 = LOCAL:1 * (100 + GET_REVISION(ABL:Žål:]‡, 500, 5)) / 100
+	CUP:Žål:‹±‡ += LOCAL:1
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_J‚ß(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	SOURCE:“z—ê:J‚ß = SOURCE:“z—ê:J‚ß * GET_REVISION(ABL:“z—ê:ƒTƒh‚Á‹C + 2, 500, 10) / 100
+	LOCAL = SOURCE:“z—ê:J‚ß
+	LOCAL = LOCAL * (100 + GET_REVISION(ABL:Žål:ƒ}ƒ]‚Á‹C, 500, 20)) / 100
+	LOCAL = LOCAL * (100 + GET_REVISION(ABL:Žål:˜Io•È, 500, 20)) / 100
+	;PALAM:’pî‚ð‚Ý‚é
+	;’p‚¸‚©‚µ‚³‚ðŠ´‚¶‚ê‚ÎŠ´‚¶‚é‚Ù‚Ç‚ ‚Ü‚è’p‚¸‚©‚µ‚­‚È‚­‚È‚é
+	IF PALAM:Žål:’pî < PALAMLV:1
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:Žål:’pî < PALAMLV:2
+		TIMES LOCAL , 0.90
+	ELSEIF PALAM:Žål:’pî < PALAMLV:3
+		TIMES LOCAL , 0.80
+	ELSEIF PALAM:Žål:’pî < PALAMLV:4
+		TIMES LOCAL , 0.70
+	ELSEIF PALAM:Žål:’pî >= PALAMLV:4
+		TIMES LOCAL , 0.60
+	ENDIF
+	CUP:Žål:’pî += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_’§”­(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	SOURCE:“z—ê:’§”­ = SOURCE:“z—ê:’§”­ * GET_REVISION(ABL:“z—ê:ƒTƒh‚Á‹C + 2, 500, 10) / 100
+	LOCAL = SOURCE:“z—ê:’§”­
+	LOCAL:1 = SOURCE:“z—ê:’§”­
+	LOCAL = LOCAL * (100 + GET_REVISION(ABL:Žål:—~–], 500, 10)) / 100
+	CUP:Žål:—~î += LOCAL
+	LOCAL:1 = LOCAL:1 * (100 + GET_REVISION(ABL:Žål:ƒ}ƒ]‚Á‹C, 500, 5)) / 100
+	CUP:Žål:‹ü•ž += LOCAL:1
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_•òŽd(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	SOURCE:“z—ê:•òŽd = SOURCE:“z—ê:•òŽd * GET_REVISION(ABL:“z—ê:‹ZI + ABL:“z—ê:•òŽd¸_ + 2, 500, 10) / 100
+	LOCAL = SOURCE:“z—ê:•òŽd
+	LOCAL:1 = SOURCE:“z—ê:•òŽd
+	LOCAL = LOCAL * (100 + GET_REVISION(ABL:Žål:—~–], 500, 10)) / 100
+	CUP:Žål:—~î += LOCAL
+	LOCAL:1 = LOCAL:1 * (100 + GET_REVISION(ABL:Žål:ƒ}ƒ]‚Á‹C, 500, 5)) / 100
+	CUP:Žål:‹ü•ž += LOCAL:1
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‹­—v(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	SOURCE:“z—ê:‹­—v = SOURCE:“z—ê:‹­—v * GET_REVISION(ABL:“z—ê:ƒTƒh‚Á‹C +ABL:“z—ê:—~–] + 2, 500, 10) / 100
+	LOCAL = SOURCE:“z—ê:‹­—v
+	LOCAL:1 = SOURCE:“z—ê:‹­—v
+	LOCAL = LOCAL * (100 + GET_REVISION(ABL:Žål:•òŽd¸_, 500, 5)) / 100
+	CUP:Žål:‹±‡ += LOCAL
+	LOCAL:1 = LOCAL:1 * (100 + GET_REVISION(ABL:Žål:]‡, 500, 10)) / 100
+	CUP:Žål:‹ü•ž += LOCAL:1
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_‰Á‹s(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	SOURCE:“z—ê:‰Á‹s = SOURCE:“z—ê:‰Á‹s * GET_REVISION(ABL:“z—ê:ƒTƒh‚Á‹C + ABL:“z—ê:—~–] + 2, 500, 5) / 100
+	LOCAL = SOURCE:“z—ê:‰Á‹s
+	LOCAL:1 = SOURCE:“z—ê:‰Á‹s
+	LOCAL = LOCAL * (100 + GET_REVISION(ABL:Žål:ƒ}ƒ]‚Á‹C, 500, 10)) / 100
+	CUP:Žål:‹ê’É += LOCAL
+	LOCAL = LOCAL * (100 + GET_REVISION(ABL:Žål:ƒ}ƒ]‚Á‹C, 500, 5)) / 100
+	CUP:Žål:‹°•| += LOCAL
+	LOCAL:1 = LOCAL:1 * (100 + GET_REVISION(ABL:Žål:]‡, 500, 10)) / 100
+	CUP:Žål:‹ü•ž += LOCAL:1
+
+;---------------------------------------------------
+;ƒ}ƒCƒiƒXSOURCE
+;---------------------------------------------------
+@SOURCE_•sŒ‰(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:•sŒ‰
+	;ABL:]‡‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:]‡
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.90
+		CASE 2
+			TIMES LOCAL , 0.80
+		CASE 3
+			TIMES LOCAL , 0.70
+		CASE 4
+			TIMES LOCAL , 0.60
+		CASE 5
+			TIMES LOCAL , 0.50
+		CASE 6
+			TIMES LOCAL , 0.40
+		CASE 7
+			TIMES LOCAL , 0.30
+		CASE 8
+			TIMES LOCAL , 0.20
+		CASE 9
+			TIMES LOCAL , 0.10
+		CASEELSE
+			TIMES LOCAL , 0.00
+	ENDSELECT
+	;Œ®‚ðŽ‚Á‚Ä‚¢‚é‚Æ•s‰õ’á‰º
+	IF FLAG:’å‘€‘ÑŒ®w“üƒtƒ‰ƒO == “z—ê
+		TIMES LOCAL , 0.20
+	ENDIF	
+	CUP:“z—ê:•s‰õ += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_ŸT‹ü(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:ŸT‹ü
+	;ABL:]‡‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:]‡
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.80
+		CASE 2
+			TIMES LOCAL , 0.60
+		CASE 3
+			TIMES LOCAL , 0.40
+		CASE 4
+			TIMES LOCAL , 0.30
+		CASE 5
+			TIMES LOCAL , 0.20
+		CASE 6
+			TIMES LOCAL , 0.10
+		CASE 7
+			TIMES LOCAL , 0.08
+		CASE 8
+			TIMES LOCAL , 0.06
+		CASE 9
+			TIMES LOCAL , 0.04
+		CASEELSE
+			TIMES LOCAL , 0.00
+	ENDSELECT
+	;ABL:—~–]‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:—~–]
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.90
+		CASE 2
+			TIMES LOCAL , 0.80
+		CASE 3
+			TIMES LOCAL , 0.70
+		CASE 4
+			TIMES LOCAL , 0.60
+		CASE 5
+			TIMES LOCAL , 0.50
+		CASE 6
+			TIMES LOCAL , 0.40
+		CASE 7
+			TIMES LOCAL , 0.30
+		CASE 8
+			TIMES LOCAL , 0.20
+		CASE 9
+			TIMES LOCAL , 0.10
+		CASEELSE
+			TIMES LOCAL , 0.00
+	ENDSELECT
+	CUP:“z—ê:—}ŸT += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_ˆí’E(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;DŠïS‚Æ•ÛŽç“I‚Í‚±‚±‚Åˆ—
+	SIF TALENT:“z—ê:«“I‹»–¡ > 0
+		TIMES SOURCE:“z—ê:ˆí’E , 0.80
+	SIF TALENT:“z—ê:«“I‹»–¡ < 0
+		TIMES SOURCE:“z—ê:ˆí’E , 2.00
+	LOCAL = SOURCE:“z—ê:ˆí’E
+	;ABL:]‡‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:]‡
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.80
+		CASE 2
+			TIMES LOCAL , 0.60
+		CASE 3
+			TIMES LOCAL , 0.40
+		CASE 4
+			TIMES LOCAL , 0.30
+		CASE 5
+			TIMES LOCAL , 0.20
+		CASE 6
+			TIMES LOCAL , 0.10
+		CASE 7
+			TIMES LOCAL , 0.08
+		CASE 8
+			TIMES LOCAL , 0.06
+		CASE 9
+			TIMES LOCAL , 0.04
+		CASEELSE
+			TIMES LOCAL , 0.00
+	ENDSELECT
+	;ABL:ƒ}ƒ]‚Á‹C‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:ƒ}ƒ]‚Á‹C
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.90
+		CASE 2
+			TIMES LOCAL , 0.80
+		CASE 3
+			TIMES LOCAL , 0.70
+		CASE 4
+			TIMES LOCAL , 0.60
+		CASE 5
+			TIMES LOCAL , 0.50
+		CASE 6
+			TIMES LOCAL , 0.40
+		CASE 7
+			TIMES LOCAL , 0.30
+		CASE 8
+			TIMES LOCAL , 0.20
+		CASE 9
+			TIMES LOCAL , 0.10
+		CASEELSE
+			TIMES LOCAL , 0.00
+	ENDSELECT
+	;Œ®‚ðŽ‚Á‚Ä‚¢‚é‚ÆŒ¸­
+	IF FLAG:’å‘€‘ÑŒ®w“üƒtƒ‰ƒO == “z—ê
+		TIMES LOCAL , 0.20
+	ENDIF	
+	CUP:“z—ê:”½Š´ += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_”½Š´(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	LOCAL = SOURCE:“z—ê:”½Š´
+	;ABL:]‡‚ð‚Ý‚é
+	LOCAL:1 = ABL:“z—ê:]‡ + ABL:“z—ê:e–§
+	SELECTCASE LOCAL:1
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.80
+		CASE 2
+			TIMES LOCAL , 0.60
+		CASE 3
+			TIMES LOCAL , 0.40
+		CASE 4
+			TIMES LOCAL , 0.30
+		CASE 5
+			TIMES LOCAL , 0.20
+		CASE 6
+			TIMES LOCAL , 0.10
+		CASE 7
+			TIMES LOCAL , 0.08
+		CASE 8
+			TIMES LOCAL , 0.06
+		CASE 9
+			TIMES LOCAL , 0.04
+		CASEELSE
+			TIMES LOCAL , 0.00
+	ENDSELECT
+	;ABL:•òŽd¸_‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:•òŽd¸_
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.90
+		CASE 2
+			TIMES LOCAL , 0.80
+		CASE 3
+			TIMES LOCAL , 0.70
+		CASE 4
+			TIMES LOCAL , 0.60
+		CASE 5
+			TIMES LOCAL , 0.50
+		CASE 6
+			TIMES LOCAL , 0.40
+		CASE 7
+			TIMES LOCAL , 0.30
+		CASE 8
+			TIMES LOCAL , 0.20
+		CASE 9
+			TIMES LOCAL , 0.10
+		CASEELSE
+			TIMES LOCAL , 0.00
+	ENDSELECT
+	;ABL:ƒ}ƒ]‚Á‹C‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:ƒ}ƒ]‚Á‹C
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.90
+		CASE 2
+			TIMES LOCAL , 0.80
+		CASE 3
+			TIMES LOCAL , 0.70
+		CASE 4
+			TIMES LOCAL , 0.60
+		CASE 5
+			TIMES LOCAL , 0.50
+		CASE 6
+			TIMES LOCAL , 0.40
+		CASE 7
+			TIMES LOCAL , 0.30
+		CASE 8
+			TIMES LOCAL , 0.20
+		CASE 9
+			TIMES LOCAL , 0.10
+		CASEELSE
+			TIMES LOCAL , 0.00
+	ENDSELECT
+	;Œ®‚ðŽ‚Á‚Ä‚¢‚é‚ÆŒ¸­
+	IF FLAG:’å‘€‘ÑŒ®w“üƒtƒ‰ƒO == “z—ê
+		TIMES LOCAL , 0.20
+	ENDIF	
+	CUP:“z—ê:”½Š´ += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_EXTRA(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	VARSET LOCAL
+	;-------------------------------------------------
+	;‘•”õŒni–ò“™j
+	;-------------------------------------------------
+	;›Z–ò
+	IF TEQUIP:“z—ê:›Z–ò
+		TIMES CUP:“z—ê:‹±‡ , 1.20
+		TIMES CUP:“z—ê:—~î , 2.00
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+		TIMES CUP:“z—ê:•s‰õ , 0.75
+	ENDIF
+	;—˜”AÜ
+	IF TEQUIP:“z—ê:—˜”AÜ
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:—~î , 0.80
+		TIMES CUP:“z—ê:’pî , 1.20
+		TIMES CUP:“z—ê:”½Š´ , 1.50
+		TIMES CUP:“z—ê:•s‰õ , 1.20
+	ENDIF
+	;Œ®‚ðŽ‚Á‚Ä‚¢‚é‚ÆŒ¸­
+	IF FLAG:’å‘€‘ÑŒ®w“üƒtƒ‰ƒO == “z—ê
+		TIMES CUP:“z—ê:”½Š´ , 0.20
+		TIMES CUP:“z—ê:•s‰õ , 0.20
+	ENDIF	
+	;-------------------------------------------------
+	;Š×—Ž‘fŽ¿
+	;-------------------------------------------------
+	;—ö•ç
+	IF TALENT:“z—ê:—ö•ç && ASSIPLAY == 0
+		CUP:“z—ê:‹±‡ = CUP:“z—ê:‹±‡ * (10 + 5 * TALENT:“z—ê:—ö•ç) / 10
+		CUP:“z—ê:‹ü•ž = CUP:“z—ê:‹ü•ž * (10 + 5 * TALENT:“z—ê:—ö•ç) / 10
+		SIF CUP:“z—ê:DˆÓ < 999999999
+			CUP:“z—ê:DˆÓ = CUP:“z—ê:DˆÓ * (10 + 5 * TALENT:“z—ê:—ö•ç) / 10
+		CUP:“z—ê:”½Š´ = CUP:“z—ê:”½Š´ * (10 - 4 * TALENT:“z—ê:—ö•ç) / 10
+		CUP:“z—ê:•s‰õ = CUP:“z—ê:•s‰õ * (10 - 4 * TALENT:“z—ê:—ö•ç) / 10
+		TIMES CUP:“z—ê:—}ŸT , 0.50
+	ELSEIF TALENT:“z—ê:—ö•ç && ASSIPLAY > 0
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+		TIMES CUP:“z—ê:•s‰õ , 1.20
+	ENDIF
+	;ˆú—
+	IF TALENT:“z—ê:ˆú—
+		CUP:“z—ê:‹±‡ = CUP:“z—ê:‹±‡ * (10 + 2 * TALENT:“z—ê:ˆú—) / 10
+		CUP:“z—ê:‹ü•ž = CUP:“z—ê:‹ü•ž * (10 + 2 * TALENT:“z—ê:ˆú—) / 10
+		CUP:“z—ê:”½Š´ = CUP:“z—ê:”½Š´ * (10 - 2 * TALENT:“z—ê:ˆú—) / 10
+		CUP:“z—ê:•s‰õ = CUP:“z—ê:•s‰õ * (10 - 2 * TALENT:“z—ê:ˆú—) / 10
+		TIMES CUP:“z—ê:—}ŸT , 0.40
+	ENDIF
+	;-------------------------------------------------
+	;‘fŽ¿
+	;-------------------------------------------------
+	;‹Cä
+	IF TALENT:“z—ê:“x‹¹ > 0
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:—~î , 0.80
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:‹°•| , 0.80
+		TIMES CUP:“z—ê:DˆÓ , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+		TIMES CUP:“z—ê:—}ŸT , 1.20
+	ENDIF
+	;‰°•a
+	IF TALENT:“z—ê:“x‹¹ < 0
+		TIMES CUP:“z—ê:‹°•| , 1.20
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+	ENDIF
+	;”½R“Ii•ž]A—ê‘®‚Å–³Œøj
+	IF TALENT:“z—ê:‘Ô“x > 0 && !TALENT:“z—ê:•ž]
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:DˆÓ , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+	ENDIF
+	;‘f’¼
+	IF TALENT:“z—ê:‘Ô“x < 0
+		TIMES CUP:“z—ê:‹±‡ , 1.20
+		TIMES CUP:“z—ê:”½Š´ , 0.80
+		SIF CUP:“z—ê:DˆÓ < 999999999
+			TIMES CUP:“z—ê:DˆÓ , 1.50
+	ENDIF
+	;¶ˆÓ‹C
+	IF TALENT:“z—ê:‰ž“š > 0
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+	ENDIF
+	;‘ål‚µ‚¢
+	IF TALENT:“z—ê:‰ž“š < 0
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 0.80
+	ENDIF
+	;ƒvƒ‰ƒCƒh‚‚¢
+	IF TALENT:“z—ê:ƒvƒ‰ƒCƒh > 0
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:‹°•| , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+	ENDIF
+	;ƒvƒ‰ƒCƒh’á‚¢
+	IF TALENT:“z—ê:ƒvƒ‰ƒCƒh < 0
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+		TIMES CUP:“z—ê:‹°•| , 1.20
+		TIMES CUP:“z—ê:”½Š´ , 0.80
+	ENDIF
+	;ƒcƒ“ƒfƒŒ
+	IF TALENT:“z—ê:ƒcƒ“ƒfƒŒ
+		;Š×—Ž‘fŽ¿‚ª‚ ‚éê‡‚Æ–³‚¢ê‡‚Å•Ï‰»‚·‚é
+		IF TALENT:“z—ê:—ö•ç || TALENT:“z—ê:ˆú— || TALENT:“z—ê:•ž]
+			TIMES CUP:“z—ê:‹±‡ , 1.20
+			TIMES CUP:“z—ê:‹ü•ž , 1.20
+			TIMES CUP:“z—ê:”½Š´ , 0.80
+		ELSE
+			TIMES CUP:“z—ê:‹±‡ , 0.80
+			TIMES CUP:“z—ê:‹ü•ž , 0.80
+			TIMES CUP:“z—ê:”½Š´ , 1.20
+		ENDIF
+	ENDIF
+	;Ž©§S
+	IF TALENT:“z—ê:Ž©§S
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:‹°•| , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+	ENDIF
+	;–³ŠÖS
+	IF TALENT:“z—ê:–³ŠÖS
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:—~î , 0.80
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:DˆÓ , 0.80
+		TIMES CUP:“z—ê:‹°•| , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 0.80
+	ENDIF
+	;Š´î–R‚µ‚¢
+	IF TALENT:“z—ê:Š´î–R‚µ‚¢
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:—~î , 0.80
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:’pî , 0.80
+		TIMES CUP:“z—ê:‹°•| , 0.80
+		TIMES CUP:“z—ê:DˆÓ , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 0.80
+		TIMES CUP:“z—ê:•s‰õ , 0.80
+		TIMES CUP:“z—ê:—}ŸT , 0.80
+	ENDIF
+	;DŠïS
+	SIF TALENT:“z—ê:«“I‹»–¡ > 0
+		TIMES CUP:“z—ê:K“¾ , 1.20
+	;•ÛŽç“I
+	SIF TALENT:“z—ê:«“I‹»–¡ < 0
+		TIMES CUP:“z—ê:K“¾ , 0.80
+	;ŠyŠÏ“I
+	SIF TALENT:“z—ê:—z‹C^‰A‹C > 0
+		TIMES CUP:“z—ê:—}ŸT , 0.80
+	;”ßŠÏ“I
+	SIF TALENT:“z—ê:—z‹C^‰A‹C < 0
+		TIMES CUP:“z—ê:—}ŸT , 1.20
+	;–Ú—§‚¿‚½‚ª‚è
+	SIF TALENT:“z—ê:–Ú—§‚¿‚½‚ª‚è
+		TIMES CUP:“z—ê:‹±‡ , 1.20
+	;—}ˆ³
+	IF TALENT:“z—ê:Ž©ŒÈˆ¤ < 0
+		TIMES CUP:“z—ê:—~î , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+		TIMES CUP:“z—ê:—}ŸT , 1.20
+	ENDIF
+	;‰ð•ú
+	IF TALENT:“z—ê:Ž©ŒÈˆ¤ > 0
+		TIMES CUP:“z—ê:—~î , 1.20
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+	ENDIF
+	;’ïR
+	IF TALENT:“z—ê:’ïR
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+		TIMES CUP:“z—ê:—}ŸT , 1.20
+	ENDIF
+	;’ÉŠo
+	CUP:“z—ê:‹ê’É = CUP:“z—ê:‹ê’É * (10 + 2 * TALENT:“z—ê:’ÉŠo) / 10
+	;K“¾‘¬“x
+	CUP:“z—ê:K“¾ = CUP:“z—ê:K“¾ * (10 + 2 * TALENT:“z—ê:K“¾‘¬“x) / 10
+	;Œ£g“I
+	SIF TALENT:“z—ê:Œ£g“I
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+	;‰õŠ´‚É‘f’¼
+	SIF TALENT:“z—ê:‰õŠ´‰ž“š > 0
+		TIMES CUP:“z—ê:—~î , 1.20
+	;‰õŠ´‚Ì”Û’èiˆú—A©•w‚Å–³Œøj
+	SIF TALENT:“z—ê:‰õŠ´‰ž“š < 0 && !TALENT:“z—ê:ˆú—
+		TIMES CUP:“z—ê:—~î , 0.80
+	;‘¦—Ž‚¿
+	IF TALENT:“z—ê:‘¦—Ž‚¿
+		TIMES CUP:“z—ê:‹±‡ , 2.00
+		TIMES CUP:“z—ê:—~î , 2.00
+		TIMES CUP:“z—ê:‹ü•ž , 2.00
+		TIMES CUP:“z—ê:K“¾ , 2.00
+		TIMES CUP:“z—ê:’pî , 2.00
+		TIMES CUP:“z—ê:‹°•| , 2.00
+		TIMES CUP:“z—ê:”½Š´ , 0.50
+		TIMES CUP:“z—ê:•s‰õ , 0.50
+		TIMES CUP:“z—ê:—}ŸT , 0.50
+	ENDIF
+	;Ž©ˆÔ‹¶‚¢
+	SIF TALENT:“z—ê:Ž©ˆÔ‹¶‚¢
+		TIMES CUP:“z—ê:—~î , 1.20
+	;ˆúšâ
+	SIF TALENT:“z—ê:ˆúšâ
+		TIMES CUP:“z—ê:‹±‡ , 1.20
+	;KŒŠ‹¶‚¢
+	SIF TALENT:“z—ê:KŒŠ‹¶‚¢
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+	;ˆú“û
+	SIF TALENT:“z—ê:ˆú“û
+		TIMES CUP:“z—ê:’pî , 1.20
+	;“|ö“I
+	IF TALENT:“z—ê:“|ö“I
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+		TIMES CUP:“z—ê:’pî , 1.20
+	ENDIF
+	;’jŒ™‚¢i—«‚Ì‚Ý—ö•çAeˆ¤‚Å–³Œøj
+	IF TALENT:“z—ê:«•ÊšnD & 1 && !(HAS_VAGINA(PLAYER)) && (!TALENT:“z—ê:—ö•ç || PLAYER != MASTER)
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:—~î , 0.80
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:K“¾ , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+		TIMES CUP:“z—ê:•s‰õ , 1.20
+	ENDIF
+	;ƒTƒh
+	IF TALENT:“z—ê:ƒTƒh
+		TIMES CUP:“z—ê:—D‰z , 2.00
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:‹°•| , 0.80
+	ENDIF
+	;ƒ}ƒ]
+	IF TALENT:“z—ê:ƒ}ƒ]
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+		TIMES CUP:“z—ê:‹°•| , 1.20
+		TIMES CUP:“z—ê:—}ŸT , 0.80
+	ENDIF
+	IF TALENT:“z—ê:¬ˆ«–‚
+		TIMES CUP:“z—ê:—D‰z , 1.50
+	ENDIF
+	;–ÏM
+	IF TALENT:“z—ê:–ÏM
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+		TIMES CUP:“z—ê:”½Š´ , 0.80
+	ENDIF
+	;—Œ™‚¢i’j«‚Ì‚Ý—ö•çAeˆ¤‚Å–³Œøj
+	IF TALENT:“z—ê:«•ÊšnD & 2 && (HAS_VAGINA(PLAYER)) && (!TALENT:“z—ê:—ö•ç || PLAYER != MASTER )
+		TIMES CUP:“z—ê:‹±‡ , 0.80
+		TIMES CUP:“z—ê:—~î , 0.80
+		TIMES CUP:“z—ê:‹ü•ž , 0.80
+		TIMES CUP:“z—ê:K“¾ , 0.80
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+		TIMES CUP:“z—ê:•s‰õ , 1.20
+	ENDIF
+	;-------------------------------------------------
+	;‚»‚Ì‘¼
+	;-------------------------------------------------
+	;‹ê’Éˆó
+	IF MARK:“z—ê:‹ê’Éˆó == 3
+		TIMES CUP:“z—ê:‹ê’É , 1.30
+		TIMES CUP:“z—ê:‹°•| , 1.30
+	ELSEIF MARK:“z—ê:‹ê’Éˆó == 2
+		TIMES CUP:“z—ê:‹ê’É , 1.20
+		TIMES CUP:“z—ê:‹°•| , 1.20
+	ELSEIF MARK:“z—ê:‹ê’Éˆó == 1
+		TIMES CUP:“z—ê:‹ê’É , 1.10
+		TIMES CUP:“z—ê:‹°•| , 1.10
+	ENDIF
+	;‰õŠyˆó
+	IF MARK:“z—ê:‰õŠyˆó == 3
+		TIMES CUP:“z—ê:—~î , 1.30
+		TIMES CUP:“z—ê:K“¾ , 1.30
+	ELSEIF MARK:“z—ê:‰õŠyˆó == 2
+		TIMES CUP:“z—ê:—~î , 1.20
+		TIMES CUP:“z—ê:K“¾ , 1.20
+	ELSEIF MARK:“z—ê:‰õŠyˆó == 1
+		TIMES CUP:“z—ê:—~î , 1.10
+		TIMES CUP:“z—ê:K“¾ , 1.10
+	ENDIF
+	;‹ü•žˆó
+	IF MARK:“z—ê:‹ü•žˆó == 3
+		TIMES CUP:“z—ê:‹±‡ , 1.30
+		TIMES CUP:“z—ê:‹ü•ž , 1.30
+	ELSEIF MARK:“z—ê:‹ü•žˆó == 2
+		TIMES CUP:“z—ê:‹±‡ , 1.20
+		TIMES CUP:“z—ê:‹ü•ž , 1.20
+	ELSEIF MARK:“z—ê:‹ü•žˆó == 1
+		TIMES CUP:“z—ê:‹±‡ , 1.10
+		TIMES CUP:“z—ê:‹ü•ž , 1.10
+	ENDIF
+	;”½”­ˆó
+	IF MARK:“z—ê:”½”­ˆó == 3
+		TIMES CUP:“z—ê:‹±‡ , 0.10
+		TIMES CUP:“z—ê:”½Š´ , 1.30
+	ELSEIF MARK:“z—ê:”½”­ˆó == 2
+		TIMES CUP:“z—ê:‹±‡ , 0.40
+		TIMES CUP:“z—ê:”½Š´ , 1.20
+	ELSEIF MARK:“z—ê:”½”­ˆó == 1
+		TIMES CUP:“z—ê:‹±‡ , 0.60
+		TIMES CUP:“z—ê:”½Š´ , 1.10
+	ENDIF
+	;-------------------------------------------------
+	;“ïˆÕ“x‚È‚Ç‚É‚æ‚éã‰º‚Ìˆ—
+	;-------------------------------------------------
+	CUP:“z—ê:ŠŠ = CUP:“z—ê:ŠŠ * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:‹±‡ = CUP:“z—ê:‹±‡ * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:—~î = CUP:“z—ê:—~î * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:‹ü•ž = CUP:“z—ê:‹ü•ž * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:K“¾ = CUP:“z—ê:K“¾ * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:’pî = CUP:“z—ê:’pî * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:‹ê’É = CUP:“z—ê:‹ê’É * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:‹°•| = CUP:“z—ê:‹°•| * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:DˆÓ = CUP:“z—ê:DˆÓ * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:—D‰z = CUP:“z—ê:—D‰z * (16 - 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:”½Š´ = CUP:“z—ê:”½Š´ * (8 +  4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:•s‰õ = CUP:“z—ê:•s‰õ * (8 + 4 * FLAG:“ïˆÕ“x) / 10
+	CUP:“z—ê:—}ŸT = CUP:“z—ê:—}ŸT * (8 + 4 * FLAG:“ïˆÕ“x) / 10
+	;-------------------------------------------------
+	;‘Š«‚É‚æ‚éã‰º‚Ìˆ—
+	;-------------------------------------------------
+	IF Žål < CHARANUM && RELATION:“z—ê:(NO:Žål) != 0
+		CUP:“z—ê:—~î *= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:—~î /= 100
+		CUP:“z—ê:‹ü•ž *= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:‹ü•ž /= 100
+		CUP:“z—ê:’pî *= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:’pî /= 100
+		CUP:“z—ê:”½Š´ *= 100
+		CUP:“z—ê:”½Š´ /= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:•s‰õ *= 100
+		CUP:“z—ê:•s‰õ /= RELATION:“z—ê:(NO:Žål)
+		CUP:“z—ê:—}ŸT *= 100
+		CUP:“z—ê:—}ŸT /= RELATION:“z—ê:(NO:Žål)
+	ENDIF
+	;-------------------------------------------------
+	;‹C—Í‚O‚É‚æ‚éã‰º‚Ìˆ—
+	;-------------------------------------------------
+	IF BASE:“z—ê:1 <= 0
+		;UP:0,1,2‚Íâ’¸‚É—‚Þ‚Ì‚Åæ‚Éˆ—‚µ‚Ä‚ ‚é
+		CUP:“z—ê:—~î /= 2
+		CUP:“z—ê:‹±‡ /= 2
+		CUP:“z—ê:‹ü•ž /= 2
+		CUP:“z—ê:K“¾ /= 2
+		CUP:“z—ê:’pî /= 2
+		CUP:“z—ê:‹°•| /= 2
+		CUP:“z—ê:‹ê’É /= 2
+		DOWNBASE:“z—ê:‘Ì—Í *= 2
+		DOWNBASE:“z—ê:‘Ì—Í += 80
+	ENDIF
+	;-------------------------------------------------
+	;‹ê’É‚©‚ç‚­‚é‘Ì—ÍE‹C—Í‚ÌŒ¸­
+	;-------------------------------------------------
+	LOCAL = CUP:“z—ê:‹ê’É / 20
+	;ABL:ƒ}ƒ]‚Á‹C‚ð‚Ý‚é
+	SELECTCASE ABL:“z—ê:ƒ}ƒ]‚Á‹C
+		CASE 0
+			TIMES LOCAL , 1.00
+		CASE 1
+			TIMES LOCAL , 0.95
+		CASE 2
+			TIMES LOCAL , 0.90
+		CASE 3
+			TIMES LOCAL , 0.80
+		CASE 4
+			TIMES LOCAL , 0.65
+		CASEELSE
+			TIMES LOCAL , 0.50
+	ENDSELECT
+	;’ÉŠo
+	LOCAL = LOCAL * (10 + TALENT:“z—ê:’ÉŠo * 2) / 10
+	DOWNBASE:“z—ê:‘Ì—Í += LOCAL
+	DOWNBASE:“z—ê:‹C—Í += LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:ŠÖ”‚Ìà–¾‚ð‘‚¢‚Ä‚­‚¾‚³‚¢
+;@return 1:xxx,0:xxx
+@SOURCE_DOWNBASE(“z—ê,Žål=0)
+	#DIM “z—ê
+	#DIM Žål
+	BASE:“z—ê:‘Ì—Í = MAX(0,BASE:“z—ê:‘Ì—Í - DOWNBASE:“z—ê:‘Ì—Í)
+	BASE:“z—ê:‹C—Í = MAX(0,BASE:“z—ê:‹C—Í - DOWNBASE:“z—ê:‹C—Í)

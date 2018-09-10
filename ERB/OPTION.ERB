@@ -1,0 +1,408 @@
+;オプション設定処理
+@OPTION
+	PRINTL Select option.
+	PRINTL [ 0] - Text settings
+	PRINTL [ 1] - Command filter
+	PRINTFORML %"[ 2] - Automatically purchase consumable items on use", 90, LEFT%\@ FLAG:1001 ? ON # OFF \@
+	PRINTFORML %"[ 3] - Display mansion information", 90, LEFT%\@ FLAG:1002 ? OFF # ON \@
+	PRINTFORML [10] - NTR patch settings
+	PRINTFORML %"[11] - Luna patch settings", 90, LEFT%\@ GETBIT(FLAG:ぅな設定,0) ?ON#OFF\@
+	PRINTFORML [12] - Character reset
+	PRINTFORML %"[13] - Talent changing settings", 90, LEFT%\@ FLAG:56 ? ON # OFF \@
+	PRINTL
+	PRINTFORML %"[15] - Underwear information cannot be obtained when wearing trousers, etc", 90, LEFT%\@ GETBIT(FLAG:雑多設定,1) ?ON#OFF\@
+	PRINTFORML %"[16] - Show action prompt when encountering SDM residents on moving", 90, LEFT%\@ GETBIT(FLAG:雑多設定,2) ?ON#OFF\@
+	PRINTFORML %"[17] - Don't show dirtiness through clothing (NTR Gossip Mode will overwrite this)", 90, LEFT%\@ GETBIT(FLAG:汚れ非表示設定,0) ?ON#OFF\@
+	PRINTL
+	PRINTFORML %"[20] - Interactions between residents, status and position settings", 90, LEFT%\@ GETBIT(FLAG:住人同士イベント設定,0) ?ON#OFF\@
+	PRINTFORML %"[21] - Residents will not change clothes everyday (For smell fetishists)", 90, LEFT%\@ GETBIT(FLAG:匂いフェチ,1) ?ON#OFF\@
+	PRINTFORML %"[24] - Enable Hypnotism patch (Not fully implemented)", 90, LEFT%\@ GETBIT(FLAG:催眠設定,1) ?ON#OFF\@
+	PRINTFORML %"[25] - Favorability gain scaling from interacting with residents", 90, LEFT%\@ FLAG:好感度倍率 ?{FLAG:好感度倍率/10}.{FLAG:好感度倍率%10}x#1x\@
+	PRINTFORML %"[26] - Succumbing gain scaling", 90, LEFT%\@ FLAG:屈服度倍率 ?{FLAG:屈服度倍率}x#1x\@
+	PRINTFORM %"[27] - Smell settings for rooms and residents", 90, LEFT%
+	IF GETBIT(FLAG:部屋のにおい_初期FLAG,0) && GETBIT(FLAG:部屋のにおい_初期FLAG,1)
+		PRINTL Detailed mode
+	ELSEIF GETBIT(FLAG:部屋のにおい_初期FLAG,0)
+		PRINTL Normal mode
+	ELSE
+		PRINTL OFF
+	ENDIF
+	PRINTFORML %"[96] - Ask how to finger when fingering", 90, LEFT%\@ FLAG:FingeringCheck ? OFF # ON \@
+	PRINTFORML %"[97] - Show pregnancy debug info", 90, LEFT%\@ FLAG:生理機能追加パッチ等debug ? ON # OFF \@
+	PRINTFORML [98]\@ FLAG:AA表示 ? ┬ # %" "%- \@ Show images%" " * 72%\@ FLAG:AA表示 ? ON # OFF \@
+	SIF FLAG:AA表示
+		PRINTFORML [99]└ Advanced image settings
+	PRINTL [100] Return
+	$INPUT_LOOP
+	INPUT
+	IF RESULT == 0
+		CALL OPTION_TEXT_SETTING
+	ELSEIF RESULT == 1
+		CALL OPTION_COMMAND_FILTER
+	ELSEIF RESULT == 2
+		FLAG:1001 = !FLAG:1001
+	ELSEIF RESULT == 3
+		CALL OPTION_HOUSE_INFO
+	ELSEIF RESULT == 10
+		CALL NTR_OPTION
+	ELSEIF RESULT == 11
+		CALL LUNA_OPTION
+	ELSEIF RESULT == 12
+		CALL CHARA_RESET
+		CALL 体詳細設定１
+	ELSEIF RESULT == 13
+		CALL Ability_OPTION	
+	ELSEIF RESULT == 15
+		CALL 下着不可視コンフィング
+	ELSEIF RESULT == 16
+		CALL 従者イベントコンフィング
+	ELSEIF RESULT == 17
+		CALL 汚れ非表示コンフィグ
+	ELSEIF RESULT == 20
+		CALL INHABITANT_SETTINGS
+	ELSEIF RESULT == 21
+		CALL 匂いフェチコンフィグ
+	ELSEIF RESULT == 24
+		CALL 催眠パッチコンフィグ
+	ELSEIF RESULT == 25
+		CALL 好感度倍率コンフィグ
+	ELSEIF RESULT == 26
+		CALL 屈服度倍率コンフィグ
+	ELSEIF RESULT == 27
+		CALL 部屋のにおいコンフィグ
+	ELSEIF RESULT == 96
+		FLAG:FingeringCheck = !FLAG:FingeringCheck
+	ELSEIF RESULT == 97
+		FLAG:生理機能追加パッチ等debug = !FLAG:生理機能追加パッチ等debug
+	ELSEIF RESULT == 98
+		FLAG:AA表示 = !FLAG:AA表示
+	ELSEIF RESULT == 99 && FLAG:AA表示
+		CALL OPTION_画像表示詳細設定
+	ELSEIF RESULT == 100
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+	RESTART
+
+;テキスト関連
+@OPTION_TEXT_SETTING
+	PRINTL Please select the text setting.
+	PRINT Current setting: 
+	IF FLAG:情景テキスト設定 == 1 && FLAG:口上テキスト設定 == 2
+		PRINTL 【Dialogue (always)＋Description】
+	ELSEIF FLAG:情景テキスト設定 == 1 && FLAG:口上テキスト設定 == -1
+		PRINTL 【Description only】
+	ELSEIF FLAG:情景テキスト設定 == 0 && FLAG:口上テキスト設定 == -1
+		PRINTL 【Don't display any text】
+	ENDIF
+	PRINTL 　
+	PRINTL [0] - Dialogue＋Description text
+	PRINTL [1] - Description only
+	PRINTL [2] - Don't display any text
+	PRINTL [100]-Return
+	$INPUT_LOOP
+	INPUT
+	IF RESULT == 100
+		RETURN 0
+	ELSEIF RESULT == 0
+		PRINTL Text setting has been set to 【Dialogue＋Description】
+		FLAG:情景テキスト設定 = 1
+		FLAG:口上テキスト設定 = 2
+	ELSEIF RESULT == 1
+		PRINTL Text setting has been set to 【Descriptions only】
+		FLAG:情景テキスト設定 = 1
+		FLAG:口上テキスト設定 = -1
+	ELSEIF RESULT == 2
+		PRINTL Text setting has been set to 【Don't diplay any text】
+		FLAG:情景テキスト設定 = 0
+		FLAG:口上テキスト設定 = -1
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+	RESTART
+
+;文字列変数に保存してみた
+@OPTION_COMMAND_FILTER
+	VARSET LOCAL
+	FOR COUNT,0,650
+		LOCALS = /{COUNT}/
+		SIF STRCOUNT(SAVESTR:0,LOCALS)
+			LOCAL:COUNT = 1
+	NEXT
+	SIF SAVESTR:0 == ""
+		SAVESTR:0 = /
+	DRAWLINE
+	TFLAG:100 = 1
+	FOR COUNT,0,650
+		LOCALS = /{COUNT}/
+		SIF STRCOUNT(SAVESTR:0,LOCALS)
+			SETCOLOR 色設定_テキスト_備考
+		SIF STRLENS(TRAINNAME:COUNT)
+			PRINTFORMC %TRAINNAME:COUNT%[{COUNT,3}]
+		RESETCOLOR
+	NEXT
+	TFLAG:100 = 0
+	PRINTL 
+	DRAWLINE
+	PRINTL [1000] - Done          [1001] - Reset
+	PRINTL [1002] - Save settings [1003] - Load settings
+	PRINTL [1010] - SM Filter     [1011] - V Filter      
+	INPUT
+	IF RESULT == 1000
+		RETURN 0
+	ELSEIF RESULT == 1001
+		SAVESTR:0 = 
+		RESTART
+	ELSEIF RESULT == 1002
+		$INPUT_LOOP_SAVE
+		LOADGLOBAL
+		FOR LOCAL,0,3
+			PRINTFORM [{LOCAL}] - 
+			IF STRLENS(GLOBALS:(LOCAL * 2 + 1))
+				PRINTFORML [%GLOBALS:(LOCAL * 2 + 1)%]
+			ELSE
+				PRINTL ----------
+			ENDIF
+		NEXT
+		PRINTL [100] - Return
+		INPUT
+		LOCAL = RESULT
+		IF RESULT == 100
+			RESTART
+		ELSEIF RESULT < 0 || RESULT > 2
+			GOTO INPUT_LOOP_SAVE
+		ENDIF
+		SIF STRLENS(GLOBALS:(RESULT * 2 + 1))
+			PRINTFORML Entry【%GLOBALS:(RESULT * 2 + 1)%】will be overwritten.
+		PRINTL Please name this entry.
+		INPUTS
+		GLOBALS:(LOCAL * 2 + 1) = %RESULTS%
+		GLOBALS:(LOCAL * 2) = %SAVESTR:0%
+		PRINTFORMW Entry was saved as 【%GLOBALS:(LOCAL * 2 + 1)%】
+		SAVEGLOBAL
+		RESTART
+	ELSEIF RESULT == 1003
+		$INPUT_LOOP_LOAD
+		LOADGLOBAL
+		FOR LOCAL,0,3
+			PRINTFORM [{LOCAL}] - 
+			IF STRLENS(GLOBALS:(LOCAL * 2 + 1))
+				PRINTFORML [%GLOBALS:(LOCAL * 2 + 1)%]
+			ELSE
+				PRINTL ----------
+			ENDIF
+		NEXT
+		PRINTL [100] - Return
+		INPUT
+		IF RESULT == 100
+			RESTART
+		ELSEIF RESULT < 0 || RESULT > 2
+			GOTO INPUT_LOOP_LOAD
+		ENDIF
+		PRINTFORMW Entry【%GLOBALS:(RESULT * 2 + 1)%】has been loaded.
+		SAVESTR:0 = %GLOBALS:(RESULT * 2)%
+		RESTART
+	;各種フィルタ
+	ELSEIF RESULT == 1010 || RESULT == 1011
+		FOR COUNT,0,650
+			;SM
+			IF RESULT == 1010
+				SIF (COUNT >= 100 && COUNT < 120) || (COUNT >= 140 && COUNT < 160)
+					LOCAL:COUNT = 1
+			;V
+			ELSEIF RESULT == 1011
+				SIF COUNT == 3 || COUNT == 44 || COUNT == 60 || COUNT == 61 || COUNT == 65 || COUNT == 67 || COUNT == 68 || COUNT == 71 
+					LOCAL:COUNT = 1
+				SIF COUNT == 122|| COUNT == 141 || COUNT == 143 || COUNT == 185 || COUNT == 603 || COUNT == 644
+					LOCAL:COUNT = 1
+			ENDIF
+		NEXT
+	ELSEIF STRLENS(TRAINNAME:RESULT)
+		LOCAL:RESULT = !LOCAL:RESULT
+	ELSE
+		RESTART
+	ENDIF
+	SAVESTR:0 = /
+	FOR COUNT,0,650
+		SIF !LOCAL:COUNT
+			CONTINUE
+		LOCALS = /{COUNT}/
+		SIF !STRCOUNT(SAVESTR:0,LOCALS)
+			SAVESTR:0 = %SAVESTR:0%{COUNT}/
+	NEXT
+	RESTART
+
+@OPTION_HOUSE_INFO
+	PRINTL If you don't want to see that the house is full of garbage.
+	PRINTL [0] Display information [1] - OFF
+	INPUT
+	IF RESULT == 0
+		FLAG:1002 = 0
+	ELSE
+		FLAG:1002 = 1
+	ENDIF
+
+
+@Ability_OPTION
+	PRINTL Should talents be changed by the appropriate experience? 
+	PRINTL [0] Yes [1] No
+	INPUT
+	IF RESULT == 0
+		FLAG:56 = 1
+		PRINTL Talents will now be able to change.
+	ELSE
+		FLAG:56 = 0
+		PRINTL Talents will not change anymore.
+	ENDIF
+
+@下着不可視コンフィング
+	IF GETBIT(FLAG:雑多設定,1)
+		CLEARBIT FLAG:雑多設定,1
+	ELSE
+		SETBIT FLAG:雑多設定,1
+	ENDIF
+
+@従者イベントコンフィング
+	IF GETBIT(FLAG:雑多設定,2)
+		CLEARBIT FLAG:雑多設定,2
+	ELSE
+		SETBIT FLAG:雑多設定,2
+	ENDIF
+
+
+@汚れ非表示コンフィグ
+	IF GETBIT(FLAG:汚れ非表示設定,0)
+		CLEARBIT FLAG:汚れ非表示設定,0
+	ELSE
+		SETBIT FLAG:汚れ非表示設定,0
+	ENDIF
+
+@匂いフェチコンフィグ
+	IF GETBIT(FLAG:匂いフェチ,1)
+		CLEARBIT FLAG:匂いフェチ,1
+	ELSE
+		SETBIT FLAG:匂いフェチ,1
+	ENDIF
+
+@催眠パッチコンフィグ
+	IF GETBIT(FLAG:催眠設定,1)
+		CLEARBIT FLAG:催眠設定,1
+	ELSE
+		SETBIT FLAG:催眠設定,1
+	ENDIF
+
+@好感度倍率コンフィグ
+	PRINTL
+	PRINTFORML Scaling setting (1 = 0.1x,　MAX 50, type 0 or less to reset)
+	INPUT
+	
+	IF RESULT > 0
+		FLAG:好感度倍率 = MIN(RESULT, 50)
+	ELSE
+		FLAG:好感度倍率 = 0
+	ENDIF
+
+@屈服度倍率コンフィグ
+	PRINTL
+	PRINTFORML (1 = 0.1x,　MAX 50, type 0 or less to reset)
+	INPUT
+	
+	IF RESULT > 0
+		FLAG:屈服度倍率 = MIN(RESULT, 50)
+	ELSE
+		FLAG:屈服度倍率 = 0
+	ENDIF
+	
+@部屋のにおいコンフィグ
+	$CONFIG_TOP
+	PRINT Current setting:  
+	IF GETBIT(FLAG:部屋のにおい_初期FLAG,0) && GETBIT(FLAG:部屋のにおい_初期FLAG,1)
+		PRINT Detailed mode
+	ELSEIF GETBIT(FLAG:部屋のにおい_初期FLAG,0)
+		PRINT Normal mode
+	ELSE
+		PRINT OFF
+	ENDIF
+	;PRINTL です
+	PRINTL
+	PRINTL [100] - Normal mode   : Only smell of body and smell of sweat can be distinguished
+	PRINTL [101] - Detailed mode : All odors can be distinguished in detail
+	PRINTL [102] -      OFF      : Will disable this function altogether
+	PRINTL
+	PRINTL [999] Return
+	
+	$INPUT_LOOP
+	INPUT
+	IF RESULT == 100
+		SETBIT FLAG:部屋のにおい_初期FLAG,0
+		CLEARBIT FLAG:部屋のにおい_初期FLAG,1
+	ELSEIF RESULT == 101
+		SETBIT FLAG:部屋のにおい_初期FLAG,0
+		SETBIT FLAG:部屋のにおい_初期FLAG,1
+	ELSEIF RESULT == 102
+		CLEARBIT FLAG:部屋のにおい_初期FLAG,0
+		CLEARBIT FLAG:部屋のにおい_初期FLAG,1
+	ELSEIF RESULT == 999
+		RETURN 0
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+	GOTO CONFIG_TOP
+	
+;---------------------------------------------------------------
+;	画像詳細設定
+;	設定が増えたので新設
+;---------------------------------------------------------------
+@OPTION_画像表示詳細設定
+PRINTL
+PRINTFORML [*]┬ Currently can show only {FLAG:画像表示} \@ FLAG:立ち絵種類 ? facial # standing \@ pictures simultaneously
+PRINTFORML [1]├ Increase
+PRINTFORML [2]└ Decrease
+PRINTFORML [3] - Character image type \@ FLAG:立ち絵種類 ? [Facial] # [Standing] \@
+PRINTFORML [4]\@ FLAG:挿絵表示 ? ┬ # %" "%- \@ Animations \@ FLAG:挿絵表示 ? ON # OFF \@
+IF FLAG:挿絵表示
+	PRINT [5]└ Ejaculation image type
+	SELECTCASE FLAG:射精画像種類
+		CASE 0
+			PRINTL  [Cross Section＋Sound Effects]
+		CASE 1
+			PRINTL  [Cross Section only]
+		CASE 2
+			PRINTL  [Sound Effects only]
+	ENDSELECT
+ENDIF
+PRINTFORML [6] - Repeat animation \@ FLAG:アニメーション ? {FLAG:アニメーション} times # OFF \@
+PRINTFORML [7] - Align \@ FLAG:立ち絵種類 ? facial # standing \@ pictures to [\@ FLAG:画像表示位置 ? left# center \@]
+PRINTFORML [8] - Display a frame around images \@ FLAG:画像枠表示 ? ON # OFF \@
+PRINTFORML [999] - Return
+INPUT
+IF RESULT == 999
+	RETURN 0
+ELSEIF RESULT == 1
+	FLAG:画像表示++
+	SIF FLAG:画像表示 > 10
+		FLAG:画像表示 = 10
+ELSEIF RESULT == 2
+	FLAG:画像表示--
+	SIF FLAG:画像表示 < 1
+		FLAG:画像表示 = 1
+ELSEIF RESULT == 3
+	FLAG:立ち絵種類 = !FLAG:立ち絵種類
+ELSEIF RESULT == 4
+	FLAG:挿絵表示 = !FLAG:挿絵表示
+ELSEIF RESULT == 5 && FLAG:挿絵表示
+	FLAG:射精画像種類++
+	SIF FLAG:射精画像種類 >= 3
+		FLAG:射精画像種類 = 0
+ELSEIF RESULT == 6
+	FLAG:アニメーション++
+	SIF FLAG:アニメーション >= 6
+		FLAG:アニメーション = 0
+ELSEIF RESULT == 7
+	FLAG:画像表示位置 = !FLAG:画像表示位置
+ELSEIF RESULT == 8
+	FLAG:画像枠表示 = !FLAG:画像枠表示
+ENDIF
+RESTART

@@ -1,0 +1,26 @@
+;;これだけは設定しておいていただかないと……
+;-------------------------------------------
+;子悪魔が他の人を呼ぶときの例外処理関数
+;-------------------------------------------
+@CALLNAME_K7(奴隷, 対象)
+	#FUNCTIONS
+	#DIM 奴隷
+	#DIM 対象
+	#DIMS 呼称
+
+	呼称 = %CALLNAME:対象%-san
+	IF CALLNAME:奴隷 == "Koakuma (Child)"
+		IF CALLNAME:対象 == "Remi" || CALLNAME:対象 == "Remilia"
+			呼称 = Mistress Remilia
+		ELSEIF CALLNAME:対象 == "Flan" || CALLNAME:対象 == "Flandre"
+			呼称 = Lady Flandre
+		ELSEIF CALLNAME:対象 == "Patchouli"
+			呼称 = Patchouli-sama
+		ELSEIF CALLNAME:対象 == "Koakuma"
+			呼称 = Onee-chan
+		ELSE
+		ENDIF
+	ELSE
+		; 名称変更時はデフォルトのまま
+	ENDIF
+	RETURNF 呼称

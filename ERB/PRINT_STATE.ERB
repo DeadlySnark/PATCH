@@ -1,0 +1,2015 @@
+;-------------------------------------------------------------------------------
+;キャラクターの能力表示を行う
+;@param ARG:0 表示するキャラクター番号
+;@param ARG:1 宝珠を表示 1:する 0:しない
+;@param ARG:2 何処から呼び出したか 1:SHOP 0:それ以外
+;@return 1:xxx,0:xxx
+@PRINT_STATE(奴隷, 宝珠表示, inSHOP)
+	#DIM 奴隷
+	#DIM 宝珠表示
+	#DIM inSHOP
+	PRINTL
+	PRINTL
+	PRINTL
+	DRAWLINE
+	PRINTS NAME:奴隷
+	;成人以外の子供のみ表示される
+	SIF (NO:奴隷 == 148 || NO:奴隷 == 149)
+		PRINTFORM  %子供の成長状態(奴隷)%
+	PRINT  (Favorability: 
+	CALL PRINT_アルファベット評価(奴隷,1)
+	PRINTFORM  {CFLAG:奴隷:好感度}) 
+	PRINTFORM    Threat from %NTR_NAME(0)%
+	PRINT  (Succumbing: 
+	CALL PRINT_アルファベット評価(奴隷,2)
+	PRINTFORM  {CFLAG:奴隷:屈服度}) 
+	PRINT (Threat: 
+	CALL PRINT_アルファベット評価(奴隷,3)
+	PRINTFORM  {CFLAG:奴隷:脅迫度}) 
+	
+	SIF 奴隷 == MASTER
+		CALL SHOW_MONEY(1)
+	SETCOLOR C_AQUA
+	;IF CFLAG:奴隷:生解禁 == 2
+	;	PRINT Agreed to make children.
+	;ELSEIF CFLAG:奴隷:生解禁 == 1
+	;	PRINT Doing it raw is allowed.
+	IF GETBIT(CFLAG:奴隷:既成事実,0)
+		PRINT Couple
+	ENDIF
+	RESETCOLOR
+	PRINTL
+	;@出産まで後何日
+	IF TALENT:奴隷:妊娠
+		PRINTFORML (Will give birth to %N_T_R(CFLAG:奴隷:にんっしんっ - 1, 1)%'s child in {CFLAG:奴隷:出産日 - DAY} day\@CFLAG:奴隷:出産日 - DAY == 1 ?#s\@)
+	ENDIF
+	;出産まで後何日ここまで
+	PRINT STA 
+				CALL PRINT_COLORBAR, BASE:奴隷:0, MAXBASE:奴隷:0, 28, UNICODE(0x2585), UNICODE(0x2585), BARCOLORSET("赤"), RESULT:1
+				PRINTFORM  ({BASE:奴隷:体力,5}/{MAXBASE:奴隷:体力,5}) 
+	PRINT ENE 
+				CALL PRINT_COLORBAR, BASE:奴隷:1, MAXBASE:奴隷:1, 28, UNICODE(0x2585), UNICODE(0x2585), BARCOLORSET("緑"), RESULT:1
+				PRINTFORML  ({BASE:奴隷:気力,5}/{MAXBASE:奴隷:気力,5}) 
+	;PRINTL
+	;行あわせ準備
+	LOCAL:1 = LINECOUNT
+	IF LOCAL == 0
+		PRINTL [33] Picture
+			IF FLAG:AA表示 && FLAG:画像表示
+				CALL PRINT_STATE_IMAGE(奴隷)
+			ENDIF
+		PRINTL
+		PRINTL ＝＝Main Information 1＝＝
+		CALL PRINT_STATE_CLOTH(奴隷)
+		CALL PRINT_STATE_ABL(奴隷)
+		PRINTL
+		CALL PRINT_STATE_TALENT(奴隷)
+		IF 奴隷 != MASTER
+			PRINTL
+			PRINTL □ Marks □------------------------------------------------------------------------------
+			CALL PRINT_STATE_MARK(奴隷)
+		ELSE
+			PRINTL
+		ENDIF
+		CALL PRINT_STATE_EXP(奴隷)
+		SIF 奴隷 != MASTER && !宝珠表示
+			CALL PRINT_STATE_JUEL(奴隷)
+		SIF 宝珠表示
+			CALL PRINT_STATE_EX(奴隷)
+		PRINTL
+		TRYCALL PRINT_RELATION(奴隷)
+	ELSEIF LOCAL == 1
+		PRINTL ＝＝Main Information 2＝＝
+		PRINTL □ Body □-------------------------------------------------------------------------------
+		TRYCALL PRINT_STATE_BODY(奴隷)
+		PRINTL
+		PRINTL □ Other □------------------------------------------------------------------------------
+		TRYCALL PRINT_STATE_MEMORIAL(奴隷)
+		TRYCALL PRINT_STATE_PROTECTION(奴隷)
+		;Showing time for chastity belt key
+		SIF FLAG:貞操帯鍵購入フラグ && 奴隷 == MASTER
+			PRINTFORML You have a key for %CALLNAME:(FLAG:貞操帯鍵購入フラグ)%'s chastity belt (Expires at \@ (FLAG:貞操帯鍵有効カウンタ - 1440 * DAY) / 60 >= 24? {((FLAG:貞操帯鍵有効カウンタ - 1440 * DAY) / 60) - 24} # {(FLAG:貞操帯鍵有効カウンタ - 1440 * DAY) / 60} \@:{(FLAG:貞操帯鍵有効カウンタ - 1440 * DAY) % 60}　Time Left: {(FLAG:貞操帯鍵有効カウンタ - TIME_PROGRESS())/60} hours and {(FLAG:貞操帯鍵有効カウンタ - TIME_PROGRESS()) % 60} minutes)
+		;従者イベント,ERB
+		IF GETBIT(FLAG:雑多設定,2) && 奴隷 == MASTER
+			PRINTL
+			FOR LOCAL:5, 1, 8
+				SIF CFLAG:(LOCAL:5):従者イベント１ < 10
+					CONTINUE
+				TRYCALL PRINT_STATE_ZYUSYAEVENT(LOCAL:5)
+			NEXT
+		ENDIF
+		;料理の状態
+		IF FLAG:料理 && 奴隷 == MASTER
+			PRINT Food on hand   : 
+			IF TCVAR:MASTER:306 == 2
+				PRINT Stinks a bit
+			ELSEIF TCVAR:MASTER:306 == 1
+				PRINT Cold
+			ENDIF
+			PRINTFORML You got %GETDISHNAME(FLAG:料理)%
+		ENDIF
+		PRINTL
+	ELSEIF LOCAL == 2
+		PRINTL ＝＝Parent-Child Information 1＝＝
+		PRINTL
+		PRINTL □ Sibling Relationship □---------------------------------------------------------------
+		TRYCALL PRINT_PARENT_3(奴隷)
+		PRINTL
+		PRINTL □ Parents □----------------------------------------------------------------------------
+		TRYCALL PRINT_PARENT(奴隷)
+		PRINTL
+		PRINTL □ Children □---------------------------------------------------------------------------
+		TRYCALL PRINT_PARENT_2(奴隷)
+		PRINTL
+	ELSEIF LOCAL == 3
+		PRINTL ＝＝Parent-Child Information 2＝＝
+		PRINTL
+		PRINTL □ Childbirth Chart □-------------------------------------------------------------------
+		TRYCALL PRINT_PARENT_4(奴隷)
+		PRINTL
+	ENDIF
+	;行あわせ処理
+	IF LINECOUNT - LOCAL:1 < 40
+		LOCAL:1 = 40 - (LINECOUNT - LOCAL:1)
+		REPEAT LOCAL:1
+			PRINTL
+		REND
+	ENDIF
+	DRAWLINE
+	PRINTFORMLC \@(LOCAL == 0) ? [ 1]Last page # [ 1]Previous page\@
+	PRINTLC [5] Return
+	PRINTFORMLC \@(LOCAL == 3) ? [ 9]First page # [ 9]Next page\@
+	PRINTL
+
+	IF inSHOP
+		PRINTFORMLC \@(奴隷 == 0) ? [11]Last character # [11]Previous character\@
+		PRINTFORMLC Page {奴隷}/{CHARANUM-1}
+		PRINTFORMLC \@(奴隷 == CHARANUM -1) ? [99]First character # [99]Next character\@
+	ENDIF
+	$LOOP_STATE
+	INPUT
+	IF RESULT == 1
+		IF LOCAL == 0
+			LOCAL = 3
+		ELSE
+			LOCAL --
+		ENDIF
+		RESTART
+	ELSEIF RESULT == 9
+		IF LOCAL == 3
+			LOCAL = 0
+		ELSE
+			LOCAL ++
+		ENDIF
+		RESTART
+	ELSEIF RESULT == 11
+		SIF 奴隷 == 0
+			奴隷 = CHARANUM
+		奴隷 --
+		RESTART
+	ELSEIF RESULT == 99
+		IF 奴隷 == CHARANUM -1
+			奴隷 = 0
+		ELSE
+			奴隷 ++
+		ENDIF
+		RESTART
+	ELSEIF RESULT == 33
+		FLAG:AA表示 = !FLAG:AA表示
+		RESTART
+	ELSEIF RESULT != 5
+		GOTO LOOP_STATE
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@PRINT_STATE_CLOTH(ARG)
+	PRINTL
+	PRINTL □ Clothes □----------------------------------------------------------------------------
+	VARSET LOCAL
+	IF !EQUIP:ARG:衣服着用
+		PRINTL Naked
+		RETURN 0
+	ENDIF
+	FOR LOCAL,1,20
+		;下半身下着１
+		IF ARG != MASTER && LOCAL == 5 && GETBIT(FLAG:雑多設定,1) && Unknown下着(ARG, LOCAL)
+			IF GETBIT(FLAG:匂いフェチ,1) 
+				PRINTFORML [%"？Underwear？ "%]
+			ELSE
+				PRINTFORML [%"？Underwear？ "%]
+			ENDIF
+			LOCAL:1 ++
+			;下半身下着２
+		ELSEIF  ARG != MASTER && LOCAL == 6 && GETBIT(FLAG:雑多設定,1) && Unknown下着(ARG, LOCAL)
+			;装着の有無に限らず確認が取れていない場合何も表示されないようにする
+			IF GETBIT(FLAG:匂いフェチ,1)
+			ELSE
+			ENDIF
+			LOCAL:1 ++
+		ELSEIF EQUIP:ARG:LOCAL
+			IF GETBIT(FLAG:匂いフェチ,1) 
+				PRINTFORML [%IRUINAME_SMELL(EQUIP:ARG:LOCAL)%%CLOTHNAME(LOCAL,EQUIP:ARG:LOCAL)%]
+			ELSE
+				PRINTFORML [%CLOTHNAME(LOCAL,EQUIP:ARG:LOCAL)%]
+			ENDIF
+			LOCAL:1 ++
+		ENDIF
+	NEXT
+	SIF !LOCAL:1
+		PRINTL Naked
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@PRINT_STATE_ABL(ARG)
+	PRINTL
+	PRINTL □ Abilities □--------------------------------------------------------------------------
+	LOCAL:1 = 0
+	FOR LOCAL,0,50
+		SIF !STRLENS(ABLNAME:LOCAL)
+			CONTINUE
+		SIF LOCAL > 50 && ARG != MASTER
+			CONTINUE
+		;同性愛関係
+		IF !(HAS_VAGINA(ARG)) && (LOCAL == 17 || LOCAL == 32)
+			CONTINUE
+		ELSEIF HAS_VAGINA(ARG) && (LOCAL == 18 || LOCAL == 33)
+			CONTINUE
+		ENDIF		
+		PRINTFORM %ABLNAME:LOCAL,14%:
+		IF LOCAL < 40
+			CALL PRINT_アルファベット評価(ARG,5,LOCAL)
+		ELSE
+			CALL PRINT_アルファベット評価(ARG,6,LOCAL)
+		ENDIF
+		PRINTFORM  {ABL:ARG:LOCAL,5,LEFT}
+		LOCAL:1 ++
+		SIF LOCAL:1 % 4 == 0
+			PRINTL 
+	NEXT
+	PRINTL
+	PRINTL □ Sex Techniques □---------------------------------------------------------------------
+	LOCAL:1 = 0
+	FOR LOCAL,50,60
+		SIF !STRLENS(ABLNAME:LOCAL)
+			CONTINUE
+		SIF !(HAS_VAGINA(ARG)) && (LOCAL == 52 || LOCAL == 54)
+			CONTINUE
+		PRINTFORM %ABLNAME:LOCAL,14%:
+		CALL PRINT_アルファベット評価(ARG,4,LOCAL)
+		PRINTFORM  {ABL:ARG:LOCAL,5,LEFT}
+		LOCAL:1 ++
+		SIF LOCAL:1 % 4 == 0
+			PRINTL 
+	NEXT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@PRINT_STATE_TALENT(ARG)
+#DIMS TALENTPRINT
+	PRINTL □ Talents □----------------------------------------------------------------------------
+	LOCAL:1 = 0
+	LOCALS = 　
+	TALENTPRINT = 　
+	;TALENT:200(名無し)は表示させない
+	FOR LOCAL,0,200
+		IF STRLENS(GET_TALENTNAME(LOCAL,TALENT:ARG:LOCAL))
+			;童貞
+			SIF LOCAL == 1 && !(HAS_PENIS(ARG))
+				CONTINUE
+			TALENTPRINT += GET_TALENTNAME(LOCAL, TALENT:ARG:LOCAL)
+			IF LOCAL == 0 || LOCAL == 3
+				;SETCOLOR 255, 120, 200
+				;FONTBOLD
+				LOCALS += @"<font color='#FF78C8'><b><nonbutton title='%TALENT_INFO(LOCAL, 	TALENT:ARG:LOCAL)%'>[%GET_TALENTNAME(LOCAL,TALENT:ARG:LOCAL)%]</nonbutton></b></font>"
+			ELSEIF LOCAL == 1 || LOCAL == 7
+				;SETCOLOR ("P-BLUE")
+				LOCALS += @"<font color='#7070C0'><nonbutton title='%TALENT_INFO(LOCAL, 	TALENT:ARG:LOCAL)%'>[%GET_TALENTNAME(LOCAL,TALENT:ARG:LOCAL)%]</nonbutton></font>"
+			ELSEIF LOCAL == 4 || LOCAL == 6
+				;SETCOLOR C_PINK
+				LOCALS += @"<font color='#FFCCFF'><nonbutton title='%TALENT_INFO(LOCAL, 	TALENT:ARG:LOCAL)%'>[%GET_TALENTNAME(LOCAL,TALENT:ARG:LOCAL)%]</nonbutton></font>"
+			ENDIF
+			;avoiding duplication
+			SIF LOCAL == 0 || LOCAL == 1 || LOCAL == 4 || LOCAL == 3 || LOCAL == 6 || LOCAL == 7
+				CONTINUE
+			LOCALS += @"<nonbutton title='%TALENT_INFO(LOCAL, TALENT:ARG:LOCAL)%'>[%GET_TALENTNAME(LOCAL,TALENT:ARG:LOCAL)%]</nonbutton>"
+			IF STRLENS(TALENTPRINT) > 50
+				TALENTPRINT =
+				LOCALS += @"<br>　"
+			ENDIF 
+		ENDIF
+	NEXT
+	HTML_PRINT LOCALS
+
+;-------------------------------------------------------------------------------
+;娼婦紋の表示（あれば）
+@PRINT_STATE_PROTECTION(ARG)
+	VARSET LOCALS
+	IF CFLAG:ARG:娼婦紋 == 0
+		RETURN 0
+	ENDIF
+	IF GETBIT(CFLAG:ARG:娼婦紋, 娼婦紋_恥丘)
+		IF LOCALS:0 != ""
+			LOCALS:0 = %LOCALS:0 + ", "%
+		ENDIF
+		LOCALS:0 = %LOCALS:0 + "Mons pubis"%
+	ENDIF
+	IF GETBIT(CFLAG:ARG:娼婦紋, 娼婦紋_太股)
+		IF LOCALS:0 != ""
+			LOCALS:0 = %LOCALS:0 + ", "%
+		ENDIF
+		LOCALS:0 = %LOCALS:0 + "Thigh"%
+	ENDIF
+	IF GETBIT(CFLAG:ARG:娼婦紋, 娼婦紋_左尻)
+		IF LOCALS:0 != ""
+			LOCALS:0 = %LOCALS:0 + ", "%
+		ENDIF
+		LOCALS:0 = %LOCALS:0 + "Left buttock"%
+	ENDIF
+	IF GETBIT(CFLAG:ARG:娼婦紋, 娼婦紋_胸元)
+		IF LOCALS:0 != ""
+			LOCALS:0 = %LOCALS:0 + ", "%
+		ENDIF
+		LOCALS:0 = %LOCALS:0 + "Chest"%
+	ENDIF
+	IF GETBIT(CFLAG:ARG:娼婦紋, 娼婦紋_右頬)
+		IF LOCALS:0 != ""
+			LOCALS:0 = %LOCALS:0 + ", "%
+		ENDIF
+		LOCALS:0 = %LOCALS:0 + "Right cheek"%
+	ENDIF
+	;子宮内が他人の精子で満たされているかどうかチェック
+	CALL COM417_GetFillingRateByPublicSperm(ARG)
+	SELECTCASE RESULT:1 * RESULT:0
+		CASE IS >= 200
+			PRINTFORML %"Bright pink prostitute crest ("+LOCALS:0+")"%
+		CASE 100 TO 199
+			PRINTFORML %"Pink prostitute crest ("+LOCALS:0+")"%
+		CASE 50 TO 99
+			PRINTFORML %"Red prostitute crest ("+LOCALS:0+")"%
+		CASE 1 TO 49
+			PRINTFORML %"Reddish-violet prostitute crest ("+LOCALS:0+")"%
+		CASEELSE
+			PRINTFORML %"Purple prostitute crest ("+LOCALS:0+")"%
+	ENDSELECT
+RETURN 0
+
+;-------------------------------------------------
+;関数名:GET_TALENTNAME
+;概　要:素質名取得関数
+;引　数:ARG:0…TALENT登録番号
+;　　　:ARG:1…TALENTの中身
+;戻り値:素質名
+;備　考:文中関数
+;素質の名前を返す。
+;-------------------------------------------------
+@GET_TALENTNAME(ARG,ARG:1)
+	#FUNCTIONS
+	SELECTCASE ARG
+			;処女
+		CASE 0
+			SIF ARG:1
+				RETURNF "Virgin"
+			;童貞
+		CASE 1
+			SIF !ARG:1
+				RETURNF "Male Virgin"
+			;性別
+		CASE 2
+			IF ARG:1 == 3
+				RETURNF "Hermaphrodite"
+			ELSEIF ARG:1 == 2
+				RETURNF "Male"
+			ELSEIF ARG:1 == 1
+				RETURNF "Female"
+			ENDIF
+			;淫乱
+		CASE 4
+			IF ARG:1 == 1
+				RETURNF "Lewd"
+			ELSEIF ARG:1 == 2
+				RETURNF "Whore"
+			ENDIF
+			;度胸
+		CASE 10
+			IF ARG:1 == -1
+				RETURNF "Timid"
+			ELSEIF ARG:1 == 1
+				RETURNF "Brave"
+			ENDIF
+			;態度
+		CASE 11
+			IF ARG:1 == -1
+				RETURNF "Docile"
+			ELSEIF ARG:1 == 1
+				RETURNF "Defiant"
+			ENDIF
+			;応答
+		CASE 12
+			IF ARG:1 == -1
+				RETURNF "Calm"
+			ELSEIF ARG:1 == 1
+				RETURNF "Cheeky"
+			ENDIF
+			;プライド
+		CASE 13
+			IF ARG:1 == -1
+				RETURNF "Humble"
+			ELSEIF ARG:1 == 1
+				RETURNF "Prideful"
+			ENDIF
+			;性的興味
+		CASE 23
+			IF ARG:1 == -1
+				RETURNF "Conservative"
+			ELSEIF ARG:1 == 1
+				RETURNF "Curious"
+			ENDIF
+			;陽気／陰気,
+		CASE 24
+			IF ARG:1 == -1
+				RETURNF "Gloomy"
+			ELSEIF ARG:1 == 1
+				RETURNF "Cheerful"
+			ENDIF
+			;貞操観念
+		CASE 30
+			IF ARG:1 == -1
+				RETURNF "Unchaste"
+			ELSEIF ARG:1 == 1
+				RETURNF "Virtuous"
+			ENDIF
+			;自己愛
+		CASE 31
+			IF ARG:1 == -1
+				RETURNF "Repressed"
+			ELSEIF ARG:1 == 1
+				RETURNF "Liberated"
+			ENDIF
+			;羞恥心
+		CASE 33
+			IF ARG:1 == -1
+				RETURNF "Shameless"
+			ELSEIF ARG:1 == 1
+				RETURNF "Shy"
+			ENDIF
+			;痛覚
+		CASE 40
+			IF ARG:1 == -1
+				RETURNF "Pain Sensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "Pain Resistant"
+			ENDIF
+			;濡れやすさ
+		CASE 41
+			IF ARG:1 == -1
+				RETURNF "Hard To Get Wet"
+			ELSEIF ARG:1 == 1
+				RETURNF "Easy To Get Wet"
+			ENDIF
+			;習得速度
+		CASE 50
+			IF ARG:1 == -1
+				RETURNF "Slow Learner"
+			ELSEIF ARG:1 == 1
+				RETURNF "Fast Learner"
+			ENDIF
+			;汚臭耐性
+		CASE 61
+			IF ARG:1 == -2
+				RETURNF "Clean Freak"
+			ELSEIF ARG:1 == -1
+				RETURNF "Smell Sensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "Resistant To Smell"
+			ELSEIF ARG:1 == 2
+				RETURNF "Ignores Dirt"
+			ENDIF
+			;快感応答
+		CASE 70
+			IF ARG:1 == -1
+				RETURNF "Denies Pleasure"
+			ELSEIF ARG:1 == 1
+				RETURNF "Enjoys Pleasure"
+			ENDIF
+			;性別嗜好
+		CASE 81
+			IF ARG:1 == -1
+				RETURNF "Bisexual"
+			ELSEIF ARG:1 == 3
+				RETURNF "Misanthrope"
+			ELSEIF ARG:1 == 1
+				RETURNF "Man Hater"
+			ELSEIF ARG:1 == 2
+				RETURNF "Misogynist"
+			ENDIF
+			;体型
+		CASE 100
+			IF ARG:1 == -3
+				RETURNF "Toddler-sized"
+			ELSEIF ARG:1 == -2
+				RETURNF "Child-sized"
+			ELSEIF ARG:1 == -1
+				RETURNF "Petite"
+			ELSEIF ARG:1 == 1
+				RETURNF "Tall"
+			ELSEIF ARG:1 == 2
+				RETURNF "Huge"
+			ELSEIF ARG:1 == 3
+				RETURNF "Giant"
+			ENDIF
+			;Ｃ感度
+		CASE 101
+			IF ARG:1 == -2
+				RETURNF "C Insensible"
+			ELSEIF ARG:1 == -1
+				RETURNF "C Insensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "C Sensitive"
+			ELSEIF ARG:1 == 2
+				RETURNF "C Hypersensitive"
+			ENDIF
+			;Ｖ感度
+		CASE 102
+			IF ARG:1 == -2
+				RETURNF "V Insensible"
+			ELSEIF ARG:1 == -1
+				RETURNF "V Insensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "V Sensitive"
+			ELSEIF ARG:1 == 2
+				RETURNF "V Hypersensitive"
+			ENDIF
+			;Ａ感度
+		CASE 103
+			IF ARG:1 == -2
+				RETURNF "A Insensible"
+			ELSEIF ARG:1 == -1
+				RETURNF "A Insensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "A Sensitive"
+			ELSEIF ARG:1 == 2
+				RETURNF "A Hypersensitive"
+			ENDIF
+			;Ｂ感度
+		CASE 104
+			IF ARG:1 == -2
+				RETURNF "B Insensible"
+			ELSEIF ARG:1 == -1
+				RETURNF "B Insensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "B Sensitive"
+			ELSEIF ARG:1 == 2
+				RETURNF "B Hypersensitive"
+			ENDIF
+			;バストサイズ
+		CASE 105
+			IF ARG:1 == -2
+				RETURNF "Flat Chest"
+			ELSEIF ARG:1 == -1
+				RETURNF "Small Breasts"
+			ELSEIF ARG:1 == 0
+				RETURNF "Average Breasts"
+			ELSEIF ARG:1 == 1
+				RETURNF "Big Breasts"
+			ELSEIF ARG:1 == 2
+				RETURNF "Huge Breasts"
+			ENDIF
+			;Penis size
+		CASE 106
+			IF ARG:1 == -2
+				RETURNF "Tiny Penis"
+			ELSEIF ARG:1 == -1
+				RETURNF "Small Penis"
+			ELSEIF ARG:1 == 1
+				RETURNF "Big Penis"
+			ELSEIF ARG:1 == 2
+				RETURNF "Huge Penis"
+			ENDIF
+			;Vagina size
+		CASE 107
+			IF ARG:1 == -2
+				RETURNF "Very Tight Vagina"
+			ELSEIF ARG:1 == -1
+				RETURNF "Tight Vagina"
+			ELSEIF ARG:1 == 1
+				RETURNF "Loose Vagina"
+			ELSEIF ARG:1 == 2
+				RETURNF "Gaping Vagina"
+			ENDIF
+			;Anus size
+		CASE 108
+			IF ARG:1 == -2
+				RETURNF "Very Tight Anus"
+			ELSEIF ARG:1 == -1
+				RETURNF "Tight Anus"
+			ELSEIF ARG:1 == 1
+				RETURNF "Loose Anus"
+			ELSEIF ARG:1 == 2
+				RETURNF "Gaping Anus"
+			ENDIF
+			;M Sensitivity
+		CASE 109
+			IF ARG:1 == -2
+				RETURNF "M Insensible"
+			ELSEIF ARG:1 == -1
+				RETURNF "M Insensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "M Sensitive"
+			ELSEIF ARG:1 == 2
+				RETURNF "M Hypersensitive"
+			ENDIF
+			;N Sensitivity
+		CASE 110
+			IF ARG:1 == -2
+				RETURNF "N Insensible"
+			ELSEIF ARG:1 == -1
+				RETURNF "N Insensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "N Sensitive"
+			ELSEIF ARG:1 == 2
+				RETURNF "N Hypersensitive"
+			ENDIF
+			;P Sensitivity
+		CASE 111
+			IF ARG:1 == -2
+				RETURNF "P Insensible"
+			ELSEIF ARG:1 == -1
+				RETURNF "P Insensitive"
+			ELSEIF ARG:1 == 1
+				RETURNF "P Sensitive"
+			ELSEIF ARG:1 == 2
+				RETURNF "P Hypersensitive"
+			ENDIF
+			;回復速度
+		CASE 130
+			IF ARG:1 == -1
+				RETURNF "Slow Recovery"
+			ELSEIF ARG:1 == 1
+				RETURNF "Fast Recovery"
+			ENDIF
+		CASEELSE
+			SIF ARG:1
+				RETURNF @"%TALENTNAME:ARG%"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@PRINT_STATE_EXP(ARG)
+	PRINTL □ Experience □-------------------------------------------------------------------------
+	LOCAL:1 = 0
+	FOR LOCAL,0,100
+		;EXP.CSVに登録されていなければCONTINUE
+		;SIF !STRLENS(EXPNAME:LOCAL)
+		;	CONTINUE
+		;未経験を表示させない
+		SIF !EXP:ARG:LOCAL
+			CONTINUE
+		;同性愛関係
+		IF !(HAS_VAGINA(ARG)) && LOCAL == 51
+			CONTINUE
+		ELSEIF HAS_VAGINA(ARG) && LOCAL == 52
+			CONTINUE
+		ENDIF
+		LOCALS = {MIN(EXP:ARG:LOCAL,99999)}
+		;because word gets mangled too
+		IF LOCAL == 44
+			PRINTFORM 　Exposure
+			LOCAL:98 = 31 - STRLENS(EXPNAME:44) - STRLENS(LOCALS)
+		ELSEIF LOCAL == 92 
+			PRINTFORM 　Cheated With
+			LOCAL:98 = 27 - STRLENS(EXPNAME:92) - STRLENS(LOCALS)
+		ELSEIF LOCAL == 93
+			PRINTFORM 　Previous Cheating
+			LOCAL:98 = 27 - STRLENS(EXPNAME:93) - STRLENS(LOCALS)
+		ELSE
+			PRINTFORM 　%REPLACE(EXPNAME:LOCAL, " Exp", "")%
+			LOCAL:98 = 31 - STRLENS(EXPNAME:LOCAL) - STRLENS(LOCALS)
+		ENDIF
+		IF LOCAL:98 > 0
+			SETCOLOR 0x606060
+			PRINTFORM %"." * LOCAL:98%
+			RESETCOLOR
+		ENDIF
+		PRINTFORM {MIN(EXP:ARG:LOCAL,99999)}
+		LOCAL:1 += 1
+		SIF LOCAL:1 % 3 == 0
+			PRINTL 
+	NEXT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@PRINT_STATE_JUEL(ARG)
+	PRINTL
+	PRINTL □ Gems □-------------------------------------------------------------------------------
+	LOCAL:1 = 0
+	FOR LOCAL,0,22
+		;PALAM.CSVに名称が登録されていないとCONTINUE
+		SIF !STRLENS(PALAMNAME:LOCAL)
+			CONTINUE
+		;1000,1000000,単位で区切る
+		LOCALS = {JUEL:ARG:LOCAL}
+		SIF JUEL:ARG:LOCAL > 1000000
+			LOCALS = {JUEL:ARG:LOCAL / 1000}k
+		SIF JUEL:ARG:LOCAL > 1000000000
+			LOCALS = {JUEL:ARG:LOCAL / 1000000}m
+		PRINTFORM 　%PALAMNAME:LOCAL%Gems
+		LOCAL:98 = 23 - STRLENS(PALAMNAME:LOCAL) - STRLENS(LOCALS)
+		IF LOCAL:98 > 0
+			SETCOLOR 0x606060
+			PRINTFORM %"." * LOCAL:98%
+			RESETCOLOR
+		ENDIF
+		PRINTFORM %LOCALS%
+		
+		LOCAL:1 += 1
+		;改行or表示位置あけ
+		SIF LOCAL:1 % 3 == 0
+			PRINTL 	
+	NEXT
+	;否定の珠
+	LOCALS = {JUEL:ARG:100}
+	SIF JUEL:ARG:100 > 1000000
+		LOCALS = {JUEL:ARG:100 / 1000}k
+	PRINTFORM 　%PALAMNAME:100%Gems
+	LOCAL:98 = 23 - STRLENS(PALAMNAME:100) - STRLENS(LOCALS)
+	IF LOCAL:98 > 0
+		SETCOLOR 0x606060
+		PRINTFORM %"." * LOCAL:98%
+		RESETCOLOR
+	ENDIF
+	PRINTFORM %LOCALS%
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@PRINT_STATE_EX(ARG)
+	SIF EX:ARG:0 + EX:ARG:1 + EX:ARG:2 + EX:ARG:3 + EX:ARG:10 + EX:ARG:11 == 0
+		RETURN 0
+	LOCAL:1 = 0
+	PRINTL
+	PRINTL □ Climax Amount □-----------------------------------------------------------------
+	FOR LOCAL,0,20
+		SIF !STRLENS(EXNAME:LOCAL)
+			CONTINUE
+		SIF !EX:LOCAL
+			CONTINUE
+		PRINTFORM 　%EXNAME:LOCAL%
+		LOCALS = {EX:ARG:LOCAL}
+		LOCAL:98 = 22 - STRLENS(EXNAME:LOCAL) - STRLENS(LOCALS)
+		IF LOCAL:98 > 0
+			SETCOLOR 0x606060
+			PRINTFORM %"." * LOCAL:98%
+			RESETCOLOR
+		ENDIF
+		PRINTFORM {EX:ARG:LOCAL}
+		LOCAL:1 ++
+		SIF LOCAL:1 % 4 == 0
+			PRINTL
+	NEXT
+	PRINT
+
+;-------------------------------------------------------------------------------
+;体験の記録を表示
+@PRINT_STATE_MEMORIAL(キャラ番号)
+	#DIM キャラ番号
+	PRINTFORML First times information.
+	PRINT First Kiss     : 
+	IF is_virgin_m(キャラ番号)
+		PRINTFORML %HE_SHE(キャラ番号, 1)% has yet to allow anyone to touch %HIS_HER(キャラ番号)% lips.
+	ELSEIF !is_virgin_m(キャラ番号) && CSTR:キャラ番号:Ｍ初体験の相手 == ""
+		PRINTFORML %LOSE_VIRGIN_MOUTH(キャラ番号)%
+	ELSE
+		PRINTFORML %CSTR:キャラ番号:Ｍ初体験の相手%
+	ENDIF
+	IF HAS_VAGINA(キャラ番号)
+		PRINT Virginity      : 
+		IF TALENT:キャラ番号:0
+			PRINTFORML She didn't taste a man yet.
+		ELSEIF !TALENT:キャラ番号:0 && CSTR:キャラ番号:Ｖ初体験の相手 == ""
+			PRINTFORML %LOSE_VIRGIN_VAG(キャラ番号)%
+		ELSE
+			PRINTFORML %CSTR:キャラ番号:Ｖ初体験の相手%
+		ENDIF
+	ENDIF
+	IF HAS_PENIS(キャラ番号)
+		PRINT Male Virginity : 
+		IF IS_DOUTEI(キャラ番号)
+			PRINTFORML %HE_SHE(キャラ番号, 1)% never used %HIS_HER(キャラ番号)% %PENIS_APPEAR(キャラ番号)% to penetrate someone yet still.
+		ELSEIF !IS_DOUTEI(キャラ番号) && CSTR:キャラ番号:ＭＶ初体験の相手 == ""
+			PRINTFORML %LOSE_VIRGIN_MALE(キャラ番号)%
+		ELSE
+			PRINTFORML %CSTR:キャラ番号:ＭＶ初体験の相手%
+		ENDIF
+	ENDIF
+	PRINT Anal Virginity : 
+	IF !EXP:キャラ番号:21
+		PRINTFORML Never has been penetrated.
+	ELSEIF EXP:キャラ番号:21 && CSTR:キャラ番号:Ａ初体験の相手 == ""
+		PRINTFORML %LOSE_VIRGIN_ANAL(キャラ番号)%
+	ELSE
+		PRINTFORML %CSTR:キャラ番号:Ａ初体験の相手%
+	ENDIF
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;体のなにがし
+@PRINT_STATE_BODY(ARG)
+	PRINTL 《   Hair    》--------------------------------
+	PRINTFORM %"Color",16%：
+	CALL 汎用色SET(CFLAG:ARG:髪色)
+	PRINTFORM ■　
+	RESETCOLOR
+	PRINTFORML %色汎用(CFLAG:ARG:髪色)%
+	PRINTFORML %"Length",16%：%髪の長さ(CFLAG:ARG:髪の長さ)%
+	PRINTFORML %"Features",16%：\@ (CFLAG:ARG:髪の長さ < 200 || BATHROOM(CFLAG:ARG:現在位置) || CFLAG:ARG:寝間着着用) ?ーーー#%髪オプション(CFLAG:ARG:髪オプション１)%\@
+	IF CFLAG:ARG:髪オプション２
+		PRINTFORML %"",16%：\@ (CFLAG:ARG:髪の長さ < 200 || BATHROOM(CFLAG:ARG:現在位置) || CFLAG:ARG:寝間着着用) ?ーーー#%髪オプション(CFLAG:ARG:髪オプション２)%\@
+	ELSE
+		PRINTL
+	ENDIF
+	PRINTL 《   Eyes    》--------------------------------
+	PRINTFORML %"Look",16%：%目つき(CFLAG:ARG:目つき)%
+	IF (CFLAG:ARG:瞳オプション２ == 1 || CFLAG:ARG:瞳オプション１ == 1)
+		PRINTFORM %"Color (Right)",16%：
+		CALL 汎用色SET(CFLAG:ARG:目色右)
+		PRINTFORM ■　
+		RESETCOLOR
+		PRINTFORML %色汎用(CFLAG:ARG:目色右)%
+		PRINTFORM %"Color (Left)",16%：
+		CALL 汎用色SET(CFLAG:ARG:目色左)
+		PRINTFORM ■　
+		RESETCOLOR
+		PRINTFORML %色汎用(CFLAG:ARG:目色左)%
+	ELSE
+		PRINTFORM %"Color",16%：
+		CALL 汎用色SET(CFLAG:ARG:目色右)
+		PRINTFORM ■　
+		RESETCOLOR
+		PRINTFORML %色汎用(CFLAG:ARG:目色右)%
+	ENDIF
+	PRINTFORML %"Features",16%：%瞳オプション(CFLAG:ARG:瞳オプション１)%
+	IF CFLAG:ARG:瞳オプション２
+		PRINTFORML %"",16%：%瞳オプション(CFLAG:ARG:瞳オプション２)%
+	ELSE
+		PRINTL
+	ENDIF
+	PRINTL 《   Skin    》--------------------------------
+	PRINTFORM %"Color",16%：
+	CALL 肌色SET(CFLAG:ARG:肌色)
+	PRINTFORM ■　
+	RESETCOLOR
+	PRINTFORML %肌色(CFLAG:ARG:肌色)%
+	PRINTL
+	IF HAS_PENIS(ARG)
+		PRINTL 《   Penis   》--------------------------------
+		PRINTFORML %"Size",16%：%Ｐ大きさ(CFLAG:ARG:Ｐ大きさ)%
+		PRINTFORML %"Features",16%：%Ｐオプション(CFLAG:ARG:Ｐオプション１)%
+		IF CFLAG:ARG:Ｐオプション２
+			PRINTFORML 　　　　　　- %Ｐオプション(CFLAG:ARG:Ｐオプション２)%
+		ELSE
+			PRINTL
+		ENDIF
+	ENDIF
+	IF HAS_VAGINA(ARG)
+		PRINTL 《  Vagina   》--------------------------------
+		PRINTFORML %"Tightness",16%：%締り具合名称(BASE:ARG:Ｖ緩さ)%
+		PRINTFORML %"Position",16%：%Ｖ位置(CFLAG:ARG:Ｖ位置)%
+		PRINTFORML %"Features",16%：%Ｖオプション(CFLAG:ARG:Ｖオプション１)%
+		IF CFLAG:ARG:Ｖオプション２
+			PRINTFORML %"",16%：%Ｖオプション(CFLAG:ARG:Ｖオプション２)%
+		ELSE
+			PRINTL
+		ENDIF
+	ENDIF
+	PRINTL 《   Anus    》--------------------------------
+	PRINTFORML %"Tightness",16%：%締り具合名称(BASE:ARG:Ａ緩さ)%
+	PRINTL
+	PRINTL 《   Other   》--------------------------------
+	IF CFLAG:ARG:体オプション１
+		PRINTFORML %"",4%  %体オプション(CFLAG:ARG:体オプション１)%
+	ELSE
+		PRINTL
+	ENDIF
+	IF CFLAG:ARG:体オプション２
+		PRINTFORML %"",4%  %体オプション(CFLAG:ARG:体オプション２)%
+	ELSE
+		PRINTL
+	ENDIF
+	IF CFLAG:ARG:体オプション３
+		PRINTFORML %"",4%  %体オプション(CFLAG:ARG:体オプション３)%
+	ELSE
+		PRINTL
+	ENDIF
+	IF CFLAG:ARG:体オプション４
+		PRINTFORML %"",4%  %体オプション(CFLAG:ARG:体オプション４)%
+	ELSE
+		PRINTL
+	ENDIF
+
+;--------------------------------------------------------
+;下着が未確認状態かどうかを返す
+;@return:0 確認済
+;@return:1 未確認
+;@return:2 未確認
+@Unknown下着(奴隷, 服番号)
+	#FUNCTION
+	#DIM 奴隷
+	#DIM 服番号
+	;既に確認済み
+	SIF CFLAG:奴隷:ぱんつ確認
+		RETURNF 0
+	;同室且つズボン等を穿いていない
+	SIF CFLAG:奴隷:現在位置 == CFLAG:MASTER:現在位置 && !EQUIP:奴隷:下半身上着１ && !EQUIP:奴隷:下半身上着２ && !EQUIP:奴隷:スカート && !EQUIP:奴隷:ボディースーツ && !EQUIP:奴隷:ワンピース && !EQUIP:奴隷:着物
+		RETURNF 0
+	;下半身下着１
+	SIF 服番号 == GETNUM(EQUIP,"下半身下着１")
+		RETURNF 1
+	;下半身下着２
+	SIF 服番号 == GETNUM(EQUIP,"下半身下着２")
+		RETURNF 2
+RETURNF 0
+
+;-------------------------------------------------------------------------------
+;Ｖ関連の表示と処理 (TRANSLATED VIA ALL_TR)
+@締り具合名称(ARG)
+	#FUNCTIONS
+	;ARG 締り具合
+	IF ARG >= 600
+		RETURNF "ぽっかり"
+	ELSEIF ARG >= 450
+		RETURNF "がばがば"
+	ELSEIF ARG >= 350
+		RETURNF "ゆるゆる"
+	ELSEIF ARG >= 180
+		RETURNF "Normal"
+	ELSEIF ARG >= 100
+		RETURNF "きゅっきゅっ"
+	ELSE
+		RETURNF "ぎちぎち"
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;締り具合変動(コマンドによる変化)
+@締り具合変動(奴隷,上昇値,部位)
+	#DIM 奴隷
+	#DIM 上昇値 ;1～7 (1:指、3:ペニス、5:バルーン、7:フィスト)
+	#DIM 部位 ;Ａ=1 Ｖ=0
+	#DIM 緩さ補正
+	IF 部位
+		;A
+		;現在の緩さによる上昇値補正
+		;がばがば以上で、かつ今までに無いほど緩くなろうとしていた場合補正が入る
+		IF (MAXBASE:奴隷:Ａ緩さ*3 < BASE:奴隷:Ａ緩さ*4) && BASE:奴隷:Ａ緩さ >= 450
+					上昇値 = MAX(上昇値-3,1)
+		ENDIF
+		BASE:奴隷:Ａ緩さ += 上昇値
+	ELSE
+		;V
+		;現在の緩さによる上昇値補正
+		;がばがば以上で、かつ今までに無いほど緩くなろうとしていた場合補正が入る
+		IF (MAXBASE:奴隷:Ｖ緩さ*3 < BASE:奴隷:Ｖ緩さ*4) && BASE:奴隷:Ｖ緩さ >= 450
+					上昇値 = MAX(上昇値-3,1)
+		ENDIF
+		BASE:奴隷:Ｖ緩さ += 上昇値
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@Ｖ位置(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 0
+			RETURNF "Normal"
+		CASE 1
+			RETURNF "Upper"
+		CASE 2
+			RETURNF "Lower"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@Ｖオプション(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 1
+			RETURNF "Grained upper wall"
+		CASE 2
+			RETURNF "Able to squeeze freely"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@GETＶオプション(ARG, ARG:1)
+	#FUNCTION
+	;対象の特定Ｖオプションの有無
+	SIF (CFLAG:ARG:Ｖオプション１ == ARG:1 || CFLAG:ARG:Ｖオプション２ == ARG:1)
+		RETURNF 1
+RETURNF 0
+
+;-------------------------------------------------------------------------------
+;Ｐ関連の表示と処理
+@Ｐ大きさ(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 2
+			RETURNF "Horse-sized"
+		CASE 1
+			RETURNF "Big"
+		CASE 0
+			RETURNF "Normal"
+		CASE -1
+			RETURNF "Small"
+		CASE -2
+			RETURNF "Tiny"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@Ｐオプション(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 1
+			RETURNF "Full phimosis"
+		CASE 2
+			RETURNF "Mild phimosis"
+		CASE 5
+			RETURNF "Able to move freely like a tentacle"
+		CASE 6
+			RETURNF "Covered with warts"
+		CASE 7
+			RETURNF "Curved"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;--------------------------------------------------------
+@髪の長さ(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE IS >= 900
+			RETURNF "So long it scrubs the ground when walking"
+		CASE 800 TO 899
+			RETURNF "Long enough to touch the ground when standing"
+		CASE 700 TO 799
+			RETURNF "Knee level"
+		CASE 600 TO 699
+			RETURNF "Waist level"
+		CASE 500 TO 599
+			RETURNF "Covers back"
+		CASE 400 TO 499
+			RETURNF "Chest level"
+		CASE 300 TO 399
+			RETURNF "Shoulder level"
+		CASE 200 TO 299
+			RETURNF "Covers neck"
+		CASE 100 TO 199
+			RETURNF "Short"
+		CASE 0 TO 99
+			RETURNF "Very short"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@髪オプション(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 1
+			RETURNF "Ponytail"
+		CASE 2
+			RETURNF "Side tail"
+		CASE 3
+			RETURNF "Twintails"
+		CASE 4
+			RETURNF "Braid"
+		CASE 5
+			RETURNF "Bun"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@目つき(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 1
+			RETURNF "Drooping eyes"
+		CASE 2
+			RETURNF "Slant eyes"
+		CASE 3
+			RETURNF "Sanpaku eyes"
+		CASE 4
+			RETURNF "Scornful eyes"
+		CASE 5
+			RETURNF "Narrow eyes"
+		CASEELSE
+			RETURNF "Normal"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@瞳オプション(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 1
+			RETURNF "Heterochromia"
+		CASE 2
+			RETURNF "Small pupil"
+		CASE 3
+			RETURNF "Cat eye"
+		CASE 4
+			RETURNF "Dead eye"
+		CASE 5
+			RETURNF "One-eyed"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@肌色(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 0
+			;0XF0F8FF(アリスブルー)
+			RETURNF "Fair"
+		CASE 1
+			;0XFFFDB4
+			RETURNF "Normal"
+		CASE 2
+			;0XD4A168
+			RETURNF "Tanned"
+		CASE 3
+			;0X6B3E08
+			RETURNF "Brown"
+		CASE 10
+			;0X006AB6
+			RETURNF "Blue"
+		CASE 11
+			;0XA757A8
+			RETURNF "Purple"
+		CASE 13
+			;0XBE0032
+			RETURNF "Red"
+		CASE 14
+			;0X00B66E
+			RETURNF "Green"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@肌色SET(ARG)
+	SELECTCASE ARG
+		CASE 0
+			SETCOLOR 0XF0F8FF
+		CASE 1
+			SETCOLOR 0XFFFDB4
+		CASE 2
+			SETCOLOR 0XD4A168
+		CASE 3
+			SETCOLOR 0X6B3E08
+		CASE 10
+			SETCOLOR 0X006AB6
+		CASE 11
+			SETCOLOR 0XA757A8
+		CASE 13
+			SETCOLOR 0XBE0032
+		CASE 14
+			SETCOLOR 0X00B66E
+		CASEELSE
+			RESETCOLOR
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@体オプション(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+			;歯系（どれか１種）1~9
+		CASE 1
+			RETURNF "Protruding tooth"
+		CASE 2
+			RETURNF "Fangs"
+		CASE 3
+			RETURNF "Shark teeth"
+			;翼系（どれか１種）10~29
+		CASE 10
+			RETURNF "Fairy wings"
+		CASE 11
+			RETURNF "Ice wings"
+		CASE 12
+			RETURNF "Remilia's wings"
+		CASE 13
+			RETURNF "Flandre's wings"
+		CASE 14
+			RETURNF "Demon wings"
+		CASE 15
+			RETURNF "Feather wings"
+			;耳系（どれか１種）30~49
+		CASE 30
+			RETURNF "Pointed ears"
+		CASE 31
+			RETURNF "Feather ears"
+		CASE 32
+			RETURNF "Pointy fluffy animal ears"
+		CASE 33
+			RETURNF "Pointy smooth animal ears"
+		CASE 34
+			RETURNF "Drooping fluffy animal ears"
+		CASE 35
+			RETURNF "Drooping smooth animal ears"
+		CASE 36
+			RETURNF "Round fluffy animal ears"
+		CASE 37
+			RETURNF "Round smooth animal ears"
+		CASE 38
+			RETURNF "Pointy bunny ears"
+		CASE 39
+			RETURNF "Drooping bunny ears"
+		CASE 40
+			RETURNF "Fin ears"
+			;角、触覚系（どれか１種）50~54
+		CASE 50
+			RETURNF "Demon wings are growing on the head"
+		CASE 51
+			RETURNF "One horn is protruding on the head"
+		CASE 52
+			RETURNF "Two horns are protruding on the head"
+		CASE 53
+			RETURNF "Antennae is growing on the head"
+			;尻尾系（どれか１種）55~59
+		CASE 55
+			RETURNF "Fluffy tail"
+		CASE 56
+			RETURNF "Smooth tail"
+		CASE 57
+			RETURNF "Hairless tail"
+		CASE 58
+			RETURNF "Demon tail"
+			;その他
+		CASE 90
+			;どちらかというと目のオプション？
+			RETURNF "Has circles under eyes"
+		CASE 91
+			;これもどちらかというと(ry
+			RETURNF "Double eyelids"
+		CASE 92
+			RETURNF "Sharp nails"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@色汎用(ARG)
+	#FUNCTIONS
+	;朱　赤　桃　赤紫　紫　青紫　青　水　青緑　深緑　緑　黄緑　黄
+	;橙　茶　焦茶　赤茶　白　灰　黒
+	SELECTCASE ARG
+		CASE 0
+			;0XBE0032
+			RETURNF "Red"
+		CASE 1
+			;0XE5001E
+			RETURNF "Scarlet"
+		CASE 2
+			;0XEF454A
+			RETURNF "Vermilion"
+		CASE 3
+			;0XAD3140
+			RETURNF "Rouge"
+		CASE 4
+			;0XD53E62
+			RETURNF "Rose"
+		CASE 5
+			;0XE38089
+			RETURNF "Peach"
+		CASE 6
+			;0XF8DADE
+			RETURNF "Cherry blossom"
+		CASE 7
+			;0XDA508F
+			RETURNF "Pink"
+		CASE 8
+			;0XC94093
+			RETURNF "Peony"
+		CASE 9
+			;0X422C41
+			RETURNF "Bluish purple"
+		CASE 10
+			;0XA757A8
+			RETURNF "Purple"
+		CASE 11
+			;0X7445AA
+			RETURNF "Violet"
+		CASE 12
+			;0XA294C8
+			RETURNF "Wisteria"
+		CASE 13
+			;0X353573
+			RETURNF "Dark blue"
+		CASE 14
+			;0X292934
+			RETURNF "Iron blue"
+		CASE 15
+			;0X384D98
+			RETURNF "Ultramarine"
+		CASE 16
+			;0X343D55
+			RETURNF "Navy blue"
+		CASE 17
+			;0X00519A
+			RETURNF "Lapis lazuli"
+		CASE 18
+			;0X006AB6
+			RETURNF "Blue"
+		CASE 19
+			;0X2B4B65
+			RETURNF "Indigo"
+		CASE 20
+			;0X9DCCE0
+			RETURNF "Watery"
+		CASE 21
+			;0X00859B
+			RETURNF "Pale blue"
+		CASE 22
+			;0X008E94
+			RETURNF "Bluish green"
+		CASE 23
+			;0X6AA89D
+			RETURNF "Bamboo"
+		CASE 24
+			;0X00A37E
+			RETURNF "Young bamboo"
+		CASE 25
+			;0X00533E
+			RETURNF "Light green"
+		CASE 26
+			;0X007B50
+			RETURNF "Evergreen"
+		CASE 27
+			;0X005638
+			RETURNF "Dark green"
+		CASE 28
+			;0X00B66E
+			RETURNF "Green"
+		CASE 29
+			;0X3C6754
+			RETURNF "Deep green"
+		CASE 30
+			;0X4D8169
+			RETURNF "Green rust"
+		CASE 31
+			;0XBADBC7
+			RETURNF "White green"
+		CASE 32
+			;0X687E52
+			RETURNF "Pine needle"
+		CASE 33
+			;0XA9C087
+			RETURNF "Fresh leaves"
+		CASE 34
+			;0X737C3E
+			RETURNF "Grass"
+		CASE 35
+			;0X97A61E
+			RETURNF "Light yellowish green"
+		CASE 36
+			;0XAAB300
+			RETURNF "Fresh grass"
+		CASE 37
+			;0XBBC000
+			RETURNF "Yellowish green"
+		CASE 38
+			;0X7C7A37
+			RETURNF "Moss"
+		CASE 39
+			;0X706C3E
+			RETURNF "Greenish brown"
+		CASE 40
+			;0XC0BA7F
+			RETURNF "Sand"
+		CASE 41
+			;0XE3C700
+			RETURNF "Yellow"
+		CASE 42
+			;0XEAD56B
+			RETURNF "Light golden"
+		CASE 43
+			;0X716B4A
+			RETURNF "Olive green"
+		CASE 44
+			;0XFFBB00
+			RETURNF "Sunflower"
+		CASE 45
+			;0XF8A900
+			RETURNF "Bright golden yellow"
+		CASE 46
+			;0XC8A65D
+			RETURNF "Mustard"
+		CASE 47
+			;0XB47700
+			RETURNF "Golden brown"
+		CASE 48
+			;0XB8883B
+			RETURNF "Yellow soil"
+		CASE 49
+			;0XDED28F
+			RETURNF "Ivory"
+		CASE 50
+			;0XEB8400
+			RETURNF "Tangerine"
+		CASE 51
+			;0X6B3E08
+			RETURNF "Jambalaya"
+		CASE 52
+			;0X9F6C31
+			RETURNF "Dirt"
+		CASE 53
+			;0XAA7A40
+			RETURNF "Amber"
+		CASE 54
+			;0X847461
+			RETURNF "Dead leaves"
+		CASE 55
+			;0X5D5245
+			RETURNF "Bamboo duster"
+		CASE 56
+			;0XD4A168
+			RETURNF "Wheat"
+		CASE 57
+			;0XEF810F
+			RETURNF "Orange"
+		CASE 58
+			;0XD89F6D
+			RETURNF "Apricot"
+		CASE 59
+			;0XFAA55C
+			RETURNF "Light orange"
+		CASE 60
+			;0XB1632A
+			RETURNF "Yellow tea"
+		CASE 61
+			;0X6D4C33
+			RETURNF "Brown"
+		CASE 62
+			;0XF1BB93
+			RETURNF "Skin"
+		CASE 63
+			;0XB0764F
+			RETURNF "Camel"
+		CASE 64
+			;0X816551
+			RETURNF "Ashen brown"
+		CASE 65
+			;0X564539
+			RETURNF "Dark brown"
+		CASE 66
+			;0XD86011
+			RETURNF "Yellowish red"
+		CASE 67
+			;0X998D86
+			RETURNF "Gray"
+		CASE 68
+			;0X704B38
+			RETURNF "Chestnut"
+		CASE 69
+			;0X3E312B
+			RETURNF "Deep brown"
+		CASE 70
+			;0X865C4B
+			RETURNF "Cypress bark"
+		CASE 71
+			;0XB64826
+			RETURNF "Birch"
+		CASE 72
+			;0XDB5C35
+			RETURNF "Persimmon"
+		CASE 73
+			;0XEB6940
+			RETURNF "Royal orange"
+		CASE 74
+			;0XB5725C
+			RETURNF "Cinnamon"
+		CASE 75
+			;0X624035
+			RETURNF "Rust"
+		CASE 76
+			;0XE65226
+			RETURNF "Reddish orange"
+		CASE 77
+			;0XAD4E39
+			RETURNF "Reddish brown"
+		CASE 78
+			;0XEA4E31
+			RETURNF "Bronze"
+		CASE 79
+			;0X905D54
+			RETURNF "Red beans"
+		CASE 80
+			;0X863E33
+			RETURNF "Jeweller's red"
+		CASE 81
+			;0X7A453D
+			RETURNF "Kite"
+		CASE 82
+			;0XD1483E
+			RETURNF "Red lead"
+		CASE 83
+			;0X9E413F
+			RETURNF "Crimson"
+		CASE 84
+			;0XEF4644
+			RETURNF "Sunset orange"
+		CASE 85
+			;0XF0F0F0
+			RETURNF "White"
+		CASE 86
+			;0X767676
+			RETURNF "Ash"
+		CASE 87
+			;0X343434
+			RETURNF "Ink"
+		CASE 88
+			;0X2A2A2A
+			RETURNF "Black"
+		CASE 89
+			;0X2A2A2A
+			RETURNF "Golden"
+		CASE 90
+			;0X2A2A2A
+			RETURNF "Silver"
+		CASEELSE
+			RETURNF "ーーー"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@汎用色SET(ARG)
+	SELECTCASE ARG
+		CASE 0
+			SETCOLOR 0XBE0032
+		CASE 1
+			SETCOLOR 0XE5001E
+		CASE 2
+			SETCOLOR 0XEF454A
+		CASE 3
+			SETCOLOR 0XAD3140
+		CASE 4
+			SETCOLOR 0XD53E62
+		CASE 5
+			SETCOLOR 0XE38089
+		CASE 6
+			SETCOLOR 0XF8DADE
+		CASE 7
+			SETCOLOR 0XDA508F
+		CASE 8
+			SETCOLOR 0XC94093
+		CASE 9
+			SETCOLOR 0X422C41
+		CASE 10
+			SETCOLOR 0XA757A8
+		CASE 11
+			SETCOLOR 0X7445AA
+		CASE 12
+			SETCOLOR 0XA294C8
+		CASE 13
+			SETCOLOR 0X353573
+		CASE 14
+			SETCOLOR 0X292934
+		CASE 15
+			SETCOLOR 0X384D98
+		CASE 16
+			SETCOLOR 0X343D55
+		CASE 17
+			SETCOLOR 0X00519A
+		CASE 18
+			SETCOLOR 0X006AB6
+		CASE 19
+			SETCOLOR 0X2B4B65
+		CASE 20
+			SETCOLOR 0X9DCCE0
+		CASE 21
+			SETCOLOR 0X00859B
+		CASE 22
+			SETCOLOR 0X008E94
+		CASE 23
+			SETCOLOR 0X6AA89D
+		CASE 24
+			SETCOLOR 0X00A37E
+		CASE 25
+			SETCOLOR 0X00533E
+		CASE 26
+			SETCOLOR 0X007B50
+		CASE 27
+			SETCOLOR 0X005638
+		CASE 28
+			SETCOLOR 0X00B66E
+		CASE 29
+			SETCOLOR 0X3C6754
+		CASE 30
+			SETCOLOR 0X4D8169
+		CASE 31
+			SETCOLOR 0XBADBC7
+		CASE 32
+			SETCOLOR 0X687E52
+		CASE 33
+			SETCOLOR 0XA9C087
+		CASE 34
+			SETCOLOR 0X737C3E
+		CASE 35
+			SETCOLOR 0X97A61E
+		CASE 36
+			SETCOLOR 0XAAB300
+		CASE 37
+			SETCOLOR 0XBBC000
+		CASE 38
+			SETCOLOR 0X7C7A37
+		CASE 39
+			SETCOLOR 0X706C3E
+		CASE 40
+			SETCOLOR 0XC0BA7F
+		CASE 41
+			SETCOLOR 0XE3C700
+		CASE 42
+			SETCOLOR 0XEAD56B
+		CASE 43
+			SETCOLOR 0X716B4A
+		CASE 44
+			SETCOLOR 0XFFBB00
+		CASE 45
+			SETCOLOR 0XF8A900
+		CASE 46
+			SETCOLOR 0XC8A65D
+		CASE 47
+			SETCOLOR 0XB47700
+		CASE 48
+			SETCOLOR 0XB8883B
+		CASE 49
+			SETCOLOR 0XDED28F
+		CASE 50
+			SETCOLOR 0XEB8400
+		CASE 51
+			SETCOLOR 0X6B3E08
+		CASE 52
+			SETCOLOR 0X9F6C31
+		CASE 53
+			SETCOLOR 0XAA7A40
+		CASE 54
+			SETCOLOR 0X847461
+		CASE 55
+			SETCOLOR 0X5D5245
+		CASE 56
+			SETCOLOR 0XD4A168
+		CASE 57
+			SETCOLOR 0XEF810F
+		CASE 58
+			SETCOLOR 0XD89F6D
+		CASE 59
+			SETCOLOR 0XFAA55C
+		CASE 60
+			SETCOLOR 0XB1632A
+		CASE 61
+			SETCOLOR 0X6D4C33
+		CASE 62
+			SETCOLOR 0XF1BB93
+		CASE 63
+			SETCOLOR 0XB0764F
+		CASE 64
+			SETCOLOR 0X816551
+		CASE 65
+			SETCOLOR 0X564539
+		CASE 66
+			SETCOLOR 0XD86011
+		CASE 67
+			SETCOLOR 0X998D86
+		CASE 68
+			SETCOLOR 0X704B38
+		CASE 69
+			SETCOLOR 0X3E312B
+		CASE 70
+			SETCOLOR 0X865C4B
+		CASE 71
+			SETCOLOR 0XB64826
+		CASE 72
+			SETCOLOR 0XDB5C35
+		CASE 73
+			SETCOLOR 0XEB6940
+		CASE 74
+			SETCOLOR 0XB5725C
+		CASE 75
+			SETCOLOR 0X624035
+		CASE 76
+			SETCOLOR 0XE65226
+		CASE 77
+			SETCOLOR 0XAD4E39
+		CASE 78
+			SETCOLOR 0XEA4E31
+		CASE 79
+			SETCOLOR 0X905D54
+		CASE 80
+			SETCOLOR 0X863E33
+		CASE 81
+			SETCOLOR 0X7A453D
+		CASE 82
+			SETCOLOR 0XD1483E
+		CASE 83
+			SETCOLOR 0X9E413F
+		CASE 84
+			SETCOLOR 0XEF4644
+		CASE 85
+			SETCOLOR 0XF0F0F0
+		CASE 86
+			SETCOLOR 0X767676
+		CASE 87
+			SETCOLOR 0X343434
+		CASE 88
+			SETCOLOR 0X2A2A2A
+		CASE 89
+			SETCOLOR 0XFFFF00
+		CASEELSE
+			RESETCOLOR
+	ENDSELECT
+
+
+@PRINT_STATE_MARK(奴隷)
+	#DIM  奴隷
+	#DIM  刻印番号
+	#DIM  刻印番号最大値
+	#DIM  セパレータ
+	#DIM  改行
+	#DIM  単行文字数
+	#DIMS 合計文字列
+	#DIMS 単行文字列
+	IF 刻印番号最大値 == 0
+		刻印番号最大値 = VARSIZE("MARK")
+		FOR 刻印番号, 刻印番号最大値-1,-1,-1
+			IF MARKNAME:刻印番号 == ""
+				刻印番号最大値 = 刻印番号
+				BREAK
+			ENDIF
+		NEXT
+	ENDIF
+	
+	セパレータ = 0
+	単行文字数 = 0
+	合計文字列 = %""%
+	FOR 刻印番号,0,刻印番号最大値
+		IF MARK:奴隷:刻印番号 && (MARKNAME:刻印番号 != "")
+			単行文字列 = %"  "*セパレータ+GET_MARK_LEVEL_OWNERNAME(奴隷,刻印番号)%
+			IF (STRLENS(単行文字列)+単行文字数) > STRLENS(DRAWLINESTR)
+				セパレータ = 0
+				合計文字列 = %合計文字列+"<br>"+単行文字列%
+				単行文字数 = STRLENS(単行文字列)
+			ELSE
+				セパレータ = 1
+				合計文字列 = %合計文字列+単行文字列%
+				単行文字数 += STRLENS(単行文字列)
+			ENDIF
+		ENDIF
+	NEXT
+	
+	HTML_PRINT 合計文字列
+	
+RETURN 0
+
+
+
+@PRINT_アルファベット評価(選択中キャラID,ARG,表示ステータス番号)
+;ARG(1.好感度 3.性技及び技能 4.その他ABL)
+;「表示ステータス番号」はARGが3または4のときのみに使用
+#DIM 選択中キャラID
+#DIM 表示ステータス番号
+IF ARG == 1
+	IF CFLAG:選択中キャラID:2 >= 50000
+		SETCOLOR COLOR("パ紫")
+		PRINT Ex
+	ELSEIF CFLAG:選択中キャラID:2 >= 30000
+		SETCOLOR COLOR("白")
+		PRINT SS
+	ELSEIF CFLAG:選択中キャラID:2 >= 10000
+		SETCOLOR COLOR("白")
+		PRINT  S
+	ELSEIF CFLAG:選択中キャラID:2 >= 5000
+		SETCOLOR COLOR("桃")
+		PRINT  A
+	ELSEIF CFLAG:選択中キャラID:2 >= 3000
+		SETCOLOR COLOR("赤")
+		PRINT  B
+	ELSEIF CFLAG:選択中キャラID:2 >= 1500
+		SETCOLOR COLOR("橙")
+		PRINT  C
+	ELSEIF CFLAG:選択中キャラID:2 >= 1000
+		SETCOLOR COLOR("黄")
+		PRINT  D
+	ELSEIF CFLAG:選択中キャラID:2 >= 500
+		SETCOLOR COLOR("緑")
+		PRINT  E
+	ELSEIF CFLAG:選択中キャラID:2 >= 100
+		SETCOLOR COLOR("水色")
+		PRINT  F
+	ELSE
+		SETCOLOR COLOR("灰色")
+		PRINT  G
+	ENDIF
+	RESETCOLOR
+	RETURN 0
+ELSEIF ARG == 2
+	IF CFLAG:選択中キャラID:21 >= 20000
+		SETCOLOR COLOR("パ紫")
+		PRINT Ex
+	ELSEIF CFLAG:選択中キャラID:21 >= 10000
+		SETCOLOR COLOR("白")
+		PRINT SS
+	ELSEIF CFLAG:選択中キャラID:21 >= 3000
+		SETCOLOR COLOR("白")
+		PRINT  S
+	ELSEIF CFLAG:選択中キャラID:21 >= 1000
+		SETCOLOR COLOR("桃")
+		PRINT  A
+	ELSEIF CFLAG:選択中キャラID:21 >= 500
+		SETCOLOR COLOR("赤")
+		PRINT  B
+	ELSEIF CFLAG:選択中キャラID:21 >= 150
+		SETCOLOR COLOR("橙")
+		PRINT  C
+	ELSEIF CFLAG:選択中キャラID:21 >= 100
+		SETCOLOR COLOR("黄")
+		PRINT  D
+	ELSEIF CFLAG:選択中キャラID:21 >= 50
+		SETCOLOR COLOR("緑")
+		PRINT  E
+	ELSEIF CFLAG:選択中キャラID:21 >= 10
+		SETCOLOR COLOR("水色")
+		PRINT  F
+	ELSE
+		SETCOLOR COLOR("灰色")
+		PRINT  G
+	ENDIF
+	RESETCOLOR
+	RETURN 0
+ELSEIF ARG == 3
+	IF CFLAG:選択中キャラID:35 >= 20000
+		SETCOLOR COLOR("パ紫")
+		PRINT Ex
+	ELSEIF CFLAG:選択中キャラID:35 >= 10000
+		SETCOLOR COLOR("白")
+		PRINT SS
+	ELSEIF CFLAG:選択中キャラID:35 >= 3000
+		SETCOLOR COLOR("白")
+		PRINT  S
+	ELSEIF CFLAG:選択中キャラID:35 >= 1000
+		SETCOLOR COLOR("桃")
+		PRINT  A
+	ELSEIF CFLAG:選択中キャラID:35 >= 500
+		SETCOLOR COLOR("赤")
+		PRINT  B
+	ELSEIF CFLAG:選択中キャラID:35 >= 150
+		SETCOLOR COLOR("橙")
+		PRINT  C
+	ELSEIF CFLAG:選択中キャラID:35 >= 100
+		SETCOLOR COLOR("黄")
+		PRINT  D
+	ELSEIF CFLAG:選択中キャラID:35 >= 50
+		SETCOLOR COLOR("緑")
+		PRINT  E
+	ELSEIF CFLAG:選択中キャラID:35 >= 10
+		SETCOLOR COLOR("水色")
+		PRINT  F
+	ELSE
+		SETCOLOR COLOR("灰色")
+		PRINT  G
+	ENDIF
+	RESETCOLOR
+	RETURN 0
+ELSEIF ARG == 4
+	IF ABL:選択中キャラID:表示ステータス番号 >= 10
+		SETCOLOR COLOR("パ紫")
+		PRINT Ex
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 8 || ABL:選択中キャラID:表示ステータス番号 == 9
+		SETCOLOR COLOR("白")
+		PRINT SS
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 7
+		SETCOLOR COLOR("白")
+		PRINT  S
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 6
+		SETCOLOR COLOR("桃")
+		PRINT  A
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 5
+		SETCOLOR COLOR("赤")
+		PRINT  B
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 4
+		SETCOLOR COLOR("橙")
+		PRINT  C
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 3
+		SETCOLOR COLOR("黄")
+		PRINT  D
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 2
+		SETCOLOR COLOR("緑")
+		PRINT  E
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 1
+		SETCOLOR COLOR("水色")
+		PRINT  F
+	ELSE
+		SETCOLOR COLOR("灰色")
+		PRINT  G
+	ENDIF
+	RESETCOLOR
+	RETURN 0
+ELSEIF ARG == 5
+	IF ABL:選択中キャラID:表示ステータス番号 >= 99
+		SETCOLOR COLOR("パ紫")
+		PRINT Ex
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 75
+		SETCOLOR COLOR("白")
+		PRINT SS
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 50
+		SETCOLOR COLOR("白")
+		PRINT  S
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 20
+		SETCOLOR COLOR("桃")
+		PRINT  A
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 10
+		SETCOLOR COLOR("赤")
+		PRINT  B
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 5
+		SETCOLOR COLOR("橙")
+		PRINT  C
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 3
+		SETCOLOR COLOR("黄")
+		PRINT  D
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 2
+		SETCOLOR COLOR("緑")
+		PRINT  E
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 1
+		SETCOLOR COLOR("水色")
+		PRINT  F
+	ELSE
+		SETCOLOR COLOR("灰色")
+		PRINT  G
+	ENDIF
+	RESETCOLOR
+	RETURN 0
+ELSEIF ARG == 6
+	IF ABL:選択中キャラID:表示ステータス番号 >= 12
+		SETCOLOR COLOR("パ紫")
+		PRINT Ex
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 10 || ABL:選択中キャラID:表示ステータス番号 == 11
+		SETCOLOR COLOR("白")
+		PRINT SS
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 9 || ABL:選択中キャラID:表示ステータス番号 == 8
+		SETCOLOR COLOR("白")
+		PRINT  S
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 6 || ABL:選択中キャラID:表示ステータス番号 == 7
+		SETCOLOR COLOR("桃")
+		PRINT  A
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 5
+		SETCOLOR COLOR("赤")
+		PRINT  B
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 4
+		SETCOLOR COLOR("橙")
+		PRINT  C
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 == 3
+		SETCOLOR COLOR("黄")
+		PRINT  D
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 2
+		SETCOLOR COLOR("緑")
+		PRINT  E
+	ELSEIF ABL:選択中キャラID:表示ステータス番号 >= 1
+		SETCOLOR COLOR("水色")
+		PRINT  F
+	ELSE
+		SETCOLOR COLOR("灰色")
+		PRINT  G
+	ENDIF
+	RESETCOLOR
+	RETURN 0
+ENDIF

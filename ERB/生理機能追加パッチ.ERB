@@ -1,0 +1,194 @@
+
+
+;妊娠系新規作成======================================
+;使用フラグ
+;CFLAG:351 卵子生存日数 (1=排卵 2=受精不可)
+;CFLAG:352 生理周期フラグ　（10～15で“危険日”付与）
+
+;TALENT:危険日
+
+
+;====================================================
+;SHOP.ERB～～～～～～～～～～～～～～～～～～
+
+
+;AFTERTRA.ERB～～～～～～～～～～～～～～～～～～
+
+@妊娠確定時の追加処理, ARG
+;妊娠が確定したのでいらないフラグをリセット
+CFLAG:ARG:卵子生存日数 = 0
+CFLAG:ARG:生理周期 = 0
+TALENT:ARG:危険日 = 0
+
+
+;生理関連---------------------------------
+@生理周期, ARG
+SIF FLAG:生理機能追加パッチ等debug
+	TRYCALL 生理周期DEBUG, ARG
+
+
+;男(ふたなり以外)はスキップ
+SIF TALENT:ARG:性別 == 2
+	RETURN 0
+	
+;娘が成長期未満で生理処理が機能していたらここでリセット
+IF NO:ARG == 149 && CFLAG:ARG:75 < 3 && (TALENT:ARG:危険日 || CFLAG:ARG:生理周期 || CFLAG:ARG:卵子生存日数)
+	TALENT:ARG:危険日 = 0
+	CFLAG:ARG:生理周期 = 0
+	CFLAG:ARG:卵子生存日数 = 0
+ENDIF
+
+;ピル使用判定リセット
+CFLAG:ARG:ピル使用 = 0
+
+
+;娘の場合成長期から生理開始
+SIF NO:ARG == 149 && CFLAG:ARG:75 < 3
+	RETURN 0
+
+;妊娠しているならスキップ
+SIF TALENT:ARG:妊娠
+	RETURN 0
+
+;生理日数経過
+CFLAG:ARG:生理周期 ++
+
+;危険日以外ならたまに長引く
+IF !TALENT:ARG:危険日 && !CFLAG:ARG:卵子生存日数
+	SIF RAND:20 == 0
+		CFLAG:ARG:生理周期 --
+ENDIF
+
+;生理フラグ10で危険日付与
+IF CFLAG:ARG:生理周期 == 10
+	TALENT:ARG:危険日 = 1
+;生理フラグ15で生理フラグ、危険日、排卵フラグリセット
+ELSEIF CFLAG:ARG:生理周期 >= 15
+	CFLAG:ARG:生理周期 = 0
+	CFLAG:ARG:卵子生存日数 = 0
+ENDIF
+
+;危険日の何時の日かに排卵
+IF TALENT:ARG:危険日 && CFLAG:ARG:卵子生存日数 == 0
+	;30%の確率で排卵日に
+	IF RAND:100 < 30
+		CFLAG:ARG:卵子生存日数 ++
+	;生理フラグ14(危険日の最終日)までに排卵日が来なかった場合は確実に排卵日となる
+	ELSEIF CFLAG:ARG:生理周期 == 14
+		CFLAG:ARG:卵子生存日数 ++
+	ENDIF
+;排卵後1日経過で卵子が受精不可となり素質[危険日]消去
+ELSEIF CFLAG:ARG:卵子生存日数 == 1
+	TALENT:ARG:危険日 = 0
+	CFLAG:ARG:卵子生存日数 ++
+ENDIF
+
+SIF FLAG:生理機能追加パッチ等debug
+	TRYCALL 生理周期DEBUG, ARG
+
+;SHOP_ITEM.ERB～～～～～～～～～～～～～～～～～
+;排卵誘発剤---------------------
+@排卵誘発剤追加処理, ARG
+SIF FLAG:生理機能追加パッチ等debug
+	TRYCALL 生理周期DEBUG, ARG
+
+;排卵日処理
+TALENT:ARG:危険日 = 1
+CFLAG:ARG:卵子生存日数 = 1
+CFLAG:ARG:生理周期 = 12
+SIF FLAG:生理機能追加パッチ等debug	
+	TRYCALL 生理周期DEBUG, ARG
+
+
+;SHOP2.ERB～～～～～～～～～～～～～～～～～
+@簡易追加情報, ARG
+PRINT  "
+IF TALENT:ARG:性別 == 3
+	SETCOLOR 0xB000FF
+	PRINT HE
+ELSEIF TALENT:ARG:性別 == 2
+	SETCOLOR 0x8000FF
+	PRINT ♂
+ELSE
+	SETCOLOR 0xFF0080
+	PRINT ♀
+ENDIF
+	RESETCOLOR
+IF TALENT:ARG:妊娠
+	PRINT PREG
+ELSEIF CFLAG:ARG:81 == 3
+	PRINT PILL
+ELSEIF CFLAG:ARG:卵子生存日数 == 1
+	PRINT OVUL
+ELSEIF TALENT:ARG:危険日
+	PRINT DD　
+ELSE
+	PRINT     
+ENDIF
+IF TALENT:ARG:処女 && (TALENT:ARG:性別 >= 2 && !TALENT:ARG:童貞)
+	SETCOLOR 255, 120, 200
+	PRINT V
+	SETCOLOR COLOR("P-BLUE")
+	PRINT M
+ELSEIF TALENT:ARG:処女
+	SETCOLOR 255, 120, 200
+	PRINT V 
+;ELSEIF TALENT:ARG:性別 >= 2 && !TALENT:ARG:童貞
+ELSEIF IS_DOUTEI(ARG)
+	SETCOLOR COLOR("P-BLUE")
+	PRINT MV
+ELSE
+	PRINT   
+ENDIF
+	RESETCOLOR
+IF TALENT:ARG:恋慕
+	SETCOLOR 196,25,25
+	PRINT Love
+ELSE
+	PRINT     
+ENDIF
+	RESETCOLOR
+IF TALENT:ARG:淫乱 == 1
+	SETCOLOR 255,120,200
+	PRINT Lewd 
+ELSEIF TALENT:ARG:淫乱 == 2
+	SETCOLOR 244,26,219
+	PRINT Whore
+ELSE
+	PRINT      
+ENDIF
+IF TALENT:ARG:NTR
+	SETCOLOR 101,153,255
+	PRINT Ｎ
+ELSE
+	PRINT 　
+ENDIF
+IF TALENT:ARG:公衆便所
+	SETCOLOR 152,67,242
+	PRINT SL
+ELSE
+	PRINT   
+ENDIF
+IF TALENT:ARG:浮気な唇
+	SETCOLOR 255,100,100
+	PRINT CL
+ELSE
+	PRINT   
+ENDIF
+IF TALENT:ARG:浮気な蜜壷
+	SETCOLOR 255,100,100
+	PRINT CV
+ELSE
+	PRINT   
+ENDIF
+IF TALENT:ARG:浮気な尻穴
+	SETCOLOR 255,100,100
+	PRINT CA
+ELSE
+	PRINT   
+ENDIF
+	RESETCOLOR
+PRINT "
+;PRINTFORM  "%LOCALS% %LOCALS:1% %LOCALS:2% %LOCALS:3% %LOCALS:4% %LOCALS:5% %LOCALS:6% %LOCALS:7% %LOCALS:8% %LOCALS:9%" 
+
+

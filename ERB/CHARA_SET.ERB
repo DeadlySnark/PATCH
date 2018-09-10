@@ -1,0 +1,189 @@
+;option 12
+;キャラクター設定系
+@CHARA_RESET
+#DIM select
+PRINTL 
+PRINTL [1]Change character name
+PRINTFORML [2]Individual character reset
+PRINTFORML [3]Reset all characters (Except for %CALLNAME:MASTER%)
+PRINTL [100]-Return
+
+$INPUT_LOOP
+INPUT
+IF RESULT == 1
+	$RE_LOOP1
+	PRINTL 
+	PRINTL Which would you like to change?
+	PRINTL [1] NAME
+	PRINTL [2] CALLNAME
+	PRINTL [100]-Return
+	
+	$INPUT_LOOP1
+	INPUT
+	IF RESULT == 1
+		PRINTL 
+		PRINTL Please select a character whose name would you like to change.
+		FOR LOCAL, 0, CHARANUM
+			PRINTFORM [{LOCAL, 2}]%NAME:LOCAL, 25, LEFT%
+			SETCOLOR 色設定_テキスト_備考
+			PRINTFORML (%CALLNAME:LOCAL%)
+			RESETCOLOR
+		NEXT
+		PRINTL [100]-Return
+		$INPUT_LOOP1_1
+		INPUT
+		IF RESULT >= 0 && RESULT < CHARANUM
+			LOCAL = RESULT
+			PRINTL 
+			PRINTFORM Please type %NAME:LOCAL%'s name.
+			SETCOLOR 色設定_テキスト_備考
+			PRINTL 　　(Leave it empty to reset)
+			RESETCOLOR
+			INPUTS
+			IF STRLENS(RESULTS) > 30
+				PRINTW Name is too long.
+				GOTO INPUT_LOOP1_1
+			ELSEIF STRLENS(RESULTS) == 0
+				NAME:LOCAL = %CSVNAME(NO:LOCAL)%
+				PRINTFORMW Renamed to %NAME:LOCAL%.
+				PRINTL 
+			ELSE
+				NAME:LOCAL = %RESULTS%
+				PRINTFORMW Renamed to %NAME:LOCAL%.
+				PRINTL 
+			ENDIF
+		ELSEIF RESULT != 100
+			GOTO INPUT_LOOP1_1
+		ENDIF
+		GOTO RE_LOOP1
+	ELSEIF RESULT == 2
+		PRINTL 
+		PRINTL Please select a character whose nickname would you like to change.
+		FOR LOCAL, 0, CHARANUM
+			PRINTFORML [{LOCAL, 2}]%CALLNAME:LOCAL, 25, LEFT%
+		NEXT
+		PRINTL [100]-Return
+		$INPUT_LOOP2_1
+		INPUT
+		IF RESULT >= 0 && RESULT < CHARANUM
+			LOCAL = RESULT
+			PRINTL 
+			PRINTFORM Please type %CALLNAME:LOCAL%'s nickname.
+			SETCOLOR 色設定_テキスト_備考
+			PRINTL 　　(Leave it empty to reset)
+			RESETCOLOR
+			INPUTS
+			IF STRLENS(RESULTS) > 20
+				PRINTW Nickname is too long.
+				GOTO INPUT_LOOP2_1
+			ELSEIF STRLENS(RESULTS) == 0
+				CALLNAME:LOCAL = %CSVCALLNAME(NO:LOCAL)%
+				PRINTFORMW Renamed to %CALLNAME:LOCAL%.
+				PRINTL 
+			ELSE
+				CALLNAME:LOCAL = %RESULTS%
+				PRINTFORMW Renamed to %CALLNAME:LOCAL%.
+				PRINTL 
+			ENDIF
+		ELSEIF RESULT != 100
+			GOTO INPUT_LOOP2_1
+		ENDIF
+		GOTO RE_LOOP1
+	ELSEIF RESULT != 100
+		GOTO INPUT_LOOP1
+	ENDIF
+ELSEIF RESULT == 2
+	$RE_LOOP2
+	PRINTL 
+	PRINTL Please select the character you would like to reset.
+	PRINTL 
+	PRINTL - Settings
+	PRINT [0] Virgin setting:
+	IF select & 1
+		SETCOLOR 色設定_設定_肯定的
+		PRINTFORML  Enabled
+	ELSE
+		SETCOLOR 色設定_設定_無効化
+		PRINTFORML  Disabled
+	ENDIF
+	RESETCOLOR
+	PRINTL 
+	FOR LOCAL, 1, CHARANUM
+		PRINTFORM [{LOCAL, 2}]%NAME:LOCAL, 25, LEFT%
+		SETCOLOR 色設定_テキスト_備考
+		PRINTFORML (%CALLNAME:LOCAL%)
+		RESETCOLOR
+	NEXT
+	PRINTL [100]-Return
+	$INPUT_LOOP_S
+	INPUT
+	IF RESULT == 0
+		select += (select & 1) ? -1 # 1
+		GOTO RE_LOOP2
+	ELSEIF RESULT > 0 && RESULT < CHARANUM
+		LOCAL = RESULT
+		LOCALS = %CALLNAME:LOCAL%
+		ADDCHARA LOCAL
+		SWAPCHARA LOCAL, CHARANUM-1
+		DELCHARA CHARANUM-1
+		IF select & 1
+			TALENT:LOCAL:処女 = 1
+			EXP:LOCAL:Ｖ経験 = 0
+			EXP:LOCAL:Ｖ性交経験 = 0
+			EXP:LOCAL:Ａ性交経験 = 0
+			ABL:LOCAL:Ｖ感覚 = 0
+			ABL:LOCAL:Ａ感覚 = 0
+		ENDIF
+		IF 人物_美鈴 <= LOCAL && LOCAL <= 人物_魔理沙
+			TRYCALLFORM 体詳細初期設定{LOCAL}(LOCAL)
+		ENDIF
+		PRINTFORMW %LOCALS% has been reset.
+		PRINTL 
+	ELSEIF RESULT != 100
+		GOTO INPUT_LOOP_S
+	ENDIF
+ELSEIF RESULT == 3
+	$RE_LOOP3
+	PRINTL 
+	PRINTL Would you like to reset all characters except your player character?
+	PRINT [0] Virgin setting:
+	IF select & 1
+		SETCOLOR 色設定_設定_肯定的
+		PRINTFORML  Enabled
+	ELSE
+		SETCOLOR 色設定_設定_無効化
+		PRINTFORML Disabled
+	ENDIF
+	RESETCOLOR
+	PRINTL 
+	PRINTL [1] Yes
+	PRINTL [2] Cancel
+	$INPUT_LOOP_S2
+	INPUT
+	IF RESULT == 0
+		select += (select & 1) ? -1 # 1
+		GOTO RE_LOOP3
+	ELSEIF RESULT == 1
+		FOR LOCAL,1,CHARANUM
+			DELCHARA 1
+		NEXT
+		FOR LOCAL,1,開始時人数
+			ADDCHARA LOCAL
+			IF select & 1
+				TALENT:LOCAL:処女 = 1
+				EXP:LOCAL:Ｖ経験 = 0
+				EXP:LOCAL:Ｖ性交経験 = 0
+				EXP:LOCAL:Ａ性交経験 = 0
+				ABL:LOCAL:Ｖ感覚 = 0
+				ABL:LOCAL:Ａ感覚 = 0
+			ENDIF
+			IF 人物_美鈴 <= LOCAL && LOCAL <= 人物_ルーミア
+				TRYCALLFORM 体詳細初期設定{LOCAL}(LOCAL)
+			ENDIF
+		NEXT
+		PRINTFORMW Reset is successful.
+		PRINTL 
+	ELSEIF RESULT != 2
+		GOTO INPUT_LOOP_S2
+	ENDIF
+ENDIF

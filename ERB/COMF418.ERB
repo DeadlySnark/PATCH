@@ -1,0 +1,191 @@
+;-------------------------------------------------
+;Œ®‚ğw“ü‚·‚é
+;-------------------------------------------------
+;ŒöO•ÖŠ‚É‚È‚Á‚½Zl‚Ì’å‘€‘Ñ‚ÌŒ®‚ğw“ü‚·‚éƒRƒ}ƒ“ƒh
+;
+;
+;-------------------------------------------------
+@COM418
+;w“ü‘ÎÛ‘I‘ğ
+	#DIM “z—ê
+	#DIM Œ®Šî–{‰¿Ši
+	#DIM Œ®“Á•Ê‰¿Ši
+	#DIM •ƒe
+
+
+	SELECTCASE EXP:MASTER:”ƒtŒoŒ±
+		CASE 0
+			PRINTFORML %NTR_NAME(0)% flashed the tiny key before %CALLNAME:MASTER%,
+			PRINTFORML Saying "You want to use the services of my fabled wToiletx too?", as he laughed.
+		CASE 1
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "One more, huh? From now on I will charge full price for using wToiletx service", as he laughed.
+		CASE 3
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "I call them wToiletsx, but they're sluts really, they will fulfill any of your wicked wishes", as he laughed.
+		CASE 5
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "I hope you really enjoy the service of our top-class wToiletsx", as he laughed.
+		CASE 10
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "It's a money well spent, you won't find that quality anywhere else, I made sure of that", as he laughed.
+		CASE 15
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "It might be expensive, but my wToiletsx are all of high-quality and reliable", as he laughed.
+		CASE 20
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "If you're in a dire need of money, just clean this entire mansion properly or do some requests", as he laughed.
+		CASE 50
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "Oh look, it's out honorable wToiletx sponsor! How is it going? Still enjoying it, eh?", as he laughed.
+		CASE 100
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "This will be your 100th wToiletx service! Such dedication is admirable and should be rewarded so I'm giving you a 5\% discount from now on", as he laughed.
+		CASE 1000
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "You are truly amazing my friend! Using my wToiletx service 1000 times is something that I don't see every day! I'll give you another 5\% discount just because I like you", as he laughed.
+		CASEELSE
+			PRINTFORML When %CALLNAME:MASTER% asked for a key, %NTR_NAME(0)% said:
+			PRINTFORML "Heh, looks like you're getting really interested in our wToiletx services, huh?", as he laughed.
+	ENDSELECT
+	
+	CALL SHOW_MONEY(1)
+	
+	FOR “z—ê,1,CHARANUM
+		IF TALENT:“z—ê:ŒöO•ÖŠ
+			Œ®Šî–{‰¿Ši = NTR_COST_UNLOCK(“z—ê)
+			Œ®“Á•Ê‰¿Ši = NTR_COST_UNLOCK_SP(“z—ê,Œ®Šî–{‰¿Ši)
+			SELECTCASE Œ®Šî–{‰¿Ši
+				CASE IS >= 4000
+					PRINTFORML %"["+TOSTR(“z—ê,"00")+"] -  High Quality Toilet   w"+CALLNAME:“z—ê+"x(4 hours, $" + TOSTR(Œ®“Á•Ê‰¿Ši,"#,###") + ")"%
+				CASE IS >= 2000
+					PRINTFORML %"["+TOSTR(“z—ê,"00")+"] - Average Quality Toilet w"+CALLNAME:“z—ê+"x(4 hours, $" + TOSTR(Œ®“Á•Ê‰¿Ši,"#,###") + ")"%
+				CASE IS >= 1000
+					PRINTFORML %"["+TOSTR(“z—ê,"00")+"] -   Low Quality Toilet   w"+CALLNAME:“z—ê+"x(4 hours, $" + TOSTR(Œ®“Á•Ê‰¿Ši,"#,###") + ")"%
+				CASEELSE
+					PRINTFORML %"["+TOSTR(“z—ê,"00")+"] -      Cheap Toilet      w"+CALLNAME:“z—ê+"x(4 hours, $" + TOSTR(Œ®“Á•Ê‰¿Ši,"#,###") + ")"%
+			ENDSELECT
+		ENDIF
+	NEXT
+	PRINTFORML [100] - It was a bad idea after all
+	$INPUT_LOOP
+	INPUT
+	SIF 100 == RESULT
+		RETURN 1
+	SIF RESULT <= 0 || CHARANUM <= RESULT
+		GOTO INPUT_LOOP
+	SIF !TALENT:RESULT:ŒöO•ÖŠ
+		GOTO INPUT_LOOP
+	“z—ê = RESULT
+	;w“ü‹àŠz
+	Œ®“Á•Ê‰¿Ši = NTR_COST_UNLOCK_SP(“z—ê,NTR_COST_UNLOCK(“z—ê))
+	IF MONEY < Œ®“Á•Ê‰¿Ši
+		PRINTFORMW Not enough money.
+		GOTO INPUT_LOOP
+	ENDIF
+	;¤•i‚Ìà–¾
+
+	IF TALENT:“z—ê:”DP
+		; ”DP‚µ‚Ä‚¢‚éê‡‚Í”¼Šz
+		PRINTFORML %NTR_NAME(0)% handed you the key and said "w%CALLNAME:“z—ê%x is pregnant right now, so I'll give you a discount".
+		•ƒe = CFLAG:“z—ê:‚É‚ñ‚Á‚µ‚ñ‚Á -1
+		; “z—ê‚ª—ö•çZl‚ÅA•ƒe‚ªMASTER‚Å‚È‚¢B1/3‚ÌŠm—¦‚Å•\¦B
+		IF TALENT:“z—ê:—ö•ç && •ƒe != MASTER && 0 == RAND:3
+			;PRINTFORML %NTR_NAME(0)+"‚Í"+CALLNAME:“z—ê+"‚ª"+CALLNAME:MASTER+"‚Ì"+MSG_RE_LOVER(“z—ê)+"‚Å‚ ‚é‚±‚Æ‚ğv‚¢o‚µA"+MSG_RE_LOVER(“z—ê)+"‚ğ‘¼‚Ì’j‚É›s‚Ü‚³‚ê‚½‚Ì‚Í‚Ç‚ñ‚È‹C•ª‚¾H‚ÆŒ™‚ÈÎ‚İ‚ğ•‚‚©‚×‚½B"%
+			PRINTFORML After remembering that %CALLNAME:MASTER% was in fact %CALLNAME:“z—ê%'s %MSG_RE_LOVER(“z—ê)%,
+			PRINTFORML %NTR_NAME(0)% asked how does it feel knowing that %HIS_HER(MASTER)% %MSG_RE_LOVER(“z—ê)% is having another man's baby,
+			PRINTFORML While smiling at %CALLNAME:MASTER% with a nasty, detestable smile.
+		ELSE
+			PRINTFORML "I think you should understand that you cannot be too rough with a pregnant woman, okay?", he added.
+		ENDIF
+	ELSEIF TALENT:“z—ê:ŠëŒ¯“ú
+		; ”DP‚µ‚Ä‚¢‚È‚­‚ÄŠëŒ¯“ú‚Ìê‡‚Í5Š„‘
+		PRINTFORML %NTR_NAME(0)% handed you the key and said "w%CALLNAME:“z—ê%x is at her dangerous day today, so it will be more expensive".
+		IF TALENT:“z—ê:—ö•ç
+			;PRINTFORML %NTR_NAME(0)+"‚Í"+CALLNAME:“z—ê+"‚ª"+CALLNAME:MASTER+"‚Ì"+MSG_RE_LOVER(“z—ê)+"‚Å‚ ‚é‚±‚Æ‚ğv‚¢o‚µA"+MSG_RE_LOVER(“z—ê)+"‚Ìg‘Ì‚ğ‹à‚Å”ƒ‚¤‹C•ª‚Í‚Ç‚ñ‚È‚à‚Ì‚¾H‚ÆŒ™‚ÈÎ‚İ‚ğ•‚‚©‚×‚½B"%
+			PRINTFORML After remembering that %CALLNAME:MASTER% was in fact %CALLNAME:“z—ê%'s %MSG_RE_LOVER(“z—ê)%,
+			PRINTFORML %NTR_NAME(0)% asked how does it feel that %HE_SHE(MASTER)% has to buy %HIS_HER(MASTER)% own %MSG_RE_LOVER(“z—ê)%'s body with money,
+			PRINTFORML While smiling at %CALLNAME:MASTER% with a nasty, detestable smile.
+		ENDIF
+	ELSEIF TALENT:“z—ê:—ö•ç
+		IF BASE:“z—ê:‚uŠÉ‚³ > 700 || BASE:“z—ê:‚`ŠÉ‚³ > 700
+			IF BASE:“z—ê:‚uŠÉ‚³ > 700 && BASE:“z—ê:‚`ŠÉ‚³ > 700
+				PRINTFORML %NTR_NAME(0)+" handed you the key and told you that w"+CALLNAME:“z—ê+"x's holes are pretty loose so it would be better to use " + HIS_HER(“z—ê) + " mouth instead."%
+			ELSEIF BASE:“z—ê:‚`ŠÉ‚³ > 700
+				PRINTFORML %NTR_NAME(0)+" handed you the key and told you that w"+CALLNAME:“z—ê+"x's "+ VAGINA(“z—ê) +" is pretty loose so it would be better to use " + HIS_HER(“z—ê) + " " + ANUS(“z—ê) + " instead."%
+			ELSEIF BASE:“z—ê:‚uŠÉ‚³ > 700
+				PRINTFORML %NTR_NAME(0)+" handed you the key and told you that w"+CALLNAME:“z—ê+"x's "+ ANUS(“z—ê) +" is pretty loose so it would be better to use " + HIS_HER(“z—ê) + " " + VAGINA(“z—ê) + " instead."%
+			ENDIF
+			;PRINTFORML %CALLNAME:MASTER+"‚ª”÷–­‚ÈŠç‚ğ‚µ‚Ä‚¢‚é‚ÆA"+NTR_NAME(0)+"‚Í‚»‚¤Œ¾‚¦‚Îw"+CALLNAME:“z—ê+"x‚Í"+CALLNAME:MASTER+"‚Ì"+MSG_RE_LOVER(“z—ê)+"‚¾‚Á‚½‚ÈA‚Ç‚ÌŒŠ‚Å‚à\‚í‚È‚¢‚©‚ç‚ä‚Á‚­‚èŠy‚µ‚ñ‚Å‚­‚êA‚ÆŒ™‚ÈÎ‚İ‚ğ•‚‚©‚×‚½B"%
+			PRINTFORML Seeing %CALLNAME:MASTER%'s troubled face, %NTR_NAME(0)% said:
+			PRINTFORML "Oh yeah, by the way, you were %CALLNAME:“z—ê%'s %MSG_RE_LOVER(“z—ê)%, right?"
+			PRINTFORML "Well, I don't really mind, use whatever hole you want and enjoy yourself properly, ahahaha!"
+			PRINTFORML He continued smiling at %CALLNAME:MASTER% with a nasty, detestable smile.
+		ELSE
+			;PRINTFORML %NTR_NAME(0)+"‚Í"+CALLNAME:“z—ê+"‚ª"+CALLNAME:MASTER+"‚Ì"+MSG_RE_LOVER(“z—ê)+"‚Å‚ ‚é‚±‚Æ‚ğv‚¢o‚µA"+MSG_RE_LOVER(“z—ê)+"‚Ìg‘Ì‚ğ‹à‚Å”ƒ‚¤‹C•ª‚Í‚Ç‚ñ‚È‚à‚Ì‚¾H‚ÆŒ™‚ÈÎ‚İ‚ğ•‚‚©‚×‚½B"%
+			PRINTFORML After remembering that %CALLNAME:MASTER% was in fact %CALLNAME:“z—ê%'s %MSG_RE_LOVER(“z—ê)%,
+			PRINTFORML %NTR_NAME(0)% asked how does it feel that %HE_SHE(MASTER)% has to buy %HIS_HER(MASTER)% own %MSG_RE_LOVER(“z—ê)%'s body with money,
+			PRINTFORML While smiling at %CALLNAME:MASTER% with a nasty, detestable smile.
+		ENDIF
+	ELSE
+		IF BASE:“z—ê:‚uŠÉ‚³ > 700 && BASE:“z—ê:‚`ŠÉ‚³ > 700
+			PRINTFORML %NTR_NAME(0)+" handed you the key and told you that w"+CALLNAME:“z—ê+"x's holes are pretty loose so it would be better to use " + HIS_HER(“z—ê) + " mouth instead."%
+		ELSEIF BASE:“z—ê:‚`ŠÉ‚³ > 700
+			PRINTFORML %NTR_NAME(0)+" handed you the key and told you that w"+CALLNAME:“z—ê+"x's "+ VAGINA(“z—ê) +" is pretty loose so it would be better to use " + HIS_HER(“z—ê) + " " + ANUS(“z—ê) + " instead."%
+		ELSEIF BASE:“z—ê:‚uŠÉ‚³ > 700
+			PRINTFORML %NTR_NAME(0)+" handed you the key and told you that w"+CALLNAME:“z—ê+"x's "+ ANUS(“z—ê) +" is pretty loose so it would be better to use " + HIS_HER(“z—ê) + " " + VAGINA(“z—ê) + " instead."%
+		ENDIF
+	ENDIF
+	;Virgin shaming by Chad-senpai :^)
+	IF IS_DOUTEI(MASTER)
+		PRINTFORML Looking at your eyes, %NTR_NAME(0)% stopped you and started speaking:
+		SELECTCASE EXP:MASTER:”ƒtŒoŒ±
+		CASE 0
+			PRINTFORML "Hm? You look pale. Is something wrong? Why are you trembling so much?..."
+			PRINTFORML "Wait, I know! Don't tell me you are still a vir... Hm, okay, listen pal. Don't worry about it, okay?"
+			PRINTFORML "I made sure to train %HIM_HER(“z—ê)% properly, so you're in a safe, experienced hands!"
+			PRINTFORML "Stick it in both holes, have a good feel of it and then come back, alright?"
+			PRINTFORML "I'll make it even cheaper for you, first dose is *almost* free after all..."
+			IF TALENT:“z—ê:—ö•ç
+				PRINTFORML "Though, I have to ask: How does it feel to buy your own %MSG_RE_LOVER(“z—ê)% just to lose your virginity with %HIM_HER(“z—ê)%, huh?"
+				PRINTFORML He smiled widely at %CALLNAME:MASTER%, making an even more disturbing face.
+				PRINTFORML "Wait, don't tell me. Your dedication is indeed admirable, to make it this far for this very purpose."
+				PRINTFORML "Or what, you're gonna just make %HIM_HER(“z—ê)% suck your %PENIS_APPEAR_SIMPLE(MASTER)% without sticking it in? That's no good."
+				PRINTFORML "I'm just gonna tell EVERYONE about that if you dare to not return as a true man next time, alright?"
+				PRINTFORML "Just you fucking see."
+				PRINTFORML "Well, good luck to you pal! Have a nice day with your precious soulmate."
+			ENDIF
+		CASE 1
+			PRINTFORML "Well well well, I heard you didn't do it. You're just wasting my time, do you know that?"
+			PRINTFORML "Sure, I get my money, but are you really trying? What kind of a feeble-minded idiot comes to me to buy my prostitutes,"
+			PRINTFORML "Only to not enjoy it to the fullest, you know what I mean? You're making %HIM_HER(“z—ê)% insecure too,"
+			PRINTFORML "%HE_SHE(“z—ê, 1)% asked me if something was wrong. If you make %HIM_HER(“z—ê)% cry, I'll beat your ass, understand?"
+			PRINTFORML "Now go and do it properly, or else you could just go and masturbate without bothering me, or my goods. Thanks for money though, chump."
+		CASE 3
+			PRINTFORML "Just let %HIM_HER(“z—ê)% do you already, if you're that hesitant."
+		CASEELSE
+			PRINTFORML "Still didn't lose that V-card, huh? Are you trying to roleplay as an ironman or something?" 
+			PRINTFORML "If you wish to remain celibate that badly, why bother with prostitutes? Are you dumb? You must be."
+			PRINTFORML "It's a money well spent for you, right? Well, at least for me after I go out."
+			PRINTFORML "Well, I don't care anymore, but I'll care just enough to bother you next time, heh."
+			PRINTFORML "See ya, loser."
+		ENDSELECT
+	ENDIF
+	PRINTFORMW %"You bought the chastity belt key for a Public Toilet w"+CALLNAME:“z—ê+"x."%
+
+	EXP:MASTER:”ƒtŒoŒ±++
+	MONEY -= Œ®“Á•Ê‰¿Ši
+	;Œ®w“ü
+	FLAG:’å‘€‘ÑŒ®w“üƒtƒ‰ƒO = “z—ê
+	CFLAG:“z—ê:NTRŒ®w“ü‰ñ”++
+	;Œ®w“üƒJƒEƒ“ƒ^
+	FLAG:’å‘€‘ÑŒ®—LŒøƒJƒEƒ“ƒ^ = TIME_PROGRESS() + 4*60
+	;Zl‚Ì”½‰“™
+	FOR “z—ê,1,CHARANUM
+		;Œ®w“ü”½‰ƒtƒ‰ƒO‰Šú‰»
+		CFLAG:“z—ê:NTR’å‘€‘Ñ”½‰ = 1
+	NEXT
+
+RETURN 1
+
+

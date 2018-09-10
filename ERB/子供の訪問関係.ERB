@@ -1,0 +1,234 @@
+;-------------------------------------------------------------------------------
+;子供の訪問関係.ERB
+;
+;追加フラグ
+;CFLAG:子供訪問フラグ 子供の訪問フラグ(成人した子供限定のフラグ)
+;	  0       紅魔館へ訪問する確率が発生
+;	  -30~-1  子供の紅魔館滞在日数
+;	  -999    紅魔館に永久滞在(解除可能)
+;	  1~10    訪問する確率が発生するまでの残り日数
+;	  101~130 呼び出したときの訪問日数
+;	  999     無期限滞在の前処理
+;
+
+;-------------------------------------------------------------------------------
+;子供が紅魔館へ帰って来る処理など
+;-------------------------------------------------------------------------------
+;BEFORETRAIN.ERB
+@子供訪問_1
+;PRINTFORMW {CHARANUM}
+;子供キャラが誰もいないなら処理終了
+SIF CHARANUM <= 開始時人数
+	RETURN 0
+
+;特殊な訪問処理
+FOR LOCAL, 開始時人数, CHARANUM
+	IF CFLAG:LOCAL:子供訪問フラグ >= 101
+		PRINTFORMW %CALLNAME:LOCAL% has been called to Scarlet Devil Mansion.
+		;正門
+		CFLAG:LOCAL:現在位置 = 場所_正門
+		;滞在処理
+		IF CFLAG:LOCAL:子供訪問フラグ == 999
+			CFLAG:LOCAL:子供訪問フラグ = -999
+		ELSE
+			CFLAG:LOCAL:子供訪問フラグ = (CFLAG:LOCAL:子供訪問フラグ - 100) * -1
+		ENDIF
+	ENDIF
+NEXT
+
+LOCAL:2 = 0
+;確率が発生するキャラの訪問確率処理
+FOR LOCAL, 開始時人数, CHARANUM
+	;3人訪問すると終了
+	SIF LOCAL:2 == 3
+		RETURN 0
+	;成人以外はスキップ
+	SIF CFLAG:LOCAL:成長度 != 成長度_成人
+		CONTINUE
+	IF CFLAG:LOCAL:子供訪問フラグ == 0
+		;プレイヤーとの好感度が高いと確率上昇
+		IF CFLAG:LOCAL:好感度 >= 300
+			LOCAL:1 = 50
+		ELSEIF CFLAG:LOCAL:好感度 >= 150
+			LOCAL:1 = 75
+		ELSE
+			LOCAL:1 = 100
+		ENDIF
+		;PRINTFORMW {LOCAL}
+		;通常で20%の確率で訪問してくる
+		IF RAND:(LOCAL:1) < 20
+			PRINTFORMW %CALLNAME:LOCAL% has went to visit and stay at Scarlet Devil Mansion.
+			;正門
+			CFLAG:LOCAL:現在位置 = 場所_正門
+			;とりあえず1日滞在処理
+			CFLAG:LOCAL:子供訪問フラグ = -1
+			LOCAL:2 ++
+		ENDIF
+	ENDIF
+NEXT
+
+
+
+;-------------------------------------------------------------------------------
+;子供が人里へ帰って行く処理など
+;-------------------------------------------------------------------------------
+;AFTERTRA.ERB
+@子供訪問_2
+;子供キャラが誰もいないなら処理終了
+SIF CHARANUM <= 開始時人数
+	RETURN 0
+;訪問確率発生までの残り日数減少、訪問していたら残り滞在日数減少処理
+FOR LOCAL, 開始時人数, CHARANUM
+	;成人以外はスキップ
+	SIF CFLAG:LOCAL:成長度 != 成長度_成人
+		CONTINUE
+	;無期限滞在中ならスキップ
+	SIF CFLAG:LOCAL:子供訪問フラグ == -999
+		CONTINUE
+		
+	;帰る口上とその処理
+	IF CFLAG:LOCAL:子供訪問フラグ == -1
+		;お持ち帰りされているなどで移動できるマップ内にいない場合、もう1日紅魔館に残る
+		IF CFLAG:LOCAL:現在位置 < 場所_訪問者宅
+			PRINTFORMW %CALLNAME:LOCAL% has went back to the Village.
+			CFLAG:LOCAL:現在位置 = 場所_里の住処
+			CFLAG:LOCAL:子供訪問フラグ = RAND(8, 13)
+		ENDIF
+	;残り滞在日数減少
+	ELSEIF CFLAG:LOCAL:子供訪問フラグ < 0
+		CFLAG:LOCAL:子供訪問フラグ ++
+	;訪問確率発生までの残り日数減少
+	ELSEIF CFLAG:LOCAL:子供訪問フラグ > 0
+		CFLAG:LOCAL:子供訪問フラグ --
+	ENDIF
+NEXT
+
+
+;-------------------------------------------------------------------------------
+;子供の呼び出し
+;-------------------------------------------------------------------------------
+;SHOP.ERB
+@子供訪問_設定
+
+IF GET_TARGET_CHILDREN(MASTER, 4) <= 0
+	PRINTFORMW You can't change these settings if there's no children.
+	RETURN
+ENDIF
+
+CALL 子供訪問_設定2, MASTER
+
+
+@子供訪問_設定2, ARG
+
+PRINTL Call children settings.
+PRINTL
+FOR LOCAL, 開始時人数 ,CHARANUM
+	IF 親子関係(ARG, LOCAL)
+		PRINTFORM  %CALLNAME:LOCAL, 18, LEFT%　
+		IF CFLAG:LOCAL:子供訪問フラグ == -999
+			PRINTFORM %"Stays at the mansion indefinitely", 30, LEFT%
+		ELSEIF CFLAG:LOCAL:子供訪問フラグ < 0
+			PRINTFORM %@"Stays at the mansion, will return back in {ABS(CFLAG:LOCAL:子供訪問フラグ)} day\@CFLAG:LOCAL:子供訪問フラグ == 1 ?#s\@", 30, LEFT%
+		ELSEIF CFLAG:LOCAL:子供訪問フラグ == 999
+			PRINTFORM %"Plans to stay at the mansion indefinitely", 30, LEFT%
+		ELSEIF CFLAG:LOCAL:子供訪問フラグ >= 101
+			PRINTFORM %@"Plans to stay at the mansion for {CFLAG:LOCAL:子供訪問フラグ - 100} day\@CFLAG:LOCAL:子供訪問フラグ == 1 ?#s\@", 30, LEFT%
+		ENDIF
+		IF CFLAG:LOCAL:子供訪問フラグ >= 101
+			PRINTBUTTON "[Change number of days]", LOCAL
+			PRINT 　
+		ELSEIF CFLAG:LOCAL:子供訪問フラグ >= 0
+			PRINTBUTTON "[Call in]", LOCAL
+			PRINT 　　　
+		ELSE
+			PRINTBUTTON "[Change number of days]", LOCAL
+			PRINT 　
+		ENDIF
+		IF CFLAG:LOCAL:子供訪問フラグ == -999
+			PRINTBUTTON "[Send back home]", LOCAL * -1
+		ENDIF
+		PRINTL
+	ENDIF
+NEXT
+PRINTL
+PRINTL [0] Return
+PRINTL
+INPUT
+
+SELECTCASE RESULT
+	CASE 0
+		RETURN
+	CASE -(CHARANUM-1) TO -(開始時人数)
+		LOCAL = ABS(RESULT)
+		IF 親子関係(ARG, LOCAL)
+			CFLAG:LOCAL:子供訪問フラグ = -1
+			PRINTFORMW %CALLNAME:LOCAL% decided to leave the mansion in the following day.
+		ENDIF
+			
+	CASE 開始時人数 TO CHARANUM-1
+		LOCAL = RESULT
+		IF 親子関係(ARG, LOCAL)
+			PRINTL Set the amount of days to stay at the mansion (From 1 up to 30, 0 to return, 99 for indefinite)
+			$LOOP
+			INPUT
+			
+			SELECTCASE RESULT
+				CASE 1 TO 30
+					IF CFLAG:LOCAL:子供訪問フラグ >= 0
+						CFLAG:LOCAL:子供訪問フラグ = 100 + RESULT
+					ELSE
+						CFLAG:LOCAL:子供訪問フラグ = -(RESULT)
+					ENDIF
+				CASE 99
+					IF CFLAG:LOCAL:子供訪問フラグ >= 0
+						CFLAG:LOCAL:子供訪問フラグ = 999
+					ELSE
+						CFLAG:LOCAL:子供訪問フラグ = -999
+					ENDIF
+				CASEELSE
+					CLEARLINE 1
+					GOTO LOOP
+			ENDSELECT
+		ENDIF
+ENDSELECT
+
+RESTART
+
+;対象ARGの子供が何人いるか、ARG:1は特定の成長度のみを指すかどうか
+@GET_TARGET_CHILDREN(ARG, ARG:1)
+#FUNCTION
+
+SIF CHARANUM <= 開始時人数
+	RETURNF -1
+
+LOCAL:1 = 0
+
+FOR LOCAL, 開始時人数, CHARANUM
+	SIF ARG:1 > 0 && CFLAG:LOCAL:成長度 != ARG:1
+		CONTINUE
+	IF 親子関係(ARG, LOCAL)
+		LOCAL:1 ++
+	ENDIF
+NEXT
+
+RETURNF LOCAL:1
+
+
+;-------------------------------------------------------------------------------
+;親子関係の取得
+;-------------------------------------------------------------------------------
+;BEFORETRAIN.ERB
+@親子関係(親, 子)
+#FUNCTION
+#DIM 親
+#DIM 子
+SIF NO:子 < 148
+ 	RETURNF 0
+SIF (CFLAG:子:父親 == 親 || CFLAG:子:母親 == 親)
+	RETURNF 1
+RETURNF 0
+
+
+
+
+

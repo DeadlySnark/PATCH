@@ -1,0 +1,1524 @@
+﻿;Various random descriptions for body parts and other
+;Usage: %BODY_PART(ARG)%
+;Functions with ARG:1 have additional option
+
+;------------------------------------------------------------
+@PENETRATE(ARG,ARG:1)
+#FUNCTIONS
+VARSET LOCALS
+;ARG:1 for a different way
+
+SIF CALLNAME:ARG != "You" && !ARG:1
+ARG:1 = 2
+
+SELECTCASE ARG:1
+
+CASE 0
+
+SELECTCASE RAND:16
+CASE 0 TO 5
+	LOCALS += "penetrate"
+CASE 6
+	LOCALS += "sink into"
+CASE 7
+	LOCALS += "plunge into"
+CASE 8
+	LOCALS += "invade"
+CASE 9
+	LOCALS += "charge into"
+CASE 10
+	LOCALS += "insert into"
+CASE 11
+	LOCALS += "thrust into"
+CASE 12
+	LOCALS += "dive into"
+CASE 13
+	LOCALS += "make your way inside of"
+CASE 14
+	LOCALS += "go into"
+CASE 15
+	LOCALS += "slide into"
+ENDSELECT
+
+CASE 1
+
+SELECTCASE RAND:15
+CASE 0 TO 5
+	LOCALS += "penetrating"
+CASE 6
+	LOCALS += "sinking into"
+CASE 7
+	LOCALS += "plunging into"
+CASE 8
+	LOCALS += "invading"
+CASE 9
+	LOCALS += "charging into"
+CASE 10
+	LOCALS += "inserting into"
+CASE 11
+	LOCALS += "thrusting into"
+CASE 12
+	LOCALS += "diving into"
+CASE 13
+	LOCALS += "going into"
+CASE 14
+	LOCALS += "sliding into"
+ENDSELECT
+
+CASE 2
+
+SELECTCASE RAND:16
+CASE 0 TO 5
+	LOCALS += "penetrates"
+CASE 6
+	LOCALS += "sinks into"
+CASE 7
+	LOCALS += "plunges into"
+CASE 8
+	LOCALS += "invades"
+CASE 9
+	LOCALS += "charges into"
+CASE 10
+	LOCALS += "inserts into"
+CASE 11
+	LOCALS += "thrusts into"
+CASE 12
+	LOCALS += "dives into"
+CASE 13
+	LOCALS += "makes its way inside of"
+CASE 14
+	LOCALS += "goes into"
+CASE 15
+	LOCALS += "slides into"
+ENDSELECT
+
+CASE 3
+
+SELECTCASE RAND:15
+CASE 0 TO 5
+	LOCALS += "penetrated"
+CASE 6
+	LOCALS += "sinked into"
+CASE 7
+	LOCALS += "plunged into"
+CASE 8
+	LOCALS += "invaded"
+CASE 9
+	LOCALS += "charged into"
+CASE 10
+	LOCALS += "inserted into"
+CASE 12
+	LOCALS += "dived into"
+CASE 13
+	LOCALS += "went into"
+CASE 14
+	LOCALS += "slided into"
+ENDSELECT
+
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@PENIS_APPEAR(ARG,ARG:1,ARG:2)
+;ARG:1 for plural
+;ARG:2 for arousal state
+#FUNCTIONS
+VARSET LOCALS
+
+;virginity
+IF !TALENT:ARG:1 && !ARG:1
+		SELECTCASE RAND:13
+		CASE 0 TO 3
+			LOCALS += "virginal "
+		CASE 4 TO 7
+			LOCALS += "unused "
+		CASE 8
+			LOCALS += "celibate "
+		CASE 9
+			LOCALS += "virgin "
+		CASE 10
+			LOCALS += "unknown to sex "
+		CASE 11
+			LOCALS += "untouched "
+		CASE 12
+			LOCALS += "innocent "
+		ENDSELECT
+	ENDIF
+
+;erection
+IF ARG:2
+IF BASE:ARG:勃起 < 300
+SELECTCASE RAND:11
+CASE 0 TO 4
+	LOCALS += "flaccid "
+CASE 5
+	LOCALS += "soft "
+CASE 6
+	LOCALS += "shrunk "
+CASE 7
+	LOCALS += "small "
+CASE 8
+	LOCALS += "unready "
+CASE 9
+	LOCALS += "limp "
+CASE 10
+	LOCALS += "still soft "	
+ENDSELECT
+ELSEIF BASE:ARG:勃起 > 500
+SELECTCASE RAND:3
+	CASE 0
+		LOCALS += "raising "
+	CASE 1
+		LOCALS += "hardening "
+	CASE 2
+		LOCALS += "half-hard "
+ENDSELECT
+ELSEIF BASE:ARG:勃起 > 1000 
+SELECTCASE RAND:21
+CASE 0
+	LOCALS += "erected "
+CASE 1
+	LOCALS += "stiffened "
+CASE 2
+	LOCALS += "hard-on "
+CASE 3
+	LOCALS += "rock-hard "
+CASE 4
+	LOCALS += "throbbing "
+CASE 5
+	LOCALS += "pulsating "
+CASE 6
+	LOCALS += "hard "
+CASE 7
+	LOCALS += "demanding "	
+CASE 8
+	LOCALS += "eager "
+CASE 9
+	LOCALS += "drooling with precum "
+CASE 10
+	LOCALS += "precum-oozing "
+CASE 11
+	LOCALS += "fully engorged "
+CASE 12
+	LOCALS += "drooling "
+CASE 13
+	LOCALS += "leaking "
+CASE 14
+	LOCALS += "slowly-oozing "
+CASE 15
+	LOCALS += "ready "
+CASE 16
+	LOCALS += "twitching "
+CASE 17
+	LOCALS += "raging "
+CASE 18
+	LOCALS += "stiff and dripping "
+CASE 19
+	LOCALS += "vigorous "
+CASE 20
+	LOCALS += "fiery "
+ENDSELECT
+ENDIF
+
+ENDIF
+
+;size
+SELECTCASE CFLAG:ARG:Ｐ大きさ
+	CASE 2
+		SELECTCASE RAND:5
+			CASE 0
+				LOCALS += "gorgeous "
+			CASE 1
+				LOCALS += "oversized "
+			CASE 2
+				LOCALS += "hyper "
+			CASE 3
+				LOCALS += "massive "
+			CASE 4
+				LOCALS += "gigantic "
+		ENDSELECT
+	CASE 1
+		SELECTCASE RAND:6
+			CASE 0
+				LOCALS += "admirable "
+			CASE 1
+				LOCALS += "excellent "
+			CASE 2
+				LOCALS += "great "
+			CASE 3
+				LOCALS += "fine "
+			CASE 4
+				LOCALS += "thick "
+			CASE 5
+				LOCALS += "big "
+		ENDSELECT
+	CASE 0
+		SELECTCASE RAND:4
+			CASE 0
+				LOCALS += "robust "
+			CASE 1
+				LOCALS += "strong "
+			CASE 2
+				LOCALS += "stout "
+			CASE 3
+				LOCALS += "firm "
+		ENDSELECT
+	CASE -1
+		SELECTCASE RAND:5
+			CASE 0
+				LOCALS += "small "
+			CASE 1
+				LOCALS += "slim "
+			CASE 2
+				LOCALS += "thin "
+			CASE 3
+				LOCALS += "delicate "
+			CASE 4
+				LOCALS += "little "
+		ENDSELECT
+	CASE -2
+		SELECTCASE RAND:8
+			CASE 0
+				LOCALS += "cute "
+			CASE 1
+				LOCALS += "childish "
+			CASE 2
+				LOCALS += "undeveloped "
+			CASE 3
+				LOCALS += "immature "
+			CASE 4
+				LOCALS += "half-grown "
+			CASE 5
+				LOCALS += "babyish "
+			CASE 6
+				LOCALS += "tender "
+			CASE 7
+				LOCALS += "tiny "
+		ENDSELECT
+	ENDSELECT
+
+SELECTCASE ARG:1
+
+CASE 0
+
+SELECTCASE RAND:23
+CASE 0 TO 4
+	LOCALS += "penis"
+CASE 5 TO 7
+	LOCALS += "member"
+CASE 8 TO 12
+	LOCALS += "dick"
+CASE 13 TO 17
+	LOCALS += "cock"
+CASE 18
+	LOCALS += "shaft"
+CASE 19
+	LOCALS += "manhood"
+CASE 20
+	LOCALS += "tool"
+CASE 21
+	LOCALS += "prick"
+CASE 22
+	LOCALS += "rod"	
+ENDSELECT
+
+CASE 1
+
+SELECTCASE RAND:22
+CASE 0 TO 4
+	LOCALS += "penises"
+CASE 5 TO 7
+	LOCALS += "members"
+CASE 8 TO 12
+	LOCALS += "dicks"
+CASE 13 TO 17
+	LOCALS += "cocks"
+CASE 18
+	LOCALS += "shafts"
+CASE 19
+	LOCALS += "tools"
+CASE 20
+	LOCALS += "pricks"
+CASE 21
+	LOCALS += "rods"
+ENDSELECT
+
+ENDSELECT
+
+RETURNF LOCALS
+
+
+@PENIS_APPEAR_SIMPLE(ARG)
+;Simple without checking for chara num
+;ARG for plural
+#FUNCTIONS
+VARSET LOCALS
+SELECTCASE ARG
+
+CASE 0
+
+SELECTCASE RAND:23
+CASE 0 TO 4
+	LOCALS += "penis"
+CASE 5 TO 7
+	LOCALS += "member"
+CASE 8 TO 12
+	LOCALS += "dick"
+CASE 13 TO 17
+	LOCALS += "cock"
+CASE 18
+	LOCALS += "shaft"
+CASE 19
+	LOCALS += "manhood"
+CASE 20
+	LOCALS += "tool"
+CASE 21
+	LOCALS += "prick"
+CASE 22
+	LOCALS += "rod"	
+ENDSELECT
+
+CASE 1
+
+SELECTCASE RAND:22
+CASE 0 TO 4
+	LOCALS += "penises"
+CASE 5 TO 7
+	LOCALS += "members"
+CASE 8 TO 12
+	LOCALS += "dicks"
+CASE 13 TO 17
+	LOCALS += "cocks"
+CASE 18
+	LOCALS += "shafts"
+CASE 19
+	LOCALS += "tools"
+CASE 20
+	LOCALS += "pricks"
+CASE 21
+	LOCALS += "rods"
+ENDSELECT
+
+ENDSELECT
+
+RETURNF LOCALS
+
+;------------------------------------------------------------
+
+@CROTCH(ARG)
+#FUNCTIONS
+VARSET LOCALS
+SELECTCASE RAND:13
+CASE 0 TO 4
+	LOCALS += "crotch"
+CASE 5 TO 9
+	LOCALS += "groin"
+CASE 10
+	LOCALS += "private parts"
+CASE 11
+	LOCALS += "genitals"
+CASE 12
+	LOCALS += "privates"
+ENDSELECT
+RETURNF LOCALS
+
+;------------------------------------------------------------
+
+@WAIST(ARG)
+#FUNCTIONS
+VARSET LOCALS
+IF TALENT:ARG:100 <= -1
+SELECTCASE RAND:3
+CASE 0
+	LOCALS += "childish "
+CASE 1
+	LOCALS += "tiny "
+CASE 2
+	LOCALS += "small "
+ENDSELECT
+ENDIF
+
+SELECTCASE RAND:3
+CASE 0
+	LOCALS += "waist"
+CASE 1
+	LOCALS += "hips"
+CASE 2
+	LOCALS += "thighs"
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@VULVA(ARG)
+#FUNCTIONS
+VARSET LOCALS
+IF TALENT:ARG:100 <= -1
+SELECTCASE RAND:17
+CASE 0
+	LOCALS += "immature "
+CASE 1
+	LOCALS += "childish "
+CASE 2
+	LOCALS += "tiny "
+CASE 3
+	LOCALS += "young "
+CASE 4
+	LOCALS += "smooth "
+CASE 5
+	LOCALS += "developing "
+CASE 6
+	LOCALS += "pubescent "
+CASE 7
+	LOCALS += "childlike "
+CASE 8
+	LOCALS += "soft "
+CASE 9
+	LOCALS += "pink "
+CASE 10
+	LOCALS += "delicate "
+CASE 11
+	LOCALS += "tender "
+CASE 12
+	LOCALS += "pussy "
+CASE 13
+	LOCALS += "juvenile "
+CASE 14
+	LOCALS += "budding "
+CASE 15
+	LOCALS += "cute "
+CASE 16
+	LOCALS += "lovely "
+ENDSELECT
+ELSE
+SELECTCASE RAND:9
+CASE 0
+	LOCALS += "soft "
+CASE 1
+	LOCALS += "pink "
+CASE 2
+	LOCALS += "delicate "
+CASE 3
+	LOCALS += "tender "
+CASE 4
+	LOCALS += "female "
+CASE 5
+	LOCALS += "feminine "
+CASE 6
+	LOCALS += "womanish "
+CASE 7
+	LOCALS += "pussy "
+CASE 8
+	LOCALS += "girlish "
+ENDSELECT
+ENDIF
+SELECTCASE RAND:7
+CASE 0
+	LOCALS += "entrance"
+CASE 1
+	LOCALS += "crack"
+CASE 2
+	LOCALS += "slit"
+CASE 3
+	LOCALS += "hole"
+CASE 4
+	LOCALS += "opening"
+CASE 5
+	LOCALS += "mound"
+CASE 6
+	LOCALS += "cleft"
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@LABIA(ARG)
+#FUNCTIONS
+VARSET LOCALS
+;Petite talent
+IF TALENT:ARG:100 <= -1
+SELECTCASE RAND:5
+	CASE 0
+		LOCALS += "fat "
+	CASE 1
+		LOCALS += "bulgy "
+	CASE 2
+		LOCALS += "puffy "
+	CASE 3
+		LOCALS += "swollen "
+	CASE 4
+		LOCALS += "plump "
+ENDSELECT
+ENDIF
+SELECTCASE RAND:17
+CASE 0 TO 4
+	LOCALS += "pussy "
+CASE 5 TO 9
+	LOCALS += "vaginal "
+CASE 10
+	LOCALS += "fleshy "
+CASE 11
+	LOCALS += "intimate "
+CASE 12
+	LOCALS += "tender "
+CASE 13
+	LOCALS += "feminine "
+CASE 14
+	LOCALS += "sensitive "
+CASE 15
+	LOCALS += "lower "
+CASE 16
+	LOCALS += "innermost "
+ENDSELECT
+SELECTCASE RAND:3	
+CASE 0
+	LOCALS += "lips"
+CASE 1
+	LOCALS += "petals"
+CASE 2
+	LOCALS += "folds"
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@JUICE(ARG,ARG:1)
+;Using %JUICE(ARG,1)% for plural
+#FUNCTIONS
+VARSET LOCAL
+VARSET LOCALS
+SELECTCASE RAND:9
+CASE 0
+	LOCALS += "pussy "
+CASE 1
+	LOCALS += "vaginal "
+CASE 2
+	LOCALS += "love "
+CASE 3
+	LOCALS += "sexual "
+CASE 4
+	LOCALS += "genital "
+CASE 5
+	LOCALS += "lewd "
+CASE 6
+	LOCALS += "girlish "
+CASE 7
+	LOCALS += "female "
+CASE 8
+	LOCALS += "erotic "
+ENDSELECT
+
+SELECTCASE RAND:16
+CASE 0 TO 3
+	LOCALS += "juice"
+CASE 4 TO 6
+	LOCALS += "secretion"
+CASE 7
+	LOCALS += "fluid"
+CASE 8 TO 11
+	LOCALS += "liquid"
+	LOCAL ++
+CASE 12
+	LOCALS += "honey"
+	LOCAL ++
+CASE 13
+	LOCALS += "lube"
+	LOCAL ++
+CASE 14
+	LOCALS += "nectar"
+CASE 15
+	LOCALS += "lubricant"
+	LOCAL ++
+ENDSELECT
+SIF ARG:1 && !LOCAL
+	LOCALS += "s"
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@LUBRIC(ARG)
+#FUNCTIONS
+VARSET LOCALS
+IF PALAM:ARG:9 < PALAMLV:1
+		SELECTCASE RAND:8
+		CASE 0 TO 4
+			LOCALS += "dry"
+		CASE 5
+			LOCALS += "unmoist"
+		CASE 6
+			LOCALS += "juiceless"
+		CASE 7
+			LOCALS += "unexcited"
+		ENDSELECT
+ELSEIF PALAM:ARG:9 < PALAMLV:2
+		SELECTCASE RAND:17
+		CASE 0 TO 1
+			LOCALS += "starting to get wet"
+		CASE 2 TO 6
+			LOCALS += "slightly wet"
+		CASE 10 TO 14
+			LOCALS += "moistened"
+		CASE 15
+			LOCALS += "slick"
+		CASE 16
+			LOCALS += "slippery"
+		ENDSELECT
+ELSEIF PALAM:ARG:9 < PALAMLV:3
+		SELECTCASE RAND:5
+		CASE 0
+			LOCALS += "moist"
+		CASE 1
+			LOCALS += "juicy"
+		CASE 2
+			LOCALS += "wet"
+		CASE 3
+			LOCALS += "sticky"
+		CASE 4
+			LOCALS += "glistening"
+		ENDSELECT
+ELSEIF PALAM:ARG:9 < PALAMLV:4
+		SELECTCASE RAND:5
+		CASE 0
+			LOCALS += "lubricated"
+		CASE 1
+			LOCALS += "drenched"
+		CASE 2
+			LOCALS += "viscous"
+		CASE 3
+			LOCALS += "damp"
+		CASE 4
+			LOCALS += "lubed"
+		ENDSELECT
+ELSEIF PALAM:ARG:9 > PALAMLV:3
+	SELECTCASE RAND:17
+		CASE 0
+			LOCALS += "slimy"
+		CASE 1
+			LOCALS += "drooling"
+		CASE 2 TO 6
+			LOCALS += "soaking wet"
+		CASE 7
+			LOCALS += "slavering"
+		CASE 8 TO 10
+			LOCALS += "oozing"
+		CASE 11 TO 15
+			LOCALS += "dripping wet"
+		CASE 16
+			LOCALS += "leaking"
+	ENDSELECT
+ENDIF
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@VIRGINITY(ARG,ARG:1)
+;Using %VIRGINITY(ARG,1)% %VIRGINITY(ARG,2)% for additional description
+#FUNCTIONS
+VARSET LOCALS
+SELECTCASE ARG:1
+CASE 1
+
+SELECTCASE RAND:16
+CASE 0
+	LOCALS += "precious "
+CASE 1
+	LOCALS += "priceless "
+CASE 2
+	LOCALS += "delicate "
+CASE 3
+	LOCALS += "treasured "
+CASE 4
+	LOCALS += "cherished "
+CASE 5
+	LOCALS += "valuable "
+CASE 6
+	LOCALS += "one and only "
+CASE 7
+	LOCALS += "true "
+CASE 8
+	LOCALS += "saved up "
+CASE 9
+	LOCALS += "preserved "
+CASE 10
+	LOCALS += "protected "
+CASEELSE
+ENDSELECT
+
+CASE 2
+
+SELECTCASE RAND:15
+CASE 0
+	LOCALS += "brand new "
+CASE 1
+	LOCALS += "restored "
+CASE 2
+	LOCALS += "bought "
+CASE 3
+	LOCALS += "fake "
+CASE 4
+	LOCALS += "repaired "
+CASE 5
+	LOCALS += "revived "
+CASE 6
+	LOCALS += "renewed "
+CASE 7
+	LOCALS += "artificial "
+CASE 8
+	LOCALS += "fresh "
+CASE 9
+	LOCALS += "false "
+CASEELSE
+ENDSELECT
+
+ENDSELECT
+
+SELECTCASE RAND:18
+CASE 0 TO 4
+	LOCALS += "virginity"
+CASE 5 TO 9
+	LOCALS += "chastity"
+CASE 10
+	LOCALS += "purity"
+CASE 11
+	LOCALS += "maidenhood"
+CASE 12
+	LOCALS += "innocence"
+CASE 13
+	LOCALS += "maidenhead"
+CASE 14
+	LOCALS += "womanhood"
+CASE 15
+	LOCALS += "girlhood"
+CASE 16
+	LOCALS += "virtue"
+CASE 17
+	LOCALS += "first time"
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@VAGINA(ARG,ARG:1)
+#FUNCTIONS
+VARSET LOCALS
+	;Petite talent
+	IF TALENT:ARG:100 <= -1
+		SELECTCASE RAND:7
+		CASE 0
+			LOCALS:1 += "Tiny "
+		CASE 1
+			LOCALS:1 += "Little "
+		CASE 2
+			LOCALS:1 += "Petite "
+		CASE 3
+			LOCALS:1 += "Delicate "
+		CASE 4
+			LOCALS:1 += "Tender "
+		CASE 5
+			LOCALS:1 += "Small "
+		CASE 6
+			LOCALS:1 += "Cute "
+		ENDSELECT
+	ENDIF
+	;additional descriptions
+	;virgin
+	IF TALENT:ARG:0 == 1
+		SELECTCASE RAND:21
+		CASE 0 TO 3
+			LOCALS:2 += "Virginal "
+		CASE 4 TO 7
+			LOCALS:2 += "Unused "
+		CASE 8
+			LOCALS:2 += "Intact "
+		CASE 9
+			LOCALS:2 += "Chaste "
+		CASE 10
+			LOCALS:2 += "Virgin "
+		CASE 11
+			LOCALS:2 += "Unknown to sex "
+		CASE 12
+			LOCALS:2 += "Celibate "
+		CASE 13
+			LOCALS:2 += "Unspoiled "
+		CASE 14
+			LOCALS:2 += "Untainted "
+		CASE 15
+			LOCALS:2 += "Untouched "
+		CASE 16
+			LOCALS:2 += "Undefiled "
+		CASE 17
+			LOCALS:2 += "Innocent "
+		CASE 18
+			LOCALS:2 += "Virtuous "
+		CASE 19
+			LOCALS:2 += "Preserved "
+		CASE 20
+			LOCALS:2 += "Shut tight "
+		ENDSELECT
+	;based on experience
+	ELSEIF EXP:ARG:1 < 10
+		SELECTCASE RAND:9
+		CASE 0
+			LOCALS:2 += "Inexperienced "
+		CASE 1
+			LOCALS:2 += "Barely used "
+		CASE 2
+			LOCALS:2 += "Almost virginal "
+		CASE 3
+			LOCALS:2 += "Tight as virgin "
+		CASE 4
+			LOCALS:2 += "Untried "
+		CASE 5
+			LOCALS:2 += "Idle "
+		CASE 6
+			LOCALS:2 += "Not used much since defloration "
+		CASE 7
+			LOCALS:2 += "Untrained "
+		CASE 8
+			LOCALS:2 += "Near-virgin "
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 30
+		SELECTCASE RAND:6
+		CASE 0
+			LOCALS:2 += "Tight "
+		CASE 1
+			LOCALS:2 += "Tense "
+		CASE 2
+			LOCALS:2 += "Stiff "
+		CASE 3
+			LOCALS:2 += "Narrow "
+		CASE 4
+			LOCALS:2 += "Closed "
+		CASE 5
+			LOCALS:2 += "Firm "
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 100
+		SELECTCASE RAND:6
+		CASE 0
+			LOCALS:2 += "Fresh "
+		CASE 1
+			LOCALS:2 += "Raw "
+		CASE 2
+			LOCALS:2 += "Ready for use "
+		CASE 3
+			LOCALS:2 += "Still tight "
+		CASE 4
+			LOCALS:2 += "Inviting "
+		CASE 5
+			LOCALS:2 += "Neat "
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 600
+		SELECTCASE RAND:6
+		CASE 0
+			LOCALS:2 += "Developed "
+		CASE 1
+			LOCALS:2 += "Experienced "
+		CASE 2
+			LOCALS:2 += "Matured "
+		CASE 3
+			LOCALS:2 += "Well-trained "
+		CASE 4
+			LOCALS:2 += "Full-fledged "
+		CASE 5
+			LOCALS:2 += "Ripened "
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 900
+		SELECTCASE RAND:9
+		CASE 0
+			LOCALS:2 += "Loose "
+		CASE 1
+			LOCALS:2 += "Sloppy "
+		CASE 2
+			LOCALS:2 += "Spacious "
+		CASE 3
+			LOCALS:2 += "Well-used "
+		CASE 4
+			LOCALS:2 += "Lewd "
+		CASE 5
+			LOCALS:2 += "Obscene "
+		CASE 6
+			LOCALS:2 += "Lustful "
+		CASE 7
+			LOCALS:2 += "Naughty "
+		CASE 8
+			LOCALS:2 += "Perverted "
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 1200
+		SELECTCASE RAND:5
+		CASE 0
+			LOCALS:2 += "Stretched "
+		CASE 1
+			LOCALS:2 += "Opened "
+		CASE 2
+			LOCALS:2 += "Expanded "
+		CASE 3
+			LOCALS:2 += "Much-used "
+		CASE 4
+			LOCALS:2 += "Widened "
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:9
+			CASE 0
+				LOCALS:2 += "Broken-down "
+			CASE 1
+				LOCALS:2 += "Gaping "
+			CASE 2
+				LOCALS:2 += "Wasted "
+			CASE 3
+				LOCALS:2 += "Used up "
+			CASE 4
+				LOCALS:2 += "Defiled "
+			CASE 5
+				LOCALS:2 += "Unchaste "
+			CASE 6
+				LOCALS:2 += "Ravished "
+			CASE 7
+				LOCALS:2 += "Violated "
+			CASE 8
+				LOCALS:2 += "Unclosing "
+		ENDSELECT
+	ENDIF
+	;Petite
+	IF TALENT:ARG:100 <= -1
+		SELECTCASE RAND:2
+		CASE 0
+			LOCALS:2 += "pussy"
+		CASE 1
+			LOCALS:2 += "cunny"
+		ENDSELECT
+	ELSE
+	SELECTCASE RAND:17
+		CASE 0 TO 4
+			LOCALS:2 += "vagina"
+		CASE 5 TO 9
+			LOCALS:2 += "pussy"
+		CASE 10 TO 12
+			LOCALS:2 += "cunt"
+		CASE 13
+			LOCALS:2 += "fuck-hole"
+		CASE 14
+			LOCALS:2 += "twat"
+		CASE 15
+			LOCALS:2 += "snatch"
+		CASE 16
+			LOCALS:2 += "honeypot"
+	ENDSELECT
+	ENDIF
+IF !ARG:1
+	LOCALS:2 = %TOLOWER(LOCALS:2)%
+	LOCALS:1 = %TOLOWER(LOCALS:1)%
+ELSEIF ARG:1 && LOCALS:1 != ""
+LOCALS:2 = %TOLOWER(LOCALS:2)%
+ENDIF
+LOCALS = %LOCALS:1%%LOCALS:2%
+RETURNF LOCALS
+;------------------------------------------------------------
+;for experience only
+@EXPERIENCE(ARG)
+#FUNCTIONS
+VARSET LOCALS
+IF TALENT:ARG:0
+		SELECTCASE RAND:21
+		CASE 0 TO 3
+			LOCALS += "virginal"
+		CASE 4 TO 7
+			LOCALS += "unused"
+		CASE 8
+			LOCALS += "intact"
+		CASE 9
+			LOCALS += "chaste"
+		CASE 10
+			LOCALS += "virgin"
+		CASE 11
+			LOCALS += "unknown to sex"
+		CASE 12
+			LOCALS += "celibate"
+		CASE 13
+			LOCALS += "unspoiled"
+		CASE 14
+			LOCALS += "untainted"
+		CASE 15
+			LOCALS += "untouched"
+		CASE 16
+			LOCALS += "undefiled"
+		CASE 17
+			LOCALS += "innocent"
+		CASE 18
+			LOCALS += "virtuous"
+		CASE 19
+			LOCALS += "preserved "
+		CASE 20
+			LOCALS:2 += "shut tight "
+		ENDSELECT
+	;based on experience
+	ELSEIF EXP:ARG:1 < 10
+		SELECTCASE RAND:9
+		CASE 0
+			LOCALS += "inexperienced"
+		CASE 1
+			LOCALS += "barely used"
+		CASE 2
+			LOCALS += "almost virginal"
+		CASE 3
+			LOCALS += "tight as virgin"
+		CASE 4
+			LOCALS += "untried"
+		CASE 5
+			LOCALS += "idle"
+		CASE 6
+			LOCALS += "not used much since defloration"
+		CASE 7
+			LOCALS += "untrained"
+		CASE 8
+			LOCALS += "near-virgin"
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 30
+		SELECTCASE RAND:6
+		CASE 0
+			LOCALS += "tight"
+		CASE 1
+			LOCALS += "tense"
+		CASE 2
+			LOCALS += "stiff"
+		CASE 3
+			LOCALS += "narrow"
+		CASE 4
+			LOCALS += "closed"
+		CASE 5
+			LOCALS += "firm"
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 100
+		SELECTCASE RAND:6
+		CASE 0
+			LOCALS += "fresh"
+		CASE 1
+			LOCALS += "raw"
+		CASE 2
+			LOCALS += "ready for use"
+		CASE 3
+			LOCALS += "still tight"
+		CASE 4
+			LOCALS += "inviting"
+		CASE 5
+			LOCALS += "neat"
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 600
+		SELECTCASE RAND:6
+		CASE 0
+			LOCALS += "developed"
+		CASE 1
+			LOCALS += "experienced"
+		CASE 2
+			LOCALS += "matured"
+		CASE 3
+			LOCALS += "well-trained"
+		CASE 4
+			LOCALS += "full-fledged"
+		CASE 5
+			LOCALS += "ripened"
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 900
+		SELECTCASE RAND:9
+		CASE 0
+			LOCALS += "loose"
+		CASE 1
+			LOCALS += "sloppy"
+		CASE 2
+			LOCALS += "spacious"
+		CASE 3
+			LOCALS += "well-used"
+		CASE 4
+			LOCALS += "lewd"
+		CASE 5
+			LOCALS += "obscene"
+		CASE 6
+			LOCALS += "lustful"
+		CASE 7
+			LOCALS += "naughty"
+		CASE 8
+			LOCALS += "perverted"
+		ENDSELECT
+	ELSEIF EXP:ARG:1 < 1200
+		SELECTCASE RAND:5
+		CASE 0
+			LOCALS += "stretched"
+		CASE 1
+			LOCALS += "opened"
+		CASE 2
+			LOCALS += "expanded"
+		CASE 3
+			LOCALS += "much-used"
+		CASE 4
+			LOCALS += "widened"
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:9
+			CASE 0
+				LOCALS += "broken-down"
+			CASE 1
+				LOCALS += "gaping"
+			CASE 2
+				LOCALS += "wasted"
+			CASE 3
+				LOCALS += "used up"
+			CASE 4
+				LOCALS += "defiled"
+			CASE 5
+				LOCALS += "unchaste"
+			CASE 6
+				LOCALS += "ravished"
+			CASE 7
+				LOCALS += "violated"
+			CASE 8
+				LOCALS += "unclosing"
+		ENDSELECT
+ENDIF
+RETURNF LOCALS
+;------------------------------------------------------------
+@BREASTS(ARG,ARG:1,ARG:2)
+#FUNCTIONS
+VARSET LOCALS
+;If aroused
+;Use %BREASTS(ARG,1)% to enable this line
+SIF PALAM:ARG:11 > PALAMLV:3 && ARG:1
+	LOCALS += "trembling with expectation "
+;Flat Chest
+;Small chest + petite
+IF (TALENT:ARG:100 <= -1 && TALENT:ARG:105 == -1) || TALENT:ARG:105 == -2
+SELECTCASE RAND:5
+	CASE 0
+		LOCALS += "only slightly bulging and sensitive"
+	CASE 1
+		LOCALS += "a bit too flat"
+	CASE 2
+		LOCALS += "almost non-existent"
+	CASE 3
+		LOCALS += "nearly zero-sized"
+	CASE 4
+		LOCALS += "insignificant"
+ENDSELECT
+;Small Breasts
+ELSEIF TALENT:ARG:105 == -1
+SELECTCASE RAND:7
+	CASE 0
+		LOCALS += "small-sized"
+	CASE 1
+		LOCALS += "tight"
+	CASE 2
+		LOCALS += "tiny"
+	CASE 3
+		LOCALS += "perky"
+	CASE 4
+		LOCALS += "palmable"
+	CASE 5
+		LOCALS += "thin"
+	CASE 6
+		LOCALS += "modest"
+ENDSELECT
+;Regular size and not male
+ELSEIF !TALENT:ARG:105 && !TALENT:ARG:140
+SELECTCASE RAND:4
+	CASE 0
+		LOCALS += "regular-sized"
+	CASE 1
+		LOCALS += "normal"
+	CASE 2
+		LOCALS += "average"
+	CASE 3
+		LOCALS += "nice"
+ENDSELECT
+;Big Breasts
+ELSEIF TALENT:ARG:105 == 1
+SELECTCASE RAND:5
+	CASE 0
+		LOCALS += "hand-overflowing"
+	CASE 1
+		LOCALS += "squeezable"
+	CASE 2
+		LOCALS += "large"
+	CASE 3
+		LOCALS += "full"
+	CASE 4
+		LOCALS += "big"
+ENDSELECT
+;Huge Breasts
+ELSEIF TALENT:ARG:105 == 2
+SELECTCASE RAND:7
+	CASE 0
+		LOCALS += "too large to hold in hands"
+	CASE 1
+		LOCALS += "jiggling"
+	CASE 2
+		LOCALS += "spacious"
+	CASE 3
+		LOCALS += "huge"
+	CASE 4
+		LOCALS += "vast"
+	CASE 5
+		LOCALS += "pillow-like"
+	CASE 6
+		LOCALS += "motherly"
+ENDSELECT
+ENDIF
+;very dirty way based on size
+
+;return only breast name
+;has included space so use without space before it
+SIF ARG:2
+VARSET LOCALS
+SELECTCASE RAND:10
+	CASE 0
+		LOCALS += " breasts"
+	CASE 1
+		LOCALS += " chest"
+	CASE 2 TO 3
+		;if not petite and small chested or flat
+		IF !(TALENT:ARG:100 <= -1 && TALENT:ARG:105 == -1) || TALENT:ARG:105 != -2
+		SELECTCASE RAND:2
+		CASE 0
+		LOCALS += " tits"
+		CASE 1
+		LOCALS += " boobs"
+		ENDSELECT
+		ELSE
+		SELECTCASE RAND:2
+		CASE 0
+		LOCALS += " breasts"
+		CASE 1
+		LOCALS += " chest"
+		ENDSELECT
+		ENDIF
+	CASE 4 TO 8
+		IF TALENT:ARG:105 > 0
+		SELECTCASE RAND:7
+		CASE 0
+		LOCALS += " jugs"
+		CASE 1
+		LOCALS += " boobs"
+		CASE 2
+		LOCALS += " rack"
+		CASE 3
+		LOCALS += " love-pillows"
+		CASE 4
+		LOCALS += " udders"
+		CASE 5
+		LOCALS += " cow tits"
+		CASE 6
+		LOCALS += " cleavage"
+		ENDSELECT
+		ELSEIF !(TALENT:ARG:100 <= -1 && TALENT:ARG:105 == -1) || TALENT:ARG:105 != -2
+		SELECTCASE RAND:2
+		CASE 0
+		LOCALS += " tits"
+		CASE 1
+		LOCALS += " boobs"
+		ENDSELECT
+		ELSE
+		SELECTCASE RAND:2
+		CASE 0
+		LOCALS += " breasts"
+		CASE 1
+		LOCALS += " chest"
+		ENDSELECT		
+		ENDIF
+	CASE 9
+		LOCALS += " bosom"
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@ANUS(ARG)
+#FUNCTIONS
+VARSET LOCALS
+;anal virgin
+	IF EXP:ARG:21 == 0
+		SELECTCASE RAND:12
+		CASE 0 TO 3
+			LOCALS += "virginal "
+		CASE 4 TO 7
+			LOCALS += "unused "
+		CASE 8
+			LOCALS += "virgin "
+		CASE 9
+			LOCALS += "unknown to sex "
+		CASE 10
+			LOCALS += "untouched "
+		CASE 11
+			LOCALS += "shut tight "
+		ENDSELECT
+	ENDIF
+
+SELECTCASE RAND:18
+CASE 0 TO 4
+	LOCALS += "anus"
+CASE 5 TO 9
+	LOCALS += "asshole"
+CASE 10 TO 14
+	LOCALS += "butthole"
+CASE 15
+	LOCALS += "rear hole"
+CASE 16
+	LOCALS += "backdoor"
+CASE 17
+	LOCALS += "dirty hole"
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@ASS(ARG)
+#FUNCTIONS
+VARSET LOCALS
+SELECTCASE RAND:14
+CASE 0 TO 4
+	LOCALS += "butt"
+CASE 5 TO 9
+	LOCALS += "ass"
+CASE 10
+	LOCALS += "bottom"
+CASE 11
+	LOCALS += "rear"
+CASE 12
+	LOCALS += "backside"
+CASE 13
+	LOCALS += "buttocks"
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@ANAL(ARG)
+#FUNCTIONS
+VARSET LOCALS
+SELECTCASE RAND:16
+CASE 0 TO 4
+	LOCALS += "butt"
+CASE 5 TO 9
+	LOCALS += "ass"
+CASE 10 TO 15
+	LOCALS += "anal"
+ENDSELECT
+RETURNF LOCALS
+;------------------------------------------------------------
+
+@SEMEN(ARG,ARG:1)
+#FUNCTIONS
+VARSET LOCALS
+SELECTCASE RAND:13
+CASE 0 TO 4
+	LOCALS += "Semen"
+CASE 5 TO 9
+	LOCALS += "Cum"
+CASE 10
+	LOCALS += "Spunk"
+CASE 11
+	LOCALS += "Seed"
+CASE 12
+	LOCALS += "Sperm"
+CASE 13
+	LOCALS += "Jizz"	
+ENDSELECT
+SIF !ARG:1
+		LOCALS = %TOLOWER(LOCALS)%
+RETURNF LOCALS
+
+
+@LEAK(ARG,ARG:1)
+#FUNCTIONS
+VARSET LOCALS
+SELECTCASE RAND:22
+CASE 0 TO 4
+	LOCALS += "oozes"
+CASE 5 TO 9
+	LOCALS += "leaks"
+CASE 10 TO 14
+	LOCALS += "flows"
+CASE 15
+	LOCALS += "gushes"
+CASE 16
+	LOCALS += "pours"
+CASE 17
+	LOCALS += "streams"	
+CASE 18
+	LOCALS += "drops"	
+CASE 19
+	LOCALS += "trickles"	
+CASE 20
+	LOCALS += "squirts"
+CASE 21
+	LOCALS += "runs"
+ENDSELECT
+
+RETURNF LOCALS
+
+;-------------------------------------------------
+;関数名:NIPPLE_DESCRIPTION
+;引　数:ARG…キャラ登録番号
+;使用例:%NIPPLE_DESCRIPTION(TARGET)%
+;例文:乳首
+;備　考:文中関数
+;ARG:1を1にすると状態に応じた形容詞がつく
+;使用例:%NIPPLE_DESCRIPTION(TARGET,1)%
+;例文:ビンビンになっている乳首
+;-------------------------------------------------
+@NIPPLE_DESCRIPTION(ARG,ARG:1)
+#FUNCTIONS
+VARSET LOCALS
+
+IF ARG:1
+	IF EX:ARG:Ｂ絶頂 * 10000 + PALAM:ARG:快Ｂ + PALAM:ARG:欲情 >= 30000
+	;ELSEIF PALAM:欲情 >= PALAMLV:5
+		IF RAND:4 == 0
+			LOCALS += "rock hard "
+		ELSEIF RAND:3 == 0
+			LOCALS += "thick and swollen "
+		ELSEIF RAND:2 == 0
+			LOCALS += "puffy and hard "
+		ELSE
+			LOCALS += "lewdly swollen "
+		ENDIF
+	ELSEIF EX:ARG:Ｂ絶頂 * 10000 + PALAM:ARG:快Ｂ + PALAM:ARG:欲情 >= 10000
+	;ELSEIF PALAM:欲情 >= PALAMLV:4
+		IF RAND:4 == 0
+			LOCALS += "erected "
+		ELSEIF RAND:3 == 0
+			LOCALS += "pointed "
+		ELSEIF RAND:2 == 0
+			LOCALS += "hard "
+		ELSE
+			LOCALS += "stiff "
+		ENDIF
+	ELSEIF EX:Ｂ絶頂 * 10000 + PALAM:快Ｂ + PALAM:欲情 >= 3000
+	;ELSEIF PALAM:欲情 >= PALAMLV:3
+		IF RAND:4 == 0
+			LOCALS += "hardening "
+		ELSEIF RAND:3 == 0
+			LOCALS += "starting to get hard "
+		ELSEIF RAND:2 == 0
+			LOCALS += "semi-hard "
+		ELSE
+			LOCALS += "stiffening "
+		ENDIF
+	ELSE
+		IF TALENT:体型 <= -1
+			SELECTCASE RAND:6
+			CASE 0
+				LOCALS += "cute "
+			CASE 1
+				LOCALS += "childish "
+			CASE 2
+				LOCALS += "undeveloped "
+			CASE 3
+				LOCALS += "small "
+			CASE 4
+				LOCALS += "tender "
+			CASE 5
+				LOCALS += "tiny "
+			ENDSELECT
+		ELSE
+			LOCALS += "still soft "
+		ENDIF
+	ENDIF
+ENDIF
+	;IF RAND:4 == 0
+	;	LOCALS += "udders"
+	IF RAND:3 == 0
+		LOCALS += "teats"
+	;ELSEIF RAND:2 == 0
+	;	LOCALS += "nipple"
+	ELSE
+		LOCALS += "nipples"
+	ENDIF
+RETURNF LOCALS

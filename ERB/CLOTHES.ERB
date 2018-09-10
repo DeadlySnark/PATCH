@@ -1,0 +1,1999 @@
+;-------------------------------------------------------------------------------
+;服装系共通情報
+;
+;EQUIP:   0～ 19 現在着ている服
+;   それぞれの数値がどの状態を表すかについてはEQUIP.CSVを参照。
+;
+;CFLAG: 200～219 服装パターン記憶用(何かあって服を元に戻す時に使用)
+;   数値に関してはEQUIP準拠。
+;
+;CFLAG: 220～239 私服パターン記憶用(服装パターンカスタマイズに使用)
+;   数値に関してはEQUIP準拠。
+;
+;CFLAG: 240～259 服の所持判定に使用(する予定。20130907現在未実装)
+;   所持判定はビット管理される。詳細についてはCFLAG.CSVを参照すること。
+;
+;-------------------------------------------------------------------------------
+;規定の服装パターンに着替える
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_SETTING(着用者,下着変更)
+	#DIM 着用者
+	#DIM 下着変更
+	;DEBUGPRINTFORML %CALLNAME:着用者+"の着替え。下着変更="+TOSTR(下着変更)%
+	SELECTCASE CFLAG:着用者:服装パターン
+			;全裸
+		CASE 0
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+			ENDIF
+		CASE 1
+			;プリセット:男装
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_MALE(着用者,下着変更)
+			ENDIF
+		CASE 2
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_FEMALE(着用者,下着変更)
+			ENDIF
+		CASE 3
+			;プリセット:紳士
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_jentle(着用者,下着変更)
+			ENDIF
+		CASE 4
+			;プリセット:メイド
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_MAID(着用者,下着変更)
+			ENDIF
+		CASE 100
+			;プリセット:私服セット
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_CUSTOM(着用者,下着変更)
+			ENDIF
+		CASE 101
+			;プリセット:美鈴
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_1(着用者,下着変更)
+			ENDIF
+		CASE 102
+			;プリセット:小悪魔
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_2(着用者,下着変更)
+			ENDIF
+		CASE 103
+			;プリセット:パチュリー
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_3(着用者,下着変更)
+			ENDIF
+		CASE 104
+			;プリセット:咲夜
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_4(着用者,下着変更)
+			ENDIF
+		CASE 105
+			;プリセット:レミリア
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_5(着用者,下着変更)
+			ENDIF
+		CASE 106
+			;プリセット:フラン
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_6(着用者,下着変更)
+			ENDIF
+		CASE 107
+			;プリセット:子悪魔
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_7(着用者,下着変更)
+			ENDIF
+		CASE 108
+			;プリセット:チルノ
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_8(着用者,下着変更)
+			ENDIF
+		CASE 109
+			;プリセット:大妖精
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_9(着用者,下着変更)
+			ENDIF
+		CASE 110
+			;プリセット:魔理沙
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_10(着用者,下着変更)
+			ENDIF
+		CASE 111
+			;プリセット:霊夢
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_11(着用者,下着変更)
+			ENDIF
+		CASE 112
+			;プリセット:ルーミア
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_12(着用者,下着変更)
+			ENDIF
+		CASE 113
+			;プリセット:アリス
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_13(着用者,下着変更)
+			ENDIF
+
+		CASE 200
+			;コスプレ
+			IF CFLAG:着用者:睡眠 == 1
+				CALL CLOTHES_Preset_NIGHTWEAR(着用者,下着変更)
+			ELSE
+				CALL CLOTHES_Preset_Cosplay(着用者,下着変更)
+			ENDIF
+	ENDSELECT
+	;服装のリセット用に、現在着ている服を記録する
+	CALL CLOTHES_Save(着用者)
+	CALL CLOTHES_SETTING_TRAIN(着用者)
+	
+	
+
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：美鈴
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_1(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	CALL CLOTHES_Change_Bra(着用者,下着変更)
+	EQUIP:着用者:帽子 = 1
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:下半身上着１ = 1
+	EQUIP:着用者:ワンピース = 2
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：小悪魔
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_2(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	CALL CLOTHES_Change_Bra(着用者,下着変更)
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 2
+	EQUIP:着用者:手 = 3
+	EQUIP:着用者:スカート = 2
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：パチュリー
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_3(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	CALL CLOTHES_Change_Bra(着用者,下着変更)
+	EQUIP:着用者:帽子 = 1
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:ワンピース = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：咲夜
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_4(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	CALL CLOTHES_Change_Bra(着用者,下着変更)
+	EQUIP:着用者:帽子 = 2
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 2
+	EQUIP:着用者:スカート = 1
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：レミリア
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_5(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	CALL CLOTHES_Change_Bra(着用者,下着変更)
+	EQUIP:着用者:帽子 = 1
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:スカート = 1
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：フランドール
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_6(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	EQUIP:着用者:帽子 = 1
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:スカート = 1
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：子悪魔
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_7(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:スカート = 2
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：チルノ
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_8(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	EQUIP:着用者:帽子 = 3
+	EQUIP:着用者:ワンピース = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：大妖精
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_9(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	EQUIP:着用者:帽子 = 3
+	EQUIP:着用者:ワンピース = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：魔理沙
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_10(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	EQUIP:着用者:帽子 = 1
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:スカート = 1
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：霊夢
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_11(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	EQUIP:着用者:帽子 = 3
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:スカート = 1
+	EQUIP:着用者:上半身上着２ = 18
+	EQUIP:着用者:上半身下着２ = 5
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：ルーミア
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_12(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	EQUIP:着用者:帽子 = 3
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:スカート = 1
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：アリス
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_13(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	CALL CLOTHES_Change_Bra(着用者,下着変更)
+	EQUIP:着用者:帽子 = 9
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	EQUIP:着用者:ワンピース = 1
+	EQUIP:着用者:上半身上着２ = 22
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：全裸
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_NUDE(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	#DIM WK_RATE
+	
+	EQUIP:着用者:衣服着用       = 0
+	EQUIP:着用者:アクセサリ     = 0
+	EQUIP:着用者:帽子           = 0
+	EQUIP:着用者:靴             = 0
+	EQUIP:着用者:靴下           = 0
+	EQUIP:着用者:下半身上着１   = 0
+	EQUIP:着用者:下半身上着２   = 0
+	EQUIP:着用者:スカート       = 0
+	EQUIP:着用者:上半身上着１   = 0
+	EQUIP:着用者:上半身上着２   = 0
+	EQUIP:着用者:ボディースーツ = 0
+	EQUIP:着用者:ワンピース     = 0
+	EQUIP:着用者:着物           = 0
+	EQUIP:着用者:レオタード     = 0
+	EQUIP:着用者:手     = 0
+	IF 下着変更
+		IF !TALENT:着用者:公衆便所 && !CFLAG:PLAYER:WC_あなたに貞操帯を着けた人
+			;公衆便所は下着を自由に脱ぐ事はできない
+			EQUIP:着用者:下半身下着１ = 0
+			EQUIP:着用者:下半身下着２ = 0
+		ENDIF
+		EQUIP:着用者:上半身下着１ = 0
+		EQUIP:着用者:上半身下着２ = 0
+	ENDIF
+	CFLAG:着用者:寝間着着用 = 0
+	CFLAG:着用者:ぱんつ確認 = 0
+	;アクセサリ装着
+	CALL CLOTHES_ACCESSORY(着用者)
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;アクセサリ装着
+@CLOTHES_ACCESSORY(着用者)
+	#DIM 着用者
+	#DIM WK_RATE
+	
+	IF TALENT:着用者:人妻
+		;人妻であれば指輪装着
+		;ただし寝取られつつあると外すことも…
+		IF NTR_CHK_FAVORABLY(着用者, FAV_寝取られ寸前)
+			WK_RATE = 3		; 寝取られ寸前だと３割
+		ELSEIF NTR_CHK_FAVORABLY(着用者, FAV_寝取られそう)
+			WK_RATE = 5		; 寝取られそうだと５割
+		ELSEIF NTR_CHK_FAVORABLY(着用者, FAV_主人より高い)
+			WK_RATE = 9		; 主人より高いと９割
+		ELSE
+			WK_RATE = 10	; そうでなければ常に装着
+		ENDIF
+		SIF TALENT:着用者:浮気公認
+			WK_RATE --
+		SIF TALENT:着用者:親愛
+			WK_RATE = 10	; 親愛であれば常に装着
+		SIF WK_RATE >= RAND:10
+			EQUIP:着用者:アクセサリ     = 衣装_アクセサリ_結婚指輪
+	ENDIF
+
+	IF TALENT:着用者:公衆便所
+		;公衆便所であれば首輪装着
+		WK_RATE = 10
+		;寝取り返し寸前、寝取り返し中だと外すことも
+		IF NTR_CHK_FAVORABLY(着用者, FAV_寝取り返し寸前)
+			WK_RATE = 7
+		ELSEIF NTR_CHK_FAVORABLY(着用者, FAV_寝取り返し寸前)
+			WK_RATE = 8
+		ENDIF
+		SIF WK_RATE >= RAND:10
+			EQUIP:着用者:アクセサリ     = 衣装_アクセサリ_首輪
+	ELSEIF TALENT:着用者:NTR
+		;NTRであればチョーカー装着
+		WK_RATE = 10
+		;寝取り返し寸前、寝取り返し中だと外すことも
+		IF NTR_CHK_FAVORABLY(着用者, FAV_寝取り返し寸前)
+			WK_RATE = 7
+		ELSEIF NTR_CHK_FAVORABLY(着用者, FAV_寝取り返し寸前)
+			WK_RATE = 8
+		ENDIF
+		SIF WK_RATE >= RAND:10
+			EQUIP:着用者:アクセサリ     = 衣装_アクセサリ_チョーカー
+	ENDIF
+RETURN
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：男装
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_jentle(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	IF HAS_VAGINA(着用者)
+		;女の子なら下着は女の子用を
+		CALL CLOTHES_Change_Knickers(着用者,下着変更)
+		;女の子ならサラシをつける
+		IF 下着変更
+			EQUIP:着用者:上半身下着２ = 5
+		ENDIF
+	ELSE
+		;男の子ならトランクス
+		IF 下着変更
+			EQUIP:着用者:下半身下着２ = 101
+		ENDIF
+	ENDIF
+	EQUIP:着用者:下半身上着１ = 1
+	EQUIP:着用者:上半身上着１ = 4
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：女装
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_FEMALE(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	IF 下着変更
+		;女装の場合は女の子でも男の子でも女の子用を
+		CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	ENDIF
+	EQUIP:着用者:スカート = 2
+	IF 下着変更
+		IF HAS_VAGINA(着用者)
+			EQUIP:着用者:上半身下着２ = 1
+		ELSE
+			;男の娘はブラジャーを付けない
+			EQUIP:着用者:上半身下着２ = 0
+		ENDIF
+	ENDIF
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+;-------------------------------------------------------------------------------
+;服装セットに着替える：紳士
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_MALE(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	IF HAS_VAGINA(着用者)
+		;女の子なら下着は女の子用を
+		CALL CLOTHES_Change_Knickers(着用者,下着変更)
+		;女の子ならサラシをつける
+		IF 下着変更
+			EQUIP:着用者:上半身下着２ = 5
+		ENDIF
+	ELSE
+		;男の子ならトランクス
+		IF 下着変更
+			EQUIP:着用者:下半身下着２ = 101
+		ENDIF
+	ENDIF
+	EQUIP:着用者:下半身上着１ = 1
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：メイド
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_MAID(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用 = 1
+	EQUIP:着用者:帽子 = 2
+	EQUIP:着用者:靴 = 1
+	EQUIP:着用者:靴下 = 1
+	CALL CLOTHES_Change_Knickers(着用者,下着変更)
+	EQUIP:着用者:スカート = 1
+	IF HAS_VAGINA(着用者)
+		IF 下着変更
+			EQUIP:着用者:上半身下着２ = 1
+		ENDIF
+	ELSE
+		;男の娘はブラジャーを付けない
+	ENDIF
+	EQUIP:着用者:上半身上着２ = 1
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットに着替える：私服セット
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Preset_CUSTOM(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	EQUIP:着用者:衣服着用       = CFLAG:着用者:私服_衣服着用
+	EQUIP:着用者:アクセサリ     = CFLAG:着用者:私服_アクセサリ
+	EQUIP:着用者:帽子           = CFLAG:着用者:私服_帽子
+	EQUIP:着用者:靴             = CFLAG:着用者:私服_靴
+	EQUIP:着用者:靴下           = CFLAG:着用者:私服_靴下
+	EQUIP:着用者:下半身上着１   = CFLAG:着用者:私服_下半身上着１
+	EQUIP:着用者:下半身上着２   = CFLAG:着用者:私服_下半身上着２
+	EQUIP:着用者:スカート       = CFLAG:着用者:私服_スカート
+	EQUIP:着用者:上半身上着１   = CFLAG:着用者:私服_上半身上着１
+	EQUIP:着用者:上半身上着２   = CFLAG:着用者:私服_上半身上着２
+	EQUIP:着用者:ボディースーツ = CFLAG:着用者:私服_ボディースーツ
+	EQUIP:着用者:ワンピース     = CFLAG:着用者:私服_ワンピース
+	EQUIP:着用者:着物           = CFLAG:着用者:私服_着物
+	EQUIP:着用者:レオタード     = CFLAG:着用者:私服_レオタード
+	EQUIP:着用者:手             = CFLAG:着用者:私服_手
+	IF 下着変更
+		IF 0 < CFLAG:着用者:私服_下半身下着２ && CFLAG:着用者:私服_下半身下着２ < 100
+			;変える前が女性物なら、今日のぱんつを選ぶ
+			 CALL CLOTHES_Change_Knickers(着用者,下着変更)
+		ELSE
+			EQUIP:着用者:下半身下着２ = CFLAG:着用者:私服_下半身下着２	
+		ENDIF
+		IF !TALENT:着用者:公衆便所 && !CFLAG:PLAYER:WC_あなたに貞操帯を着けた人
+			;公衆便所は下着を自由に変更することはできない
+			EQUIP:着用者:下半身下着１ = CFLAG:着用者:私服_下半身下着１
+		ENDIF
+		EQUIP:着用者:上半身下着１ = CFLAG:着用者:私服_上半身下着１
+		EQUIP:着用者:上半身下着２ = CFLAG:着用者:私服_上半身下着２
+	ENDIF
+	EQUIP:着用者:衣服着用 = CLOTHES_IsDressed(着用者)
+	CFLAG:着用者:寝間着着用 = 0
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;現在の服装を私服セットに保存する
+;@return 1:保存成功,0:保存失敗
+@CLOTHES_Preset_CUSTOM_Save(着用者)
+	#DIM 着用者
+	EQUIP:着用者:衣服着用 = CLOTHES_IsDressed(着用者)
+	CFLAG:着用者:私服_衣服着用       = EQUIP:着用者:衣服着用
+	CFLAG:着用者:私服_アクセサリ     = EQUIP:着用者:アクセサリ
+	CFLAG:着用者:私服_帽子           = EQUIP:着用者:帽子
+	CFLAG:着用者:私服_靴             = EQUIP:着用者:靴
+	CFLAG:着用者:私服_靴下           = EQUIP:着用者:靴下
+	CFLAG:着用者:私服_下半身下着１   = EQUIP:着用者:下半身下着１
+	CFLAG:着用者:私服_下半身下着２   = EQUIP:着用者:下半身下着２
+	CFLAG:着用者:私服_下半身上着１   = EQUIP:着用者:下半身上着１
+	CFLAG:着用者:私服_下半身上着２   = EQUIP:着用者:下半身上着２
+	CFLAG:着用者:私服_スカート       = EQUIP:着用者:スカート
+	CFLAG:着用者:私服_上半身下着１   = EQUIP:着用者:上半身下着１
+	CFLAG:着用者:私服_上半身下着２   = EQUIP:着用者:上半身下着２
+	CFLAG:着用者:私服_上半身上着１   = EQUIP:着用者:上半身上着１
+	CFLAG:着用者:私服_上半身上着２   = EQUIP:着用者:上半身上着２
+	CFLAG:着用者:私服_ボディースーツ = EQUIP:着用者:ボディースーツ
+	CFLAG:着用者:私服_ワンピース     = EQUIP:着用者:ワンピース
+	CFLAG:着用者:私服_着物           = EQUIP:着用者:着物
+	CFLAG:着用者:私服_レオタード     = EQUIP:着用者:レオタード
+	CFLAG:着用者:私服_手             = EQUIP:着用者:手
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;現在の服装を服装セットに保存する
+;@return 1:保存成功,0:保存失敗
+@CLOTHES_Save(着用者)
+	#DIM 着用者
+	EQUIP:着用者:衣服着用 = CLOTHES_IsDressed(着用者)
+	CFLAG:着用者:服装_衣服着用       = EQUIP:着用者:衣服着用
+	CFLAG:着用者:服装_アクセサリ     = EQUIP:着用者:アクセサリ
+	CFLAG:着用者:服装_帽子           = EQUIP:着用者:帽子
+	CFLAG:着用者:服装_靴             = EQUIP:着用者:靴
+	CFLAG:着用者:服装_靴下           = EQUIP:着用者:靴下
+	CFLAG:着用者:服装_下半身下着１   = EQUIP:着用者:下半身下着１
+	CFLAG:着用者:服装_下半身下着２   = EQUIP:着用者:下半身下着２
+	CFLAG:着用者:服装_下半身上着１   = EQUIP:着用者:下半身上着１
+	CFLAG:着用者:服装_下半身上着２   = EQUIP:着用者:下半身上着２
+	CFLAG:着用者:服装_スカート       = EQUIP:着用者:スカート
+	CFLAG:着用者:服装_上半身下着１   = EQUIP:着用者:上半身下着１
+	CFLAG:着用者:服装_上半身下着２   = EQUIP:着用者:上半身下着２
+	CFLAG:着用者:服装_上半身上着１   = EQUIP:着用者:上半身上着１
+	CFLAG:着用者:服装_上半身上着２   = EQUIP:着用者:上半身上着２
+	CFLAG:着用者:服装_ボディースーツ = EQUIP:着用者:ボディースーツ
+	CFLAG:着用者:服装_ワンピース     = EQUIP:着用者:ワンピース
+	CFLAG:着用者:服装_着物           = EQUIP:着用者:着物
+	CFLAG:着用者:服装_レオタード     = EQUIP:着用者:レオタード
+	CFLAG:着用者:服装_手             = EQUIP:着用者:手
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服装セットから現在の服装を読み出して着替える
+;@return 1:保存成功,0:保存失敗
+@CLOTHES_Load(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	EQUIP:着用者:衣服着用       = CFLAG:着用者:服装_衣服着用
+	EQUIP:着用者:アクセサリ     = CFLAG:着用者:服装_アクセサリ
+	EQUIP:着用者:帽子           = CFLAG:着用者:服装_帽子
+	EQUIP:着用者:靴             = CFLAG:着用者:服装_靴
+	EQUIP:着用者:靴下           = CFLAG:着用者:服装_靴下
+	EQUIP:着用者:下半身上着１   = CFLAG:着用者:服装_下半身上着１
+	EQUIP:着用者:下半身上着２   = CFLAG:着用者:服装_下半身上着２
+	EQUIP:着用者:スカート       = CFLAG:着用者:服装_スカート
+	EQUIP:着用者:上半身上着１   = CFLAG:着用者:服装_上半身上着１
+	EQUIP:着用者:上半身上着２   = CFLAG:着用者:服装_上半身上着２
+	EQUIP:着用者:ボディースーツ = CFLAG:着用者:服装_ボディースーツ
+	EQUIP:着用者:ワンピース     = CFLAG:着用者:服装_ワンピース
+	EQUIP:着用者:着物           = CFLAG:着用者:服装_着物
+	EQUIP:着用者:レオタード     = CFLAG:着用者:服装_レオタード
+	EQUIP:着用者:手             = CFLAG:着用者:服装_手
+	IF 下着変更
+		IF !TALENT:着用者:公衆便所 && !CFLAG:PLAYER:WC_あなたに貞操帯を着けた人
+			;公衆便所は下着を自由に変更することはできない
+			EQUIP:着用者:下半身下着１ = CFLAG:着用者:服装_下半身下着１
+			EQUIP:着用者:下半身下着２ = CFLAG:着用者:服装_下半身下着２
+		ENDIF
+		EQUIP:着用者:上半身下着１ = CFLAG:着用者:服装_上半身下着１
+		EQUIP:着用者:上半身下着２ = CFLAG:着用者:服装_上半身下着２
+	ENDIF
+	EQUIP:着用者:衣服着用 = CLOTHES_IsDressed(着用者)
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服を着ているかどうかの判定を行う
+;@return 1:服を着ている,0:全裸
+@CLOTHES_IsDressed(着用者)
+	#FUNCTION
+	#DIM 着用者
+	SIF EQUIP:着用者:アクセサリ
+		RETURNF 1 
+	SIF EQUIP:着用者:帽子
+		RETURNF 1
+	SIF EQUIP:着用者:靴
+		RETURNF 1
+	SIF EQUIP:着用者:靴下
+		RETURNF 1
+	SIF EQUIP:着用者:下半身下着１
+		RETURNF 1
+	SIF EQUIP:着用者:下半身下着２
+		RETURNF 1
+	SIF EQUIP:着用者:下半身上着１
+		RETURNF 1
+	SIF EQUIP:着用者:下半身上着２
+		RETURNF 1
+	SIF EQUIP:着用者:スカート
+		RETURNF 1
+	SIF EQUIP:着用者:上半身下着１
+		RETURNF 1
+	SIF EQUIP:着用者:上半身下着２
+		RETURNF 1
+	SIF EQUIP:着用者:上半身上着１
+		RETURNF 1
+	SIF EQUIP:着用者:上半身上着２
+		RETURNF 1
+	SIF EQUIP:着用者:ボディースーツ
+		RETURNF 1
+	SIF EQUIP:着用者:ワンピース
+		RETURNF 1
+	SIF EQUIP:着用者:着物
+		RETURNF 1
+	SIF EQUIP:着用者:レオタード
+		RETURNF 1
+	SIF EQUIP:着用者:手
+		RETURNF 1
+RETURNF 0
+
+;-------------------------------------------------------------------------------
+;服を着替える：下半身下着（屈服度や各種素質・フラグを考慮）
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Change_Knickers(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	IF 下着変更 == 0
+		RETURN 0
+	ENDIF
+	IF TALENT:着用者:公衆便所
+		;公衆便所であれば貞操帯(100)。これは最優先。
+		EQUIP:着用者:下半身下着１ = 100
+		EQUIP:着用者:下半身下着２ = 0
+	ELSEIF 着用者 == PLAYER && TALENT:着用者:肉便器 && CFLAG:PLAYER:WC_あなたに貞操帯を着けた人 != 0
+		EQUIP:着用者:下半身下着１ = 100
+		EQUIP:着用者:下半身下着２ = 0
+	ELSEIF GETBIT(CFLAG:着用者:服装パターンオプション,0)
+		;ノーパン指定があればノーパン
+		EQUIP:着用者:下半身下着１ = 0
+		EQUIP:着用者:下半身下着２ = 0
+	ELSEIF TALENT:着用者:淫乱
+		;淫乱/娼婦持ちならエロい下着限定
+		EQUIP:着用者:下半身下着１ = 0
+		EQUIP:着用者:下半身下着２ = 今日のぱんつADULT(着用者, 0)
+	ELSEIF CFLAG:着用者:屈服度 > CFLAG:着用者:好感度 && CFLAG:着用者:屈服度 > 999
+		;屈服度が好感度より高く、1000以上あるならエロい下着限定
+		EQUIP:着用者:下半身下着１ = 0
+		EQUIP:着用者:下半身下着２ = 今日のぱんつADULT(着用者, 0)
+	ELSE
+		;普通の下着
+		EQUIP:着用者:下半身下着１ = 0
+		EQUIP:着用者:下半身下着２ = 今日のぱんつ(着用者)
+	ENDIF
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服を着替える：上半身下着（屈服度や各種素質・フラグを考慮）
+;@return 1:着替え成功,0:着替え失敗
+@CLOTHES_Change_Bra(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	IF 下着変更 == 0
+		RETURN 0
+	ENDIF
+	IF GETBIT(CFLAG:着用者:服装パターンオプション,1)
+		;ノーブラ指定があればノーブラ
+		EQUIP:着用者:上半身下着１ = 0
+		EQUIP:着用者:上半身下着２ = 0
+	ELSEIF TALENT:着用者:バストサイズ == -2
+		;絶壁なら必要無いですよね(｀；ω；´)
+		EQUIP:着用者:上半身下着１ = 0
+		EQUIP:着用者:上半身下着２ = 0
+	ELSE
+		EQUIP:着用者:上半身下着１ = 0
+		EQUIP:着用者:上半身下着２ = 1
+	ENDIF
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;服を初期状態に戻す
+@CLOTHES_RESET(着用者,下着変更=1)
+	#DIM 着用者
+	#DIM 下着変更
+	CALL CLOTHES_Load(着用者,下着変更)
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;EQUIPからTEQUIPに変換
+@CLOTHES_SETTING_TRAIN(ARG)
+	TEQUIP:ARG:0 = 0
+	TEQUIP:ARG:1 = 0
+	;着せ替えが有効でない
+	SIF !EQUIP:ARG:0
+		RETURN 0
+	;下半身
+	;TEQUIP:0 下半身着衣状況(ビット0=スカート 1=ずらし可 2=ずらし不可 3=ずらせない下半身上着)
+	;	(ビットを使いたくない人用 0=なし 1=ノーパンスカート 2=パンティのみ 3=スカート+パンティ 
+	;	4=スパッツ(下着)もしくはノーパンズボン 5=スカート+スパッツ 6=ズボン+パンティ 7=フル装備(このバリアントでは無理)）
+	;EQUIP:5,6 下半身下着
+	SIF EQUIP:ARG:下半身下着１
+		TEQUIP:ARG:0 |= 4
+	SIF EQUIP:ARG:下半身下着２
+		TEQUIP:ARG:0 |= 2
+	;EQUIP:7～9 下半身上着１
+	IF EQUIP:ARG:下半身上着１
+		TEQUIP:ARG:0 |= 4
+		TEQUIP:ARG:0 |= 8
+	ENDIF
+	SIF EQUIP:ARG:下半身上着２
+		TEQUIP:ARG:0 |= 2
+	SIF EQUIP:ARG:スカート
+		TEQUIP:ARG:0 |= 1
+	;EQUIP:14～16 全身上着
+	IF EQUIP:ARG:ボディースーツ
+		TEQUIP:ARG:0 |= 4
+		TEQUIP:ARG:0 |= 8
+		TEQUIP:ARG:0 |= 16	
+	ENDIF
+	SIF EQUIP:ARG:ワンピース
+		TEQUIP:ARG:0 |= 1
+	SIF EQUIP:ARG:着物
+		TEQUIP:ARG:0 |= 1
+	IF EQUIP:ARG:レオタード
+		TEQUIP:ARG:0 |= 2
+		TEQUIP:ARG:0 |= 16
+	ENDIF
+	;上半身
+	;TEQUIP:1 上半身着衣状況(0=なし 1=はだけ可 2=はだけ不可 3=突っ込み不可)
+	;	(ビットを使いたくない人用 0=なし 1=ノーブラ和服 2=ブラのみ 3=和服+ブラ）
+	;EQUIP:10,11 上半身下着
+	IF EQUIP:ARG:上半身下着１
+		TEQUIP:ARG:1 |= 2
+		TEQUIP:ARG:1 |= 4
+	ENDIF
+	SIF EQUIP:ARG:上半身下着２
+		TEQUIP:ARG:1 |= 1
+	;EQUIP:12,13 上半身上着
+	IF EQUIP:ARG:上半身上着１
+		TEQUIP:ARG:1 |= 2
+		TEQUIP:ARG:1 |= 4
+	ENDIF
+	SIF EQUIP:ARG:上半身上着２
+		TEQUIP:ARG:1 |= 1
+	;EQUIP:14～16 全身上着
+	IF EQUIP:ARG:ボディースーツ
+		TEQUIP:ARG:1 |= 2
+		TEQUIP:ARG:1 |= 4
+	ENDIF
+	SIF EQUIP:ARG:ワンピース
+		TEQUIP:ARG:1 |= 2
+	SIF EQUIP:ARG:着物
+		TEQUIP:ARG:1 |= 1
+	IF EQUIP:ARG:レオタード
+		TEQUIP:ARG:1 |= 2
+		TEQUIP:ARG:1 |= 4
+	ENDIF
+	;ずらし処理
+	SIF TEQUIP:ARG:3
+		CLEARBIT TEQUIP:ARG:1,2
+	SIF TEQUIP:ARG:4
+		CLEARBIT TEQUIP:ARG:1,1
+
+;-------------------------------------------------
+;関数名:SHOW_BOTTOM
+;概　要:下半身服装名取得関数
+;戻り値:服装名(文字列)
+;引数:0 参照するキャラ番号
+;引数:1スカート、2ずらし可、3ずらし不可、4下半身上着ずらし不可の種別(省略した場合は最も露出を妨げているもの)
+;備　考:文中関数
+;TEQUIP:0に対応して一番上に着ている衣装の種類を返す
+;-------------------------------------------------
+@SHOW_BOTTOM(ARG,ARG:1)
+	#FUNCTIONS
+	LOCAL = 0
+	IF TEQUIP:ARG:0 & 8
+		LOCAL = 4
+	ELSEIF TEQUIP:ARG:0 & 4
+		LOCAL = 3
+	ELSEIF TEQUIP:ARG:0 & 2
+		LOCAL = 2
+	ELSEIF TEQUIP:ARG:0 & 1
+		LOCAL = 1
+	ENDIF
+	LOCAL = ARG:1 ? ARG:1 # LOCAL
+	SELECTCASE LOCAL
+		CASE 4
+			IF EQUIP:ARG:下半身上着１
+				RETURNF "clothes"
+			ELSEIF EQUIP:ARG:ボディースーツ
+				RETURNF "clothes"
+			ENDIF
+		CASE 3
+			IF EQUIP:ARG:ボディースーツ
+				RETURNF "clothes"
+			ELSEIF EQUIP:ARG:下半身上着１
+				RETURNF "clothes"
+			ELSEIF EQUIP:ARG:下半身下着１
+				RETURNF "underwear"
+			ENDIF
+		CASE 2
+			IF EQUIP:ARG:レオタード
+				RETURNF "clothes"
+			ELSEIF EQUIP:ARG:下半身上着２
+				RETURNF "clothes"
+			ELSEIF EQUIP:ARG:下半身下着２
+				RETURNF "underwear"
+			ENDIF
+		CASE 1
+			IF EQUIP:ARG:スカート == 1
+				RETURNF "skirt"
+			ELSEIF EQUIP:ARG:スカート == 2
+				RETURNF "long skirt"
+			ELSEIF EQUIP:ARG:ワンピース
+				RETURNF "skirt"
+			ELSEIF EQUIP:ARG:着物
+				RETURNF "kimono hem"
+			ENDIF
+	ENDSELECT
+
+;-------------------------------------------------
+;関数名:SHOW_TOP
+;概　要:上半身服装名取得関数
+;戻り値:服装名(文字列)
+;引数:0 参照するキャラ番号
+;引数:1はだけ可、2はだけ不可(省略した場合は最も露出を妨げているもの)
+;備　考:文中関数
+;TEQUIP:0に対応して一番上に着ている衣装の種類を返す
+;-------------------------------------------------
+@SHOW_TOP(ARG,ARG:1)
+	#FUNCTIONS
+	LOCAL = 0
+	IF TEQUIP:ARG:1 & 2
+		LOCAL = 2
+	ELSEIF TEQUIP:ARG:1 & 1
+		LOCAL = 1
+	ENDIF
+	LOCAL = ARG:1 ? ARG:1 # LOCAL
+	IF LOCAL == 2
+		IF EQUIP:ARG:ボディースーツ || EQUIP:ARG:ワンピース || EQUIP:ARG:レオタード
+			RETURNF "clothes"
+		ELSEIF EQUIP:ARG:ワンピース == 2
+			RETURNF "china clothes"
+		ELSEIF EQUIP:ARG:ワンピース == 5
+			RETURNF "apron"
+		ELSEIF EQUIP:ARG:ワンピース == 6
+			RETURNF "poncho"
+		ELSEIF EQUIP:ARG:ワンピース == 7
+			RETURNF "monk clothes"
+		ELSEIF EQUIP:ARG:ワンピース == 8
+			RETURNF "witch's dress"
+		ELSEIF EQUIP:ARG:レオタード == 3
+			RETURNF "ninja's outfit"
+		ELSEIF EQUIP:ARG:レオタード == 4
+			RETURNF "sling bikini"
+		ELSEIF EQUIP:ARG:レオタード == 5
+			RETURNF "tentacle clothes" 
+		ELSEIF EQUIP:ARG:レオタード == 6
+			RETURNF "racing swimsuit" 
+		ELSEIF EQUIP:ARG:レオタード == 7
+			RETURNF "pit babe" 
+		ELSEIF EQUIP:ARG:レオタード == 8
+			RETURNF "female wrestler costume" 
+		ELSEIF EQUIP:ARG:上半身上着１ == 1
+			RETURNF "jacket"
+		ELSEIF EQUIP:ARG:上半身下着１ == 1
+			RETURNF "underwear"
+		ELSEIF EQUIP:ARG:上半身下着１ == 2
+			RETURNF "pasties"
+		ENDIF
+	ELSEIF LOCAL == 1
+		IF EQUIP:ARG:着物
+			RETURNF "kimono"
+		ELSEIF EQUIP:ARG:上半身上着２
+			RETURNF "blouse"
+		ELSEIF EQUIP:ARG:上半身下着２
+			RETURNF "underwear"
+		ENDIF
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;現在着用の衣服名称取得
+;@return 服の名称
+@CLOTHNAME(服種類,服番号)
+	#FUNCTIONS
+	#DIM 服種類
+	#DIM 服番号
+
+	IF (CFLAG:MASTER:服装_上半身上着２ == 6 && CFLAG:MASTER:服装_スカート == 5 && CFLAG:MASTER:服装_靴下 == 5 && CFLAG:MASTER:服装_靴 == 2) && 服種類 == 13
+		RETURNF "巫女装束"
+	ELSEIF (CFLAG:MASTER:服装_上半身上着２ == 6 && CFLAG:MASTER:服装_スカート == 5 && CFLAG:MASTER:服装_靴下 == 5 && CFLAG:MASTER:服装_靴 == 2) && (服種類 == 9 || 服種類 == 4 || 服種類 == 3)
+		RETURNF ""
+	ENDIF
+	SELECTCASE 服種類
+		CASE 1
+			IF 服番号 == 衣装_アクセサリ_結婚指輪
+				RETURNF "Wedding Ring"
+			ELSEIF 服番号 == 衣装_アクセサリ_チョーカー
+				RETURNF "Choker"
+			ELSEIF 服番号 == 衣装_アクセサリ_首輪
+				RETURNF "Collar"
+			ENDIF
+		CASE 2
+			IF 服番号 == 1
+				RETURNF "Hat"
+			ELSEIF 服番号 == 2
+				RETURNF "Headdress"
+			ELSEIF 服番号 == 3
+				RETURNF "Ribbon"
+			ELSEIF 服番号 == 4
+				RETURNF "Cat Ears"
+			ELSEIF 服番号 == 5
+				RETURNF "Rabbit Ears"
+			ELSEIF 服番号 == 6
+				RETURNF "Dog Ears"
+			ELSEIF 服番号 == 7
+				RETURNF "Cow Ears"
+			ELSEIF 服番号 == 8
+				RETURNF "Hood"
+			ELSEIF 服番号 == 9
+				RETURNF "Headband"
+
+			ENDIF
+		CASE 3
+			IF 服番号 == 1
+				RETURNF "Shoes"
+			ELSEIF 服番号 == 2
+				RETURNF "Sandals"
+			ELSEIF 服番号 == 3
+				RETURNF "Boots"
+			ELSEIF 服番号 == 4
+				RETURNF "Slippers"
+			ENDIF
+		CASE 4
+			IF 服番号 == 1
+				RETURNF "Socks"
+			ELSEIF 服番号 == 2
+				RETURNF "Thigh-high Socks"
+			ELSEIF 服番号 == 3
+				RETURNF "Knee-socks"
+			ELSEIF 服番号 == 4
+				RETURNF "Stockings"
+			ELSEIF 服番号 == 5
+				RETURNF "Tabi"
+			ELSEIF 服番号 == 6
+				RETURNF "Garter Stockings"
+			ENDIF
+		CASE 5
+			IF 服番号 == 1 || 服番号 == 42
+				RETURNF "Chastity Belt"
+			ELSEIF 服番号 == 2
+				RETURNF "Bandaid"
+			ELSEIF 服番号 == 100
+				RETURNF "Chastity Belt"
+			ENDIF
+		CASE 6
+			IF 服番号 == 101
+				RETURNF "Trunks"
+			ELSEIF 服番号 == 102
+				RETURNF "Briefs"
+			ELSEIF 服番号 == 103
+				RETURNF "Boxer Shorts"
+			ELSEIF 服番号 == 104
+				RETURNF "Bikini Pants"
+			ELSEIF 服番号 == 105
+				RETURNF "Bikini Pants(Micro)"
+			ELSEIF 服番号 == 106
+				RETURNF "Cow Bikini Pants"
+			ELSE
+				RETURNF PANTSNAME(服番号)
+			ENDIF
+		CASE 7
+			IF 服番号 == 1
+				RETURNF "Trousers"
+			ELSEIF 服番号 == 2
+				RETURNF "Spats"
+			ELSEIF 服番号 == 3
+				RETURNF "Hakama"
+			ENDIF
+		CASE 8
+			IF 服番号 == 1
+				RETURNF "Short Pants"
+			ELSEIF 服番号 == 2
+				RETURNF "Gym Shorts"
+			ELSEIF 服番号 == 3
+				RETURNF "Hot Pants"
+			ELSEIF 服番号 == 4
+				RETURNF "Bondage Pants"
+			ENDIF
+		CASE 9
+			IF 服番号 == 1
+				RETURNF "Mini-skirt"
+			ELSEIF 服番号 == 2
+				RETURNF "Skirt"
+			ELSEIF 服番号 == 3
+				RETURNF "Long Skirt"
+			ELSEIF 服番号 == 4
+				RETURNF "Straight Skirt"
+			ELSEIF 服番号 == 5
+				RETURNF "Chima"
+			ENDIF
+		CASE 10
+			IF 服番号 == 2
+				RETURNF "Pasties"
+			ENDIF
+		CASE 11
+			IF 服番号 == 1
+				RETURNF "Bra"
+			ELSEIF 服番号 == 2
+				RETURNF "Sports Bra"
+			ELSEIF 服番号 == 3
+				RETURNF "Padded Bra"
+			ELSEIF 服番号 == 4
+				RETURNF "Camisole"
+			ELSEIF 服番号 == 5
+				RETURNF "Sarashi"
+			ELSEIF 服番号 == 6
+				RETURNF "Bikini"
+			ELSEIF 服番号 == 7
+				RETURNF "Bikini(Micro)"
+			ELSEIF 服番号 == 8
+				RETURNF "Lingerie"
+			ELSEIF 服番号 == 9
+				RETURNF "Cow Bikini"
+			ENDIF
+		CASE 12
+			IF 服番号 == 1
+			RETURNF "Jacket"
+			ELSEIF 服番号 == 2
+			RETURNF "Armor"
+			ELSEIF 服番号 == 3
+			RETURNF "Military uniform"
+			ELSEIF 服番号 == 4
+			RETURNF "Men's suit"
+			ENDIF
+		CASE 13
+			IF 服番号 == 1
+				RETURNF "Blouse"
+			ELSEIF 服番号 == 2
+				RETURNF "Sailor Suit"
+			ELSEIF 服番号 == 3
+				RETURNF "Blazer"
+			ELSEIF 服番号 == 4
+				RETURNF "Dress Shirt"
+			ELSEIF 服番号 == 5
+				RETURNF "Male School Uniform"
+			ELSEIF 服番号 == 6
+				RETURNF "White Clothing"
+			ELSEIF 服番号 == 7
+				RETURNF "Pajamas"
+			ELSEIF 服番号 == 8
+				RETURNF "T-shirt"
+			ELSEIF 服番号 == 9
+				RETURNF "Tank Top"
+			ELSEIF 服番号 == 10
+				RETURNF "Shrine Maiden Clothes"
+			ELSEIF 服番号 == 11
+				RETURNF "Vertical Rib Sweater"
+			ELSEIF 服番号 == 12
+				RETURNF "Cheerleader Outfit"
+			ELSEIF 服番号 == 13
+				RETURNF "Coat"
+			ELSEIF 服番号 == 14
+				RETURNF "Bondage"
+			ELSEIF 服番号 == 15
+				RETURNF "Nurse Clothes"
+			ELSEIF 服番号 == 16
+				RETURNF "Policewoman Outfit"
+			ELSEIF 服番号 == 17
+				RETURNF "Magical Girl's clothes"
+			ELSEIF 服番号 == 18
+				RETURNF "Hakurei Shrine Clothes"
+			ELSEIF 服番号 == 19
+				RETURNF "Santa Costume"
+			ELSEIF 服番号 == 20
+				RETURNF "Open-chest Turtleneck"
+			ELSEIF 服番号 == 21
+				RETURNF "Kindergartener Clothes"
+			ELSEIF 服番号 == 22
+				RETURNF "Cape"
+
+			ENDIF
+		CASE 14
+			IF 服番号 == 1
+				RETURNF "Bodysuit"
+			ENDIF
+		CASE 15
+			IF 服番号 == 1
+				RETURNF "One-piece Dress"
+			ELSEIF 服番号 == 2
+				RETURNF "China Dress"
+			ELSEIF 服番号 == 3
+				RETURNF "Negligee"
+			ELSEIF 服番号 == 4
+				RETURNF "Baby Doll"
+			ELSEIF 服番号 == 5
+				RETURNF "Apron"
+			ELSEIF 服番号 == 6
+				RETURNF "Poncho"
+			ELSEIF 服番号 == 7
+				RETURNF "Nun Habit"
+			ELSEIF 服番号 == 8
+				RETURNF "Witch's Dress"
+			ENDIF
+		CASE 16
+			IF 服番号 == 1
+				RETURNF "Kimono"
+			ELSEIF 服番号 == 2
+				RETURNF "Sleepwear"
+			ENDIF
+		CASE 17
+			IF 服番号 == 1
+				RETURNF "School Swimsuit"
+			ELSEIF 服番号 == 2
+				RETURNF "Leotard"
+			ELSEIF 服番号 == 3
+				RETURNF "Ninja's Outfit"
+			ELSEIF 服番号 == 4
+				RETURNF "Sling Bikini"
+			ELSEIF 服番号 == 5
+				RETURNF "Tentacle Clothes"
+			ELSEIF 服番号 == 6
+				RETURNF "Racing Swimsuit"
+			ELSEIF 服番号 == 7
+				RETURNF "Pit Babe Outfit"
+			ELSEIF 服番号 == 8
+				RETURNF "Female Wrestler Costume"
+			ENDIF
+		CASE 18
+			IF 服番号 == 1
+				RETURNF "Cotton Gloves"
+			ELSEIF 服番号 == 2
+				RETURNF "Rubber Gloves"
+			ELSEIF 服番号 == 3
+				RETURNF "White Gloves"
+			ELSEIF 服番号 == 4
+				RETURNF "Leather Gloves"
+			ELSEIF 服番号 == 5
+				RETURNF "Fingerless Gloves"
+			ELSEIF 服番号 == 6
+				RETURNF "Evening Gloves"
+			ELSEIF 服番号 == 7
+				RETURNF "Ninja Gauntlets"
+			ELSEIF 服番号 == 8
+				RETURNF "Mitten"
+			ENDIF
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@今日のぱんつ(着用者,エロのみ=0)
+	#FUNCTION
+	#DIM DYNAMIC 着用者
+	#DIM DYNAMIC 下着決定
+	#DIM DYNAMIC 手にとったぱんつ
+	#DIM DYNAMIC 好みの下着_幼児
+	#DIM DYNAMIC 好みの下着_子供
+	#DIM DYNAMIC 好みの下着_清楚
+	#DIM DYNAMIC 好みの下着_淫靡
+	#DIM DYNAMIC エロのみ
+	下着決定 = 0
+	IF TALENT:着用者:公衆便所
+		;公衆便所なら貞操帯(強制)
+		RETURNF 100
+	ELSEIF TALENT:着用者:肉便器 && CFLAG:PLAYER:WC_あなたに貞操帯を着けた人 != 0
+		RETURNF 100
+	ENDIF
+	SELECTCASE TALENT:着用者:体型
+		CASE -2
+			;幼児体型
+			好みの下着_幼児 = 1
+		CASE -1
+			;小柄体型
+			好みの下着_子供 = 1
+		CASEELSE
+			;その他。
+			好みの下着_清楚 = 1
+	ENDSELECT
+	IF TALENT:着用者:幼稚 || TALENT:着用者:幼児／幼児退行
+		;幼稚、幼児／幼児退行があるなら幼児下着だけを好む
+		好みの下着_幼児 = 1
+		好みの下着_子供 = 0
+		好みの下着_清楚 = 0
+		好みの下着_淫靡 = 0
+	ENDIF
+	IF TALENT:着用者:小悪魔 || TALENT:着用者:淫乱
+		;小悪魔、あるいは淫乱であれば、エロい下着も好む
+		好みの下着_淫靡 = 1
+	ENDIF
+	IF エロのみ
+		好みの下着_幼児 = 0
+		好みの下着_子供 = 0
+		好みの下着_清楚 = 0
+		好みの下着_淫靡 = 1
+	ENDIF
+	WHILE !下着決定
+		手にとったぱんつ = RAND:100
+		SELECTCASE 手にとったぱんつ
+			CASE 0
+				;ノーパン
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 4)
+			CASE 1
+				;トランクス 男性用下着は101番以降へ移動しました
+			CASE 2
+				;絆創膏
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 4)
+			CASE 3
+				;ドロワーズ（白）
+				下着決定 = 好みの下着_幼児
+			CASE 4
+				;ドロワーズ（ピンク）
+				下着決定 = 好みの下着_幼児
+			CASE 5
+				;ドロワーズ（薄紫）
+				下着決定 = 好みの下着_幼児
+			CASE 6
+				;くまさんパンツ
+				下着決定 = 好みの下着_幼児
+			CASE 7
+				;ねこさんパンツ
+				下着決定 = 好みの下着_幼児
+			CASE 8
+				;水玉ぱんつ（青白）
+				下着決定 = (好みの下着_子供 || 好みの下着_幼児)
+			CASE 9
+				;水玉ぱんつ（紫白）
+				下着決定 = (好みの下着_子供 || 好みの下着_幼児)
+			CASE 10
+				;しましまぱんつ(青白)
+				下着決定 = (好みの下着_清楚 || 好みの下着_子供)
+			CASE 11
+				;しましまぱんつ（赤白）
+				下着決定 = (好みの下着_清楚 || 好みの下着_子供)
+			CASE 12
+				;しましまぱんつ（紫白）
+				下着決定 = (好みの下着_清楚 || 好みの下着_子供)
+			CASE 13
+				;しましまぱんつ（緑白）
+				下着決定 = (好みの下着_清楚 || 好みの下着_子供)
+			CASE 14
+				;しましまぱんつ（黄白）
+				下着決定 = (好みの下着_清楚 || 好みの下着_子供)
+			CASE 15
+				;しましまぱんつ（紫黒）
+				下着決定 = (好みの下着_清楚 || 好みの下着_子供)
+			CASE 16
+				;フリルぱんつ（白） レースではない
+				下着決定 = 好みの下着_子供
+			CASE 17
+				;フリルぱんつ（ピンク） レースではない
+				下着決定 = 好みの下着_子供
+			CASE 18
+				;フリルぱんつ（薄紫） レースではない
+				下着決定 = 好みの下着_子供
+			CASE 19
+				;ローレグパンツ（白） いわゆるおばさんぱんつ
+				下着決定 = 好みの下着_清楚
+			CASE 20
+				;ローレグパンツ（ピンク） いわゆるおばさんぱんつ
+				下着決定 = 好みの下着_清楚
+			CASE 21
+				;ローレグパンツ（青） いわゆるおばさんぱんつ
+				下着決定 = 好みの下着_清楚
+			CASE 22
+				;ローライズパンツ
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 0)
+			CASE 23
+				;ハイレグパンツ
+				下着決定 = (好みの下着_淫靡 && RAND:2 == 0)
+			CASE 24
+				;レースのパンティ(白)
+				下着決定 = 好みの下着_清楚
+			CASE 25
+				;レースのパンティ(黒)
+				下着決定 = 好みの下着_清楚
+			CASE 26
+				;レースのパンティ(ピンク)
+				下着決定 = 好みの下着_清楚
+			CASE 27
+				;スパッツ（黒） 下半身上着１(ズボン)にスパッツがいるので削除
+				;下着決定 = (ABL:着用者:露出癖 > 3)
+			CASE 28
+				;スパッツ（灰）
+				;下着決定 = (ABL:着用者:露出癖 > 3)
+			CASE 29
+				;シースルーショーツ（白）
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 3)
+			CASE 30
+				;シースルーショーツ（ピンク）
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 3)
+			CASE 31
+				;Tバック（白）
+				下着決定 = 好みの下着_淫靡
+			CASE 32
+				;Tバック（青）
+				下着決定 = 好みの下着_淫靡
+			CASE 33
+				;Tバック（黒）
+				下着決定 = 好みの下着_淫靡
+			CASE 34
+				;紐パン（白） あるいは G-Strings,Thongsと呼ばれるもの
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 0)
+			CASE 35
+				;紐パン（黒）あるいは G-Strings,Thongsと呼ばれるもの
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 0)
+			CASE 36
+				;紐パン（赤）あるいは G-Strings,Thongsと呼ばれるもの
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 0)
+			CASE 37
+				;紐パン（青白しま）あるいは G-Strings,Thongsと呼ばれるもの
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 0)
+			CASE 38
+				;紐パン（赤白しま）あるいは G-Strings,Thongsと呼ばれるもの
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 0)
+			CASE 39
+				;紐パン（紫）あるいは G-Strings,Thongsと呼ばれるもの
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:露出癖 > 0)
+			CASE 40
+				;レザーパンツ（赤）
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:サドっ気 > 4)
+			CASE 41
+				;レザーパンツ（黒）
+				下着決定 = (好みの下着_淫靡 && ABL:着用者:サドっ気 > 4)
+			CASE 100
+				;貞操帯 100番に変更しました
+				下着決定 = TALENT:着用者:公衆便所
+		ENDSELECT
+	WEND
+RETURNF 手にとったぱんつ
+
+;-------------------------------------------------------------------------------
+;Hな下着のみ返す版
+@今日のぱんつADULT(住人, 貞操帯抑制)
+	#FUNCTION
+	#DIM 住人		; 住人選択
+	#DIM 貞操帯抑制	; 0:通常動作（公衆便所は常に貞操帯） 1:公衆便所でも貞操帯以外を返す
+
+	IF 貞操帯抑制 == 0
+		IF TALENT:住人:公衆便所
+			;貞操帯
+			RETURNF 100
+		ELSEIF TALENT:住人:肉便器 && CFLAG:PLAYER:WC_あなたに貞操帯を着けた人
+			RETURNF 100
+		ENDIF
+	ENDIF
+RETURNF 今日のぱんつ(住人,1)
+
+;-------------------------------------------------------------------------------
+;ぱんつの名前
+;@return ぱんつの名前
+@PANTSNAME(ぱんつ)
+	#FUNCTIONS
+	#DIM DYNAMIC ぱんつ
+	SELECTCASE ぱんつ
+		CASE 2
+			RETURNF "Bandaid"
+		CASE 3
+			RETURNF "Bloomers(White)"
+		CASE 4
+			RETURNF "Bloomers(Pink)"
+		CASE 5
+			RETURNF "Bloomers(Orchid)"
+		CASE 6
+			RETURNF "Bear Panties"
+		CASE 7
+			RETURNF "Cat Panties"
+		CASE 8
+			RETURNF "Polka Dot Panties(Blue)"
+		CASE 9
+			RETURNF "Polka Dot Panties(W Purple)"
+		CASE 10
+			RETURNF "Striped Panties(Pale Blue)"
+		CASE 11
+			RETURNF "Striped Panties(R White)"
+		CASE 12
+			RETURNF "Striped Panties(P White)"
+		CASE 13
+			RETURNF "Striped Panties(G White)"
+		CASE 14
+			RETURNF "Striped Panties(Y White)"
+		CASE 15
+			RETURNF "Striped Panties(P Black)"
+		CASE 16
+			RETURNF "Frilled Panties(White)"
+		CASE 17
+			RETURNF "Frilled Panties(Pink)"
+		CASE 18
+			RETURNF "Frilled Panties(L Purple)"
+		CASE 19
+			RETURNF "Low-leg Panties(White)"
+		CASE 20
+			RETURNF "Low-leg Panties(Pink)"
+		CASE 21
+			RETURNF "Low-leg Panties(Blue)"
+		CASE 22
+			RETURNF "Low-rise Panties"
+		CASE 23
+			RETURNF "High-leg Panties"
+		CASE 24
+			RETURNF "Lace Panties(White)"
+		CASE 25
+			RETURNF "Lace Panties(Black)"
+		CASE 26
+			RETURNF "Lace Panties(Pink)"
+		CASE 27
+			RETURNF "Spats(Black)"
+		CASE 28
+			RETURNF "Spats(Gray)"
+		CASE 29
+			RETURNF "See-through Panties(White)"
+		CASE 30
+			RETURNF "See-through Panties(Pink)"
+		CASE 31
+			RETURNF "Bikini Thong(White)"
+		CASE 32
+			RETURNF "Bikini Thong(Blue)"
+		CASE 33
+			RETURNF "Bikini Thong(Black)"
+		CASE 34
+			RETURNF "G-string(White)"
+		CASE 35
+			RETURNF "G-string(Black)"
+		CASE 36
+			RETURNF "G-string(Red)"
+		CASE 37
+			RETURNF "G-string(BW Striped)"
+		CASE 38
+			RETURNF "G-string(RW Striped)"
+		CASE 39
+			RETURNF "G-string(Purple)"
+		CASE 40
+			RETURNF "Leather Panties(Red)"
+		CASE 41
+			RETURNF "Leather Panties(Black)"
+		CASE 42
+			RETURNF "Open-lace Bikini Thong(White)"
+		CASE 43
+			RETURNF "Open-lace Bikini Thong(Black)"
+		CASE 44
+			RETURNF "Open-lace Bikini Thong(Red)"
+		CASE 45
+			RETURNF "See-through Shorts(White)"
+		CASE 46
+			RETURNF "See-through Shorts(Black)"
+		CASE 47
+			RETURNF "See-through Shorts(Red)"
+		CASE 48
+			RETURNF "Open Lace Shorts(White)"
+		CASE 49
+			RETURNF "Open Lace Shorts(Black)"
+		CASE 50
+			RETURNF "Open Lace Shorts(Red)"
+		CASE 100
+			RETURNF "Chastity Belt"
+		CASE 101
+			RETURNF "Trunks"
+		CASE 102
+			RETURNF "Briefs"
+		CASE 103
+			RETURNF "Boxer Shorts"
+		CASE 104
+			RETURNF "Bikini"
+		CASE 105
+			RETURNF "Micro-bikini"
+		CASE 106
+			RETURNF "Cow Bikini"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;ぱんつの形容詞
+;@return ぱんつの形容詞
+@PANTS_DESCRIPTION(ぱんつ)
+	#FUNCTIONS
+	#DIM DYNAMIC ぱんつ
+	SELECTCASE ぱんつ
+		CASE 2
+			RETURNF "Just enough to barely cover embarrassing place"
+		CASE 3
+			RETURNF "Children's"
+		CASE 4
+			RETURNF "Children's"
+		CASE 5
+			RETURNF "Children's"
+		CASE 6
+			RETURNF "Cute emblemed"
+		CASE 7
+			RETURNF "Cute emblemed"
+		CASE 8
+			RETURNF "Cute patterned"
+		CASE 9
+			RETURNF "Cute patterned"
+		CASE 10
+			RETURNF "Emphasizing the hip outline"
+		CASE 11
+			RETURNF "Emphasizing the hip outline"
+		CASE 12
+			RETURNF "Emphasizing the hip outline"
+		CASE 13
+			RETURNF "Emphasizing the hip outline"
+		CASE 14
+			RETURNF "Emphasizing the hip outline"
+		CASE 15
+			RETURNF "Emphasizing the hip outline"
+		CASE 16
+			RETURNF "Pretty and cute"
+		CASE 17
+			RETURNF "Pretty and cute"
+		CASE 18
+			RETURNF "Beautiful"
+		CASE 19
+			RETURNF "Simple designed"
+		CASE 20
+			RETURNF "Simple designed"
+		CASE 21
+			RETURNF "Simple designed"
+		CASE 22
+			RETURNF "Barely covering the butt crack"
+		CASE 23
+			RETURNF "Borderline obscene"
+		CASE 24
+			RETURNF "Slightly transparent"
+		CASE 25
+			RETURNF "Sensual and adult"
+		CASE 26
+			RETURNF "Combining cuteness and sexiness"
+		CASE 27
+			RETURNF "Tightening up around the thighs"
+		CASE 28
+			RETURNF "Pleasant to touch"
+		CASE 29
+			RETURNF "Transparent enough to show the embarrassing spot clearly"
+		CASE 30
+			RETURNF "Agitating and impure"
+		CASE 31
+			RETURNF "Boldly exposing most important places"
+		CASE 32
+			RETURNF "Boldly exposing most important places"
+		CASE 33
+			RETURNF "Boldly exposing most important places"
+		CASE 34
+			RETURNF "Barely holds on place, wanting to get untied"
+		CASE 35
+			RETURNF "Looks like an obscene invitation"
+		CASE 36
+			RETURNF "Barely holds on place, wanting to get untied"
+		CASE 37
+			RETURNF "Barely holds on place, wanting to get untied"
+		CASE 38
+			RETURNF "Barely holds on place, wanting to get untied"
+		CASE 39
+			RETURNF "Mysteriously appealing"
+		CASE 40
+			RETURNF "Dully shining with a vinyl textile"
+		CASE 41
+			RETURNF "Dully shining with a vinyl textile"
+		CASE 42
+			RETURNF "Decorating the exposed genitalia"
+		CASE 43
+			RETURNF "Decorating the exposed genitalia"
+		CASE 44
+			RETURNF "Decorating the exposed genitalia"
+		CASE 45
+			RETURNF "Comes with a pocket"
+		CASE 46
+			RETURNF "Comes with a pocket"
+		CASE 47
+			RETURNF "Comes with a pocket"
+		CASE 48
+			RETURNF "Has a pocket"
+		CASE 49
+			RETURNF "Has a pocket"
+		CASE 50
+			RETURNF "Has a pocket"
+		CASE 100
+			RETURNF "With a key hole that proves this thing is being managed by another person"
+		CASE 104
+			RETURNF "Dangerously suggestive"
+		CASE 105
+			RETURNF "Extremely obscene"
+	ENDSELECT
+
+;-------------------------------------------------------------------------------
+;下着１、下着２を判定して下着名取得
+@下着名１_２(奴隷)
+	#FUNCTIONS
+	#DIM DYNAMIC 奴隷
+	#DIM 下着１ = GETNUM(EQUIP,"下半身下着１")
+	#DIM 下着２ = GETNUM(EQUIP,"下半身下着２")
+	IF 0 != EQUIP:奴隷:下着１
+		RETURNF CLOTHNAME(下着１,EQUIP:奴隷:下着１)
+	ELSEIF 0 != EQUIP:奴隷:下着２
+		RETURNF CLOTHNAME(下着２,EQUIP:奴隷:下着２)
+	ELSE
+		RETURNF "下半身"
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;ノーパンかチェック
+@CHK_NO_PANTS(奴隷)
+	#FUNCTION
+	#DIM DYNAMIC 奴隷
+	#DIM 下着１ = GETNUM(EQUIP,"下半身下着１")
+	#DIM 下着２ = GETNUM(EQUIP,"下半身下着２")
+	IF 0 == EQUIP:奴隷:下着１ && 0 == EQUIP:奴隷:下着２
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;衣類の臭い
+;@return 衣類の臭い
+@IRUINAME_SMELL(くさい)
+	#FUNCTIONS
+	#DIM DYNAMIC くさい
+	IF DAY:2 == 1
+		RETURNF "Sweet-smelling(Worn all day)"
+	ELSEIF DAY:2 == 11
+		RETURNF "Sweet-smelling(Worn all day)"
+	ELSEIF DAY:2 == 21
+		RETURNF "Sweet-smelling(Worn all day)"
+	ELSEIF DAY:2 == 2
+		RETURNF "Sweaty(Worn two days)"
+	ELSEIF DAY:2 == 12
+		RETURNF "Sweaty(Worn two days)"
+	ELSEIF DAY:2 == 22
+		RETURNF "Sweaty(Worn two days)"
+	ELSEIF DAY:2 == 3
+		RETURNF "A bit stained(Worn three days)"
+	ELSEIF DAY:2 == 13
+		RETURNF "A bit stained(Worn three days)"
+	ELSEIF DAY:2 == 23
+		RETURNF "A bit stained(Worn three days)"
+	ELSEIF DAY:2 == 4
+		RETURNF "Soaked with a girlish scent(Worn four days)"
+	ELSEIF DAY:2 == 14
+		RETURNF "Soaked with a girlish scent(Worn four days)"
+	ELSEIF DAY:2 == 24
+		RETURNF "Soaked with a girlish scent(Worn four days)"
+	ELSEIF DAY:2 == 5
+		RETURNF "Smelling like female(Worn five days)"
+	ELSEIF DAY:2 == 15
+		RETURNF "Smelling like female(Worn five days)"
+	ELSEIF DAY:2 == 25
+		RETURNF "Smelling like female(Worn five days)"
+	ELSEIF DAY:2 == 6
+		RETURNF "Dirty(Worn six days)"
+	ELSEIF DAY:2 == 16
+		RETURNF "Dirty(Worn six days)"
+	ELSEIF DAY:2 == 26
+		RETURNF "Dirty(Worn six days)"
+	ELSEIF DAY:2 == 7
+		RETURNF "Covered with secretions and filth(Worn for seven days)"
+	ELSEIF DAY:2 == 17
+		RETURNF "Covered with secretions and filth(Worn for seven days)"
+	ELSEIF DAY:2 == 27
+		RETURNF "Covered with secretions and filth(Worn for seven days)"
+	ELSEIF DAY:2 == 8
+		RETURNF "Incredibly filthy and smelly(Worn for eight days)"
+	ELSEIF DAY:2 == 18
+		RETURNF "Incredibly filthy and smelly(Worn for eight days)"
+	ELSEIF DAY:2 == 28
+		RETURNF "Incredibly filthy and smelly(Worn for eight days)"
+	ELSEIF DAY:2 == 9
+		RETURNF "Stinky and worn(Worn for nine days)"
+	ELSEIF DAY:2 == 19
+		RETURNF "Stinky and worn(Worn for nine days)"
+	ELSEIF DAY:2 == 29
+		RETURNF "Stinky and worn(Worn for nine days)"
+	ELSEIF DAY:2 == 10
+		RETURNF "Ingrained with body fluid and with filth stretched on(Worn for ten days)"
+	ELSEIF DAY:2 == 20
+		RETURNF "Ingrained with body fluid and with filth stretched on(Worn for ten days)"
+	ELSEIF DAY:2 == 30
+		RETURNF "Ingrained with body fluid and with filth stretched on(Worn for ten days)"
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;寝間着着用
+@CLOTHES_Preset_NIGHTWEAR(着用者,下着変更=0)
+	#DIM 着用者
+	#DIM 下着変更
+	;まずは脱ぐ
+	CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+	SELECTCASE CFLAG:着用者:寝間着
+		CASE 0
+			;全裸の場合は強制的に下着も脱ぐ
+			CALL CLOTHES_Preset_NUDE(着用者,1)
+		CASE 1
+			;いつもの服(靴、アクセサリー無し)
+			;プリセット後、上下服以外を外す
+			SELECTCASE CFLAG:着用者:服装パターン
+				CASE 0
+					CALL CLOTHES_Preset_NUDE(着用者,下着変更)
+				CASE 1
+					CALL CLOTHES_Preset_MALE(着用者,下着変更)
+				CASE 2
+					CALL CLOTHES_Preset_FEMALE(着用者,下着変更)
+				CASE 4
+					CALL CLOTHES_Preset_MAID(着用者,下着変更)
+				CASE 100
+					CALL CLOTHES_Preset_CUSTOM(着用者,下着変更)
+				CASE 101
+					CALL CLOTHES_Preset_1(着用者,下着変更)
+				CASE 102
+					CALL CLOTHES_Preset_2(着用者,下着変更)
+				CASE 103
+					CALL CLOTHES_Preset_3(着用者,下着変更)
+				CASE 104
+					CALL CLOTHES_Preset_4(着用者,下着変更)
+				CASE 105
+					CALL CLOTHES_Preset_5(着用者,下着変更)
+				CASE 106
+					CALL CLOTHES_Preset_6(着用者,下着変更)
+				CASE 107
+					CALL CLOTHES_Preset_7(着用者,下着変更)
+				CASE 108
+					CALL CLOTHES_Preset_8(着用者,下着変更)
+				CASE 109
+					CALL CLOTHES_Preset_9(着用者,下着変更)
+				CASE 110
+					CALL CLOTHES_Preset_10(着用者,下着変更)
+				CASE 111
+					CALL CLOTHES_Preset_11(着用者,下着変更)
+				CASE 112
+					CALL CLOTHES_Preset_12(着用者,下着変更)
+				CASE 113
+					CALL CLOTHES_Preset_13(着用者,下着変更)
+			ENDSELECT
+			EQUIP:着用者:アクセサリ = 0
+			EQUIP:着用者:帽子 = 0
+			EQUIP:着用者:靴 = 0
+			EQUIP:着用者:靴下 = 0
+			EQUIP:着用者:手 = 0
+			;下着
+			;CASE 2
+			;下着・ズボン
+		CASE 3
+			EQUIP:着用者:下半身上着１ = 1
+			;Ｙシャツ・パンツ
+		CASE 4
+			EQUIP:着用者:上半身上着２ = 4
+			;パジャマ・ズボン
+		CASE 5
+			EQUIP:着用者:上半身上着２ = 7
+			EQUIP:着用者:下半身上着１ = 1
+			;Ｔシャツ・パンツ
+		CASE 6
+			EQUIP:着用者:上半身上着２ = 8
+			;タンクトップ・パンツ
+		CASE 7
+			EQUIP:着用者:上半身上着２ = 9
+			;ネグリジェ・パンツ
+		CASE 8
+			EQUIP:着用者:ワンピース = 3
+			;ベビードール・パンツ
+		CASE 9
+			EQUIP:着用者:ワンピース = 4
+			;寝巻・パンツ
+		CASE 10
+			EQUIP:着用者:着物 = 2
+	ENDSELECT
+	IF CFLAG:着用者:寝間着
+		;いつもの服以外の下着着用
+		IF CFLAG:着用者:寝間着 >= 2
+			IF HAS_VAGINA(着用者)
+				;貧乳以下は寝間着時に上半身下着を着用しない
+				;※但し、レミリアのような貧乳且つ私服で上半身下着を着用している場合は寝間着時も着用状態が維持される
+				IF TALENT:着用者:バストサイズ >= 0
+					CALL CLOTHES_Change_Bra(着用者,下着変更)
+				ENDIF
+				;女の子なら下着は女の子用を
+				CALL CLOTHES_Change_Knickers(着用者,下着変更)
+			ELSE
+				;男の子ならトランクス
+				EQUIP:着用者:下半身下着２ = 101
+			ENDIF
+		ENDIF
+	ENDIF
+	CFLAG:着用者:寝間着着用 = 1
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;寝間着のまま移動する際の靴を履く
+@CLOTHES_Preset_NIGHTWEAR_S(着用者)
+	#DIM 着用者
+	;私服時に靴を履かない場合はここでも靴を履かない
+	IF CFLAG:着用者:服装パターン != 0 && CFLAG:着用者:服装パターン != 108 && CFLAG:着用者:服装パターン != 109
+		SELECTCASE 着用者
+				;美鈴、咲夜、小悪魔は靴
+			CASE 1, 2, 4
+				EQUIP:着用者:靴 = 1
+				;他はスリッパ
+			CASEELSE
+				EQUIP:着用者:靴 = 4
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;-------------------------------------------------------------------------------
+;寝間着設定
+@寝間着設定
+	DRAWLINE
+	PRINTL Please set a sleepwear for sleeping characters. (Currently you can set sleepwear one time only)
+	PRINTL
+	FOR LOCAL, 1, CHARANUM
+		PRINTFORML [{LOCAL,2}] %CALLNAME:LOCAL% (%寝間着名称(CFLAG:LOCAL:寝間着)%)
+	NEXT
+	PRINTL [99] OK
+	INPUT
+	IF RESULT >= 1 && RESULT < CHARANUM
+		LOCAL:1 = RESULT
+		PRINTFORML Please set %CALLNAME:RESULT%'s sleepwear.
+		FOR LOCAL, 0, 開始時人数
+			PRINTFORML [{LOCAL,2}] %寝間着名称(LOCAL)%
+		NEXT
+		INPUT
+		IF RESULT >= 0 && RESULT <= 開始時人数
+			CFLAG:(LOCAL:1):寝間着 = RESULT
+		ENDIF
+	ELSEIF RESULT == 99
+		PRINTL Is this alright?
+		PRINTL [0] Yes
+		PRINTBUTTON "[ELSE] No", 1
+		ONEINPUT
+		SIF RESULT == 0
+			RETURN
+	ENDIF
+	RESTART
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;寝間着の名前
+;@return 寝間着の名前
+@寝間着名称(ARG)
+	#FUNCTIONS
+	SELECTCASE ARG
+		CASE 0
+			RETURNF "Naked"
+		CASE 1
+			RETURNF "Usual clothes (No shoes, no accessories)"
+		CASE 2
+			RETURNF "Underwear only (No bra if chest is small)"
+		CASE 3
+			RETURNF "Underwear/Trousers"
+		CASE 4
+			RETURNF "Dress Shirt/Panties"
+		CASE 5
+			RETURNF "Pajamas/Trousers"
+		CASE 6
+			RETURNF "T-shirt/Panties"
+		CASE 7
+			RETURNF "Tank Top/Pants"
+		CASE 8
+			RETURNF "Negligee/Pants"
+		CASE 9
+			RETURNF "Baby Doll/Pants"
+		CASE 10
+			RETURNF "Sleepwear/Pants"
+	ENDSELECT
+RETURNF "Unknown"

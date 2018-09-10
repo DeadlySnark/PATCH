@@ -1,0 +1,144 @@
+;------------------------------------------------
+;キャラコピー諸々
+;------------------------------------------------
+@CHARACROSS(ARG)
+
+ADDCHARA 0
+
+		FOR LOCAL,0,56
+		ABL:ARG:LOCAL = ABL:(ARG+1):LOCAL
+		NEXT
+		
+		FOR LOCAL,0,14
+		BASE:ARG:LOCAL = BASE:(ARG+1):LOCAL
+		NEXT
+		
+		FOR LOCAL,0,191
+		TALENT:ARG:LOCAL = TALENT:(ARG+1):LOCAL
+		NEXT
+		
+		FOR LOCAL,0,94
+		EXP:ARG:LOCAL = EXP:(ARG+1):LOCAL
+		NEXT
+		
+		CFLAG:ARG:7 = CFLAG:(ARG+1):7
+		
+		CFLAG:ARG:298 = CFLAG:(ARG+1):298
+		CFLAG:ARG:310 = CFLAG:(ARG+1):310
+		CFLAG:ARG:311 = CFLAG:(ARG+1):311
+		CFLAG:ARG:312 = CFLAG:(ARG+1):312
+		
+		NAME:ARG = %NAME:(ARG+1)%
+		CALLNAME:ARG = %CALLNAME:(ARG+1)%
+		NO:ARG = NO:(ARG+1)
+		
+		DELCHARA (ARG+1)
+
+RETURN 0	
+
+;------------------------------------------------
+@REVERSEMODE_1
+#DIM WK_ARG
+
+PRINTL You will start as a Scarlet Devil Mansion resident.
+$INPUT_LOOP
+PRINTL Who will you be?
+PRINTL [1] Meiling
+PRINTL [2] Koakuma
+PRINTL [3] Patchouli
+PRINTL [4] Sakuya
+PRINTL [5] Remilia
+PRINTL [6] Flandre
+PRINTL [7] Koakuma (Child)
+PRINTL [8] Cirno
+PRINTL [9] Daiyousei
+PRINTL [10] Marisa
+PRINTL [11] Reimu
+PRINTL [12] Rumia
+PRINTL [13] Alice
+	
+INPUT
+IF 0 < RESULT && RESULT < 開始時人数
+	$INPUT_LOOP_1
+	TARGET = RESULT
+	ADDCHARA RESULT
+	PRINTFORML You will play as %CALLNAME:1%. Is this alright?
+	PRINTL [0] Yes
+	PRINTL [1] I changed my mind
+		INPUT
+		IF RESULT == 0
+			DELCHARA 0
+			MASTER = 0
+			TARGET = MASTER
+			PLAYER = MASTER
+			WK_ARG = CFLAG:MASTER:311
+			CFLAG:MASTER:311 = 15
+			
+			FOR LOCAL,1,開始時人数
+				IF LOCAL == NO:MASTER
+					ADDCHARA 0
+					CFLAG:LOCAL:311 = WK_ARG
+				ELSE
+					ADDCHARA LOCAL
+				ENDIF
+			NEXT
+			RETURN 0
+		ELSEIF RESULT == 1
+			DELCHARA 1
+		GOTO INPUT_LOOP
+		
+		ELSE
+		GOTO INPUT_LOOP_1
+		
+		ENDIF
+		
+ELSE
+
+	GOTO INPUT_LOOP
+	
+ENDIF
+
+RETURN 0	
+	
+;---------------------------------------	
+;素質コピー
+;--------------------------------------
+@COPY_CUSTOM(ARG)
+PRINTL Whose talents would you like to copy?
+
+$INPUT_LOOP
+FOR LOCAL,0,CHARANUM
+	IF LOCAL == ARG
+		;
+	ELSE
+	PRINTFORML [{LOCAL,2}] - %CALLNAME:LOCAL%
+	ENDIF
+NEXT
+PRINTL [99] - Cancel
+	
+INPUT
+IF 0 < RESULT && RESULT < 開始時人数
+	TARGET = RESULT
+	$INPUT_LOOP_1
+	PRINTFORML %CALLNAME:TARGET%'s talents will be copied over to %CALLNAME:ARG%. Is this alright?
+	PRINTL [0] Yes
+	PRINTL [1] I changed my mind
+		INPUT
+		IF RESULT == 0
+			FOR LOCAL,0,191
+			TALENT:ARG:LOCAL = TALENT:TARGET:LOCAL
+			NEXT
+		PRINTL Successfully copied.
+		ELSEIF RESULT == 1
+			GOTO INPUT_LOOP
+		ELSE
+			GOTO INPUT_LOOP_1
+		ENDIF
+			
+ELSEIF RESULT == 99
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+RETURN 0	

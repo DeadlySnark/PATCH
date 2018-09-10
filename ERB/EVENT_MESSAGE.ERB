@@ -1,0 +1,744 @@
+;-------------------------------------------
+;調教後のテキスト
+;-------------------------------------------
+@PALAM_MESSAGE_C
+	;処女喪失 & Ａ処女喪失 & 童貞喪失 & ファストキッス
+	;see LOSEVIRGIN.ERB
+	;using TCVAR:Initiator to determine initiating partner
+	SIF !FLAG:9059
+		CALL LOSEVIRGINTEXT(FLAG:9060)
+	
+	
+	;Confess
+	IF SELECTCOM == 352
+		IF  TFLAG:193 > 0
+			PRINTFORML %CALLNAME:TARGET% accepted %YOUR(MASTER)% confession while blushing profusely.
+			PRINTL  
+			PRINTFORM You and %CALLNAME:TARGET% are now a 
+			SETCOLOR COLOR("PINK")
+			PRINT Couple
+			RESETCOLOR
+			PRINTFORMW !
+			PRINTL  
+		ELSE
+			PRINTFORMW %CALLNAME:TARGET% looks extremely puzzled...
+			PRINTL  
+		ENDIF
+	ENDIF
+	
+	;何もしない
+	IF SELECTCOM == 21
+		SIF PALAM:欲情 >= PALAMLV:3
+			PRINTFORM %CALLNAME:TARGET% breathes heavily
+		SIF PALAM:欲情 >= PALAMLV:5
+			PRINT  as %HE_SHE(TARGET)% looks at you expectantly
+		SIF PALAM:欲情 >= PALAMLV:3 && TEQUIP:媚薬
+			PRINT  while shivering from the overflowing desire and hugging %HIS_HER(TARGET)% trembling body
+		SIF PALAM:欲情 >= PALAMLV:4
+			PRINT  and constantly rubs %HIS_HER(TARGET)% %THIGHS(TARGET)% together
+		;SIF PALAM:欲情 >= PALAMLV:3
+		;	PRINTL ている……
+		PRINTL ...
+	ENDIF
+	;フェラで射精後
+	IF TFLAG:8 && NOWEX:PLAYER:射精
+		LOCAL = MASTER_POSE(4,1,1)
+		PRINT After that, 
+		IF SELECTCOM == 511
+			PRINTFORML %CALLNAME:TARGET% throughly licked %YOUR(PLAYER)% and %CALLNAME:ASSI%'s %PENIS_APPEAR(PLAYER,1)% alternately, cleaning them from the dirt...
+		ELSE
+			IF TFLAG:8 == 3
+				PRINTFORM %CALLNAME:LOCAL% and %CALLNAME:TARGET% 
+			ELSEIF TFLAG:8 == 2
+				PRINTFORM %CALLNAME:LOCAL% 
+			ELSEIF TFLAG:8 == 1
+				PRINTFORM %CALLNAME:TARGET% 
+			ENDIF
+			;SIF NOWEX:PLAYER:射精
+			;	PRINT 残った精液を吸い取りながら、
+			PRINTFORM throughly cleaned %YOUR(PLAYER)% %PENIS_APPEAR(PLAYER)% from the dirt
+			SIF NOWEX:PLAYER:射精
+				PRINTFORM ,\nWhile licking off the remaining %SAMEN_DESCRIPTION(PLAYER)% off of it
+			PRINTL ...
+		ENDIF
+		SIF TFLAG:8 == 3 && NOWEX:PLAYER:射精
+			PRINTL The two of them are licking each other's mouths full of %SAMEN_DESCRIPTION(PLAYER)%, as if it wasn't enough for them...
+		STAIN:PLAYER:Ｐ = 汚れ_ペニス
+	ENDIF
+
+;-------------------------------------------
+;パラメータ変化時テキスト　作成中
+;-------------------------------------------
+@PALAM_MESSAGE_D
+
+;-------------------------------------------------------------------------------
+;欲情がLV2になったとき　などなど
+;-------------------------------------------
+;刻印取得時のテキスト
+;-------------------------------------------
+@MARK_MESSAGE(奴隷)
+	#DIM 奴隷
+	TFLAG:刻印取得時従順変化済みフラグ = 0
+	SETCOLOR 199, 255, 199
+	CALL MARK_MESSAGE_A(奴隷)
+	SETCOLOR 255, 150, 150
+	CALL MARK_MESSAGE_P(奴隷)
+	SETCOLOR 100, 150, 255
+	CALL MARK_MESSAGE_S(奴隷)
+	SETCOLOR 247,171,166
+	CALL MARK_MESSAGE_R(奴隷)
+	RESETCOLOR
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@MARK_MESSAGE_A(奴隷)
+	#DIM 奴隷
+	;苦痛刻印
+	SELECTCASE TCVAR:奴隷:苦痛刻印取得
+		CASE 1
+			PRINTFORML %CALLNAME:奴隷%'s face was distorted in pain, but %HE_SHE(奴隷)% endured it...
+		CASE 2
+			PRINTFORML %CALLNAME:奴隷% cried in pain for a while...
+		CASE 3
+			PRINTFORML %CALLNAME:奴隷% cried and screamed from feeling so much pain...
+		CASEELSE
+			RETURN 0
+	ENDSELECT
+	IF CFLAG:奴隷:苦痛刻印主人 != MASTER
+		SETCOLOR 色設定_状態_ＮＴＲ
+	ENDIF
+	;PRINTFORML %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:苦痛刻印主人)+"によって"+CALLNAME:奴隷+"は苦痛刻印LV"+TOSTR(MARK:奴隷:苦痛刻印)+"を刻まれた"%
+	PRINTFORML %CALLNAME:奴隷% got a Pain Mark LV%TOSTR(MARK:奴隷:苦痛刻印)% as a result of actions from %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:苦痛刻印主人)%.
+	RESETCOLOR
+	IF TCVAR:奴隷:苦痛刻印取得 == 1
+		PRINTFORML %CALLNAME:奴隷% got Pain Mark LV1!
+	ELSEIF TCVAR:奴隷:苦痛刻印取得 == 2
+		PRINTFORML %CALLNAME:奴隷% got Pain Mark LV2!
+		IF TFLAG:25 == 1 && TFLAG:刻印取得時従順変化済みフラグ == 0
+			PRINTL And %HIS_HER(奴隷)% Obedience has increased to LV1!
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ENDIF
+	ELSEIF TCVAR:奴隷:苦痛刻印取得 == 3
+		PRINTFORML %CALLNAME:奴隷% got Pain Mark LV3!
+		IF TFLAG:25 == 1 && TFLAG:刻印取得時従順変化済みフラグ == 0
+			PRINTL And %HIS_HER(奴隷)% Obedience has increased to LV1!
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ENDIF
+		IF TALENT:PLAYER:サド
+			PRINTFORML 【%YOUR(PLAYER,1)% sadism】
+			CALL COLORMESSAGE(@"Abnormal Experience＋２ (%CALLNAME:奴隷%)",C_RED,1)
+		ELSEIF TALENT:PLAYER:針さばき && SELECTCOM == 104
+			PRINTFORML 【%YOUR(PLAYER,1)% Needle Skill】
+			CALL COLORMESSAGE(@"Abnormal Experience＋２ (%CALLNAME:奴隷%)",C_RED,1)
+		ELSE
+			CALL COLORMESSAGE(@"Abnormal Experience＋１ (%CALLNAME:奴隷%)",C_RED,1)
+		ENDIF
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@MARK_MESSAGE_P(奴隷)
+	#DIM 奴隷
+	;快楽刻印
+	SELECTCASE TCVAR:奴隷:快楽刻印取得
+		CASE 1
+			PRINTFORML %CALLNAME:奴隷%'s body trembled from the intense amount of pleasure that it just learned...
+		CASE 2
+			PRINTFORML %CALLNAME:奴隷%'s face melted from the lingering pleasure...
+		CASE 3
+			PRINTFORML Looks like the extreme amount of pleasure that %CALLNAME:奴隷% received was permanently engraved into %HIS_HER(奴隷)% body and soul...
+		CASEELSE
+			RETURN 0
+	ENDSELECT
+	IF CFLAG:奴隷:快楽刻印主人 != MASTER
+		SETCOLOR 色設定_状態_ＮＴＲ
+	ENDIF
+	;PRINTFORML %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:快楽刻印主人)+"によって"+CALLNAME:奴隷+"は快楽刻印LV"+TOSTR(MARK:奴隷:快楽刻印)+"を刻まれた"%
+	PRINTFORML %CALLNAME:奴隷% got a Pleasure Mark LV%TOSTR(MARK:奴隷:快楽刻印)% as a result of actions from %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:快楽刻印主人)%.
+	RESETCOLOR
+	IF TCVAR:奴隷:快楽刻印取得 == 3
+		IF TFLAG:25 == 1 && TFLAG:刻印取得時従順変化済みフラグ == 0
+			PRINTL And %HIS_HER(奴隷)% Obedience has increased to LV1!
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ENDIF
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@MARK_MESSAGE_S(奴隷)
+	#DIM 奴隷
+	;屈服刻印
+	SELECTCASE TCVAR:奴隷:屈服刻印取得
+		CASE 11
+			;PRINTFORML %CALLNAME:奴隷+"は思わず可愛らしい嬌声を上げたかと思うと、顔を赤くして"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"から目を逸らした……"%
+			PRINTFORML %CALLNAME:奴隷% accidentally raised %HIS_HER(奴隷)% lovely voice, 
+			PRINTFORML But then %HE_SHE(奴隷)% became silent and looked away from %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)% while blushing profusely...
+		CASE 12
+			;PRINTFORML %CALLNAME:奴隷+"は快楽に震えながら、"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"に物欲しげな視線を送っていた……"%
+			PRINTFORML Trembling from pleasure, %CALLNAME:奴隷% looked at %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)% with the incredible desire...
+		CASE 13
+			;PRINTFORML %CALLNAME:奴隷+"は快楽に乱れながらも、"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"にさらなる行為を懇願した……"%
+			PRINTFORML Though %CALLNAME:奴隷% was already absorbed by pleasure, %HE_SHE(奴隷)% begged %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)% for more...
+		CASE 21
+			;PRINTFORML %CALLNAME:奴隷+"は"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"を見ると、小さな悲鳴をあげていた……"%
+			PRINTFORML When %CALLNAME:奴隷% gazed at %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)%, %HE_SHE(奴隷)% let out a quiet scream...
+		CASE 22
+			;PRINTFORML %CALLNAME:奴隷+"は体を縮ませて、"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"に怯えの篭った視線を送っている……"%
+			PRINTFORML %CALLNAME:奴隷% tightened %HIS_HER(奴隷)% body, looking at %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)% with a frightened gaze...
+		CASE 23
+			;PRINTFORML %CALLNAME:奴隷+"は震えながら何度も何度も"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"に許しを請い続けていた……"%
+			PRINTFORML %CALLNAME:奴隷% kept asking %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)% for forgiveness over and over again while trembling...
+		CASE 31
+			;PRINTFORML %CALLNAME:奴隷+"は媚びるような視線を"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"に投げかけた……"%
+			PRINTFORML %CALLNAME:奴隷%'s raised a flirtatious gaze at %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)%...
+		CASE 32
+			;PRINTFORML %CALLNAME:奴隷+"はもっと"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"に喜んでもらいたいようだ……"%
+			PRINTFORML Seems like %CALLNAME:奴隷% wants to please %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)% even more now...
+		CASE 33
+			;PRINTFORML %CALLNAME:奴隷+"はどこか陶酔とした表情でじっと"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"を見つめている……"%
+			PRINTFORML %CALLNAME:奴隷% stared at %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)% intently with somewhat entranced expression...
+		CASEELSE
+			RETURN 0
+	ENDSELECT
+	IF CFLAG:奴隷:屈服刻印主人 != MASTER
+		SETCOLOR 色設定_状態_ＮＴＲ
+	ENDIF
+	;PRINTFORML %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)+"によって"+CALLNAME:奴隷+"は屈服刻印LV"+TOSTR(MARK:奴隷:屈服刻印)+"を刻まれた"%
+	PRINTFORML %CALLNAME:奴隷% got a Submission Mark LV%TOSTR(MARK:奴隷:屈服刻印)% as a result of actions from %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:屈服刻印主人)%.
+	RESETCOLOR
+	IF TCVAR:奴隷:屈服刻印取得 == 2
+		IF TFLAG:25 == 1 && TFLAG:刻印取得時従順変化済みフラグ == 0
+			PRINTL And %HIS_HER(奴隷)% Obedience has increased to LV1!
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ENDIF
+	ELSEIF TCVAR:奴隷:屈服刻印取得 == 3
+		IF TFLAG:25 == 1 && TFLAG:刻印取得時従順変化済みフラグ == 0
+			PRINTL And %HIS_HER(奴隷)% Obedience has increased to LV2!
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ENDIF
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;FIXME:関数の説明を書いてください
+;@return 1:xxx,0:xxx
+@MARK_MESSAGE_R(奴隷)
+	#DIM 奴隷
+	;反発刻印
+	SELECTCASE TCVAR:奴隷:反発刻印取得
+		CASE 1
+			;PRINTFORML %CALLNAME:奴隷+"は鋭い視線を"+GET_DESCRIPTIVE_NAME(CFLAG:奴隷:反発刻印主人)+"に向けている……"%
+			PRINTFORML %CALLNAME:奴隷% glared at %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:反発刻印主人)% with a sharp look in %HIS_HER(奴隷)% eyes...
+		CASE 2
+			;PRINTFORML %CALLNAME:奴隷+"の顔には怒りが滲んでいる……"%
+			PRINTFORML %CALLNAME:奴隷%'s face shows an extreme amount of anger...
+		CASE 3
+			;PRINTFORML %CALLNAME:奴隷+"は憤怒に顔を歪ませて、恨み言を呟いている……"%
+			PRINTFORML %CALLNAME:奴隷%'s anger distorted %HIS_HER(奴隷)% face as %HE_SHE(奴隷)% grumbled something...
+		CASEELSE
+			RETURN 0
+	ENDSELECT
+	IF CFLAG:奴隷:反発刻印主人 != MASTER
+		SETCOLOR 色設定_状態_ＮＴＲ
+	ENDIF
+	;PRINTFORML %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:反発刻印主人)+"によって"+CALLNAME:奴隷+"は反発刻印LV"+TOSTR(MARK:奴隷:反発刻印)+"を刻まれた"%
+	PRINTFORML %CALLNAME:奴隷% got a Hate Mark LV%TOSTR(MARK:奴隷:反発刻印)% as a result of actions from %GET_DESCRIPTIVE_NAME(CFLAG:奴隷:反発刻印主人)%.
+	RESETCOLOR
+	IF TCVAR:奴隷:反発刻印取得 == 3
+		IF TFLAG:25 == 1
+			PRINTL And %HIS_HER(奴隷)% Obedience became LV0...
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ELSEIF TFLAG:25 == 2 && TFLAG:刻印取得時従順変化済みフラグ == 0
+			PRINTL And %HIS_HER(奴隷)% Obedience became LV1...
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ENDIF
+	ELSEIF TCVAR:奴隷:反発刻印取得 == 3
+		IF TFLAG:25 == 1 && TFLAG:刻印取得時従順変化済みフラグ == 0
+			PRINTL And %HIS_HER(奴隷)% Obedience became LV0...
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ELSEIF TFLAG:25 == 2 && TFLAG:刻印取得時従順変化済みフラグ == 0
+			PRINTL And %HIS_HER(奴隷)% Obedience became LV2...
+			TFLAG:刻印取得時従順変化済みフラグ = 1
+		ENDIF
+		CALL COLORMESSAGE(@"Abnormal Experience＋１ (%CALLNAME:奴隷%)",C_RED,1)
+	ENDIF
+
+;-------------------------------------------
+;イベント口上テキスト
+;-------------------------------------------
+@EVENT_MESSAGE
+
+;-------------------------------------------------
+;関数名:OPPAI_DESCRIPTION
+;概　要:言葉でなく心で理解しろ
+;引　数:ARG…キャラ登録番号
+;戻り値:夢
+;備　考:文中関数
+;使用例:%OPPAI_DESCRIPTION(TARGET)%
+;例文:胸
+;ARG:1を1にすると状態に応じた形容詞がつく
+;使用例:%OPPAI_DESCRIPTION(TARGET,1)%
+;例文:はちきれんばかりの乳塊
+;条件文に TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+;を指定しているのは合体中の描写
+;-------------------------------------------------
+@OPPAI_DESCRIPTION(ARG,ARG:1)
+#FUNCTIONS
+VARSET LOCALS
+IF ARG:1
+;	IF FLAG:Look表示用乳房
+;		;爆乳
+;		IF TALENT:ARG:バストサイズ == 2
+;			LOCALS += "bursting "
+;		;巨乳
+;		ELSEIF TALENT:ARG:バストサイズ == 1
+;			LOCALS += "plump "
+;		;並乳
+;		ELSEIF TALENT:ARG:バストサイズ == 0
+;			LOCALS += "nice "
+;		;貧乳
+;		ELSEIF TALENT:ARG:バストサイズ == -1
+;			LOCALS += "small-sized "
+;		;絶壁
+;		ELSEIF TALENT:ARG:バストサイズ == -2
+;			LOCALS += "lovely "
+;		ELSE
+;			LOCALS += "ERROR: unexpected breast size...({TALENT:ARG:バストサイズ})"
+;		ENDIF
+;	ELSE
+		;爆乳
+		IF TALENT:ARG:バストサイズ == 2
+			IF TALENT:PLAYER:バストサイズ == -2 && RAND:5 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "enviously big and wildly bouncing "
+				ELSE
+					LOCALS += "enviously big "
+				ENDIF
+			ELSEIF RAND:4 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "bouncing like on a running cow "
+				ELSE
+					LOCALS += "cow-like "
+				ENDIF
+			ELSEIF RAND:3 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "vigorously jumping, vast "
+				ELSE
+					LOCALS += "voluptuous "
+				ENDIF
+			ELSEIF RAND:2 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "shaking like crazy "
+				ELSE
+					LOCALS += "overdeveloped "
+				ENDIF
+			ELSE
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "violently rocking, pillow-like "
+				ELSE
+					LOCALS += "too large to hold in hands "
+				ENDIF
+			ENDIF
+		;巨乳
+		ELSEIF TALENT:ARG:バストサイズ == 1
+			IF RAND:3 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "shaking, hand-overflowing "
+				ELSE
+					LOCALS += "hand-overflowing "
+				ENDIF
+			ELSEIF RAND:2 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "squeezable and trembling "
+				ELSE
+					LOCALS += "ripe and squeezable "
+				ENDIF
+			ELSE
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "jiggling and swinging left and right "
+				ELSE
+					LOCALS += "jiggling "
+				ENDIF
+			ENDIF
+		;並乳
+		ELSEIF TALENT:ARG:バストサイズ == 0
+			IF RAND:4 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "softly shivering and nicely ripened "
+				ELSE
+					LOCALS += "nicely ripened "
+				ENDIF
+			ELSEIF RAND:3 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "shaking, palmable and "
+				ELSE
+					LOCALS += "palmable "
+				ENDIF
+			ELSEIF RAND:2 == 0
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "quivering and perfectly balanced "
+				ELSE
+					LOCALS += "perfectly balanced, symmetric "
+				ENDIF
+			ELSE
+				IF TEQUIP:50 == PLAYER || TEQUIP:51 == PLAYER
+					LOCALS += "jumping and nicely shaped "
+				ELSE
+					LOCALS += "nicely shaped "
+				ENDIF
+			ENDIF
+		;絶壁
+		ELSEIF TALENT:ARG:バストサイズ == -2
+			IF RAND:4 == 0
+				LOCALS += "paper-thin, board-like "
+			ELSEIF RAND:3 == 0
+				LOCALS += "only slightly bulging and sensitive "
+			ELSEIF RAND:2 == 0
+				LOCALS += "very flat "
+			ELSE
+				LOCALS += "insignificant "
+			ENDIF
+		;貧乳
+		ELSEIF TALENT:ARG:バストサイズ == -1
+			IF RAND:2 == 0
+				LOCALS += "a bit too small "
+			ELSE
+				LOCALS += "lovely "
+			ENDIF
+		;想定外
+		ELSE
+			LOCALS += "ERROR: unexpected breast size...({TALENT:ARG:バストサイズ})"
+		ENDIF
+	ENDIF
+;ENDIF
+;IF FLAG:Look表示用乳房
+	;絶壁
+;	IF TALENT:ARG:バストサイズ == -2
+;		LOCALS += "nipples"
+	;貧乳~爆乳
+;	ELSEIF TALENT:ARG:バストサイズ >= -1 && TALENT:ARG:バストサイズ <= 2
+;		LOCALS += "chest"
+;	ELSE
+;		LOCALS += "ERROR: unexpected breast size...({TALENT:ARG:バストサイズ})"
+;	ENDIF
+;ELSE
+	;爆乳
+	IF TALENT:ARG:バストサイズ == 2 && TALENT:ARG:母乳体質 && TALENT:ARG:淫乳 && TALENT:ARG:マゾ && RAND:27 == 0
+		LOCALS += "lactating, lewd and insatiable "
+	ELSEIF TALENT:ARG:バストサイズ == 2 && TALENT:ARG:母乳体質 && RAND:26 == 0
+		LOCALS += "milk containing "
+	ELSEIF TALENT:ARG:バストサイズ == 2 && (TALENT:ARG:母乳体質) && RAND:25 == 0
+		LOCALS += "female bitch's milky "
+	ELSEIF TALENT:ARG:バストサイズ == 2 && TALENT:ARG:淫乳 && RAND:24 == 0
+		LOCALS += "huge, lewd "
+	ELSEIF TALENT:ARG:バストサイズ == 2 && TALENT:ARG:体型 == 1 && RAND:23 == 0
+		LOCALS += "gigantic "
+	ELSEIF TALENT:ARG:バストサイズ == 2 && RAND:22 == 0
+		LOCALS += "massive "
+	ELSEIF TALENT:ARG:バストサイズ == 2 && RAND:21 == 0
+		LOCALS += "spacious "
+	ELSEIF TALENT:ARG:バストサイズ == 2 && RAND:20 == 0
+		LOCALS += "huge "
+	ELSEIF TALENT:ARG:バストサイズ == 2 && RAND:19 == 0
+		LOCALS += "motherly "
+	;巨乳
+	ELSEIF TALENT:ARG:バストサイズ == 1 && RAND:18 == 0
+		LOCALS += "heavy "
+	ELSEIF TALENT:ARG:バストサイズ == 1 && RAND:17 == 0
+		LOCALS += "big "
+	ELSEIF TALENT:ARG:バストサイズ == 1 && RAND:16 == 0
+		LOCALS += "plump "
+	ELSEIF TALENT:ARG:バストサイズ == 1 && RAND:15 == 0
+		LOCALS += "soft "
+	ELSEIF TALENT:ARG:バストサイズ >= 1 && RAND:14 == 0
+		LOCALS += "full "
+	;絶壁
+	ELSEIF TALENT:ARG:バストサイズ == -2 && TALENT:ARG:性別 != 2 && RAND:13 == 0
+		LOCALS += "smooth "
+	ELSEIF TALENT:ARG:バストサイズ == -2 && TALENT:ARG:性別 != 2 && RAND:12 == 0
+		LOCALS += "almost non-existent "
+	ELSEIF TALENT:ARG:バストサイズ == -2 && TALENT:ARG:性別 != 2 && RAND:11 == 0
+		LOCALS += "nearly zero-sized "
+	;貧乳
+	ELSEIF TALENT:ARG:バストサイズ == -1 && RAND:10 == 0
+		LOCALS += "cute "
+	ELSEIF TALENT:ARG:バストサイズ == -1 && RAND:9 == 0
+		LOCALS += "modest "
+	ELSEIF TALENT:ARG:バストサイズ == -1 && RAND:8 == 0
+		LOCALS += "undersized "
+	ELSEIF TALENT:ARG:バストサイズ == -1 && RAND:7 == 0
+		LOCALS += "perky "
+	ELSEIF TALENT:ARG:バストサイズ == -1 && RAND:6 == 0
+		LOCALS += "thin "
+	;乳
+	ELSEIF TALENT:ARG:バストサイズ == 0 && RAND:5 == 0
+		LOCALS += "average "
+	ELSEIF TALENT:ARG:バストサイズ == 0 && RAND:4 == 0
+		LOCALS += "normal-sized "
+		
+	ELSEIF TALENT:ARG:バストサイズ >= 0 && RAND:3 == 0
+		LOCALS += "well-shaped "
+	ELSEIF TALENT:ARG:バストサイズ >= 0 && RAND:2 == 0
+		LOCALS += "nice "
+	ELSE
+		;念のため男の乳書いとく
+		IF TALENT:ARG:バストサイズ == -2 && TALENT:ARG:性別 == 2
+			IF ABL:ARG:戦闘能力 >= 6
+				LOCALS += "ripped chest"
+			ELSEIF ABL:ARG:戦闘能力 >= 4
+				LOCALS += "well-built chest"
+			ELSEIF ABL:ARG:戦闘能力 <= 1
+				LOCALS += "thin chest"
+			ELSE
+				LOCALS += "chest"
+			ENDIF
+		ELSEIF !(TALENT:ARG:バストサイズ >= -2 && TALENT:ARG:バストサイズ <= 2)
+			LOCALS += "ERROR: unexpected breast size...({TALENT:ARG:バストサイズ})"
+		ENDIF
+	ENDIF
+	IF TALENT:ARG:バストサイズ == 0
+		SELECTCASE RAND:6
+		CASE 0
+			LOCALS += "breasts"
+		CASE 1
+			LOCALS += "chest"
+		CASE 2
+			LOCALS += "tits"
+		CASE 3
+			LOCALS += "boobs"
+		CASE 4
+			LOCALS += "bust"
+		CASE 5
+			LOCALS += "bosom"
+		ENDSELECT
+	ELSEIF TALENT:ARG:バストサイズ > 0
+		SELECTCASE RAND:13
+		CASE 0
+			LOCALS += "breasts"
+		CASE 1
+			LOCALS += "chest"
+		CASE 2
+			LOCALS += "tits"
+		CASE 3
+			LOCALS += "boobs"
+		CASE 4
+			LOCALS += "bust"
+		CASE 5
+			LOCALS += "jugs"
+		CASE 6
+			LOCALS += "boobs"
+		CASE 7
+			LOCALS += "rack"
+		CASE 8
+			LOCALS += "love-pillows"
+		CASE 9
+			LOCALS += "udders"
+		CASE 10
+			LOCALS += "cow tits"
+		CASE 11
+			LOCALS += "cleavage"
+		CASE 12
+			LOCALS += "bosom"
+		ENDSELECT
+	ELSEIF TALENT:ARG:バストサイズ <= -1
+		SELECTCASE RAND:3
+		CASE 0
+			LOCALS += "breasts"
+		CASE 1
+			LOCALS += "chest"
+		CASE 2
+			LOCALS += "bosom"
+		ENDSELECT
+	ELSE
+		LOCALS += "ERROR: unexpected breast size...({TALENT:ARG:バストサイズ})"
+	ENDIF
+		
+;ENDIF
+RETURNF LOCALS
+
+;-------------------------------------------------
+;関数名:SAMEN_DESCRIPTION
+;引　数:ARG…キャラ登録番号
+;備　考:文中関数
+;ARG:1を1にすると素質に応じた形容詞がつく
+;-------------------------------------------------
+@SAMEN_DESCRIPTION(ARG,ARG:1)
+#FUNCTIONS
+VARSET LOCALS
+
+;IF TALENT:ARG:濃厚精液 && ARG:1
+;	SELECTCASE RAND:7
+;		CASE 0
+;			LOCALS += "exceptionally dense "
+;		CASE 1
+;			LOCALS += "semi-solid "
+;		CASE 2
+;			LOCALS += "incredibly virile "
+;		CASE 3
+;			LOCALS += "adhesive "
+;		CASE 4
+;			LOCALS += "very thick "
+;		CASE 5
+;			LOCALS += "fertile "
+;		CASE 6
+;			LOCALS += "filled with countless spermatozoa "
+;	ENDSELECT
+;	ELSE
+	SELECTCASE RAND:26
+		CASE 0
+			LOCALS += "smelling "
+		CASE 1
+			LOCALS += "stinky "
+		CASE 2 TO 6
+			LOCALS += "warm "
+		CASE 7 TO 11
+			LOCALS += "hot "
+		CASE 12 TO 16
+			LOCALS += "sticky "
+		CASE 16 TO 19
+			LOCALS += "thick "
+		CASE 20
+			LOCALS += "white "
+		CASE 21
+			LOCALS += "viscous "
+		CASEELSE
+	ENDSELECT
+;ENDIF
+
+SELECTCASE RAND:13
+CASE 0 TO 4
+	LOCALS += "semen"
+CASE 5 TO 9
+	LOCALS += "cum"
+CASE 10
+	LOCALS += "spunk"
+CASE 11
+	LOCALS += "seed"
+CASE 12
+	LOCALS += "sperm"
+CASE 13
+	LOCALS += "jizz"	
+CASE 14
+	LOCALS += "baby juice"		
+ENDSELECT
+RETURNF LOCALS
+
+;-------------------------------------------------
+;関数名:HIP
+;概　要:三番煎じ上等
+;引　数:ARG…キャラ登録番号
+;戻り値:
+;備　考:文中関数
+;使用例:%HIP(TARGET)%
+;-------------------------------------------------
+@HIP(ARG)
+#FUNCTIONS
+VARSET LOCALS
+
+IF TALENT:ARG:体型 == -2
+	SELECTCASE RAND:3
+	CASE 0
+		LOCALS = small and smooth %ASS()%
+	CASE 1
+		LOCALS = lovely %ASS()%
+	CASE 2
+		LOCALS = cute %ASS()%
+	ENDSELECT
+ELSEIF TALENT:ARG:バストサイズ < 0
+	SELECTCASE RAND:4
+	CASE 0
+		LOCALS = slim %ASS()%
+	CASE 1
+		LOCALS = slender %ASS()%
+	CASE 2
+		LOCALS = small %ASS()%
+	CASE 3
+		LOCALS = thin %ASS()%
+	ENDSELECT
+ELSEIF TALENT:ARG:バストサイズ > 0
+	SELECTCASE RAND:5
+	CASE 0
+		LOCALS = childbearing hips
+	CASE 1
+		LOCALS = well-built %ASS()%
+	CASE 2
+		LOCALS = ample %ASS()%
+	CASE 3
+		LOCALS = plump %ASS()%
+	CASE 4
+		LOCALS = voluptuous %ASS()%
+	ENDSELECT
+ELSE
+	SELECTCASE RAND:3
+	CASE 0
+		LOCALS = lovely and toned %ASS()%
+	CASE 1
+		LOCALS = tender %ASS()%
+	CASE 2
+		LOCALS = tight %ASS()%
+	ENDSELECT
+ENDIF
+RETURNF LOCALS
+
+;-------------------------------------------------
+;関数名:THIGHS
+;概　要:太ももは英語でTHIGHSと言うらしい、HIPのパクリ
+;引　数:ARG…キャラ登録番号
+;戻り値:
+;備　考:文中関数
+;使用例:%THIGHS(TARGET)%
+;-------------------------------------------------
+@THIGHS(ARG)
+#FUNCTIONS
+VARSET LOCALS
+
+IF TALENT:ARG:体型 == -2
+	SELECTCASE RAND:3
+	CASE 0
+		LOCALS = small and smooth
+	CASE 1
+		LOCALS = slender
+	CASE 2
+		LOCALS = slim
+	ENDSELECT
+ELSEIF TALENT:ARG:バストサイズ < 0
+	SELECTCASE RAND:3
+	CASE 0
+		LOCALS = thin
+	CASE 1
+		LOCALS = smooth and slim
+	CASE 2
+		LOCALS = fine and smooth
+	ENDSELECT
+ELSEIF TALENT:ARG:バストサイズ > 0
+	SELECTCASE RAND:3
+	CASE 0
+		LOCALS = well-built
+	CASE 1
+		LOCALS = sexy
+	CASE 2
+		LOCALS = plump
+	CASE 3
+		LOCALS = voluptuous
+	ENDSELECT
+ELSE
+	SELECTCASE RAND:3
+	CASE 0
+		LOCALS = lovely and toned
+	CASE 1
+		LOCALS = tender
+	CASE 2
+		LOCALS = soft
+	ENDSELECT
+ENDIF
+SELECTCASE RAND:3
+	CASE 0
+		LOCALS += " thighs"
+	CASE 1
+		LOCALS += " hips"
+	CASE 2
+		LOCALS += " sides"
+ENDSELECT
+RETURNF LOCALS

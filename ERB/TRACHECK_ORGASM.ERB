@@ -1,0 +1,524 @@
+;-------------------------------------------------------------------------------
+;β’Έn‚Μ—‚Θ‚Η
+;-------------------------------------------------
+;β’Έ—
+;-------------------------------------------------
+@ORGASM_ADD(“z—κ,’²‹³Ò=0)
+	#DIM “z—κ
+	#DIM ’²‹³Ò
+	#DIM β’Έ—v‹W”
+	#DIM ‘‡‰υ΄’l
+	#DIM •”Κ‰υ΄’l
+	#DIM β’Έσ•β
+	#DIM ‚`β’Έ‹­“x
+	#DIM ‚aβ’Έ‹­“x
+	#DIM ‚bβ’Έ‹­“x
+	#DIM ‚uβ’Έ‹­“x
+	#DIM •‚‹C‰υy‹­“x
+	
+	β’Έσ•β = 0
+	β’Έσ•β += ((CUP:“z—κ:‰υ‚b + PALAM:“z—κ:‰υ‚b) >= PALAMLV:4)
+	β’Έσ•β += ((CUP:“z—κ:‰υ‚u + PALAM:“z—κ:‰υ‚u) >= PALAMLV:4)
+	β’Έσ•β += ((CUP:“z—κ:‰υ‚` + PALAM:“z—κ:‰υ‚`) >= PALAMLV:4)
+	β’Έσ•β += ((CUP:“z—κ:‰υ‚a + PALAM:“z—κ:‰υ‚a) >= PALAMLV:4)
+	SELECTCASE β’Έσ•β
+		CASE 4
+			‘‡‰υ΄’l = 7000
+		CASE 3
+			‘‡‰υ΄’l = 5000
+		CASE 2
+			‘‡‰υ΄’l = 3000
+		CASE 1
+			‘‡‰υ΄’l = 2000
+	ENDSELECT
+	;‹”F«‚Μ–β‘θ‚Εc‚µ‚Δ‚¨‚­
+	‚bβ’Έ‹­“x = 0
+	‚uβ’Έ‹­“x = 0
+	‚`β’Έ‹­“x = 0
+	‚aβ’Έ‹­“x = 0
+	
+	;–K–βÒΘO‚Μ’²‹³‚ΕA‰υyσ‚ζ‚θ‚ΰ•‚‹C‰υyσ‚Μƒƒxƒ‹‚ª‚‚Άκ‡Aβ’Έ‚µ‚Γ‚η‚­‚Θ‚ι
+	IF ’²‹³Ò != 998 && GET_MARK_LEVEL(“z—κ,σ”Τ†_‰υyσ,’²‹³Ò) < MARK:“z—κ:•‚‹C‰υyσ
+		β’Έ—v‹W” = MAX( 100 * MARK:“z—κ:•‚‹C‰υyσ / MAX(1,GET_MARK_LEVEL(“z—κ,σ”Τ†_‰υyσ,’²‹³Ò)) , 100 )
+	ELSE
+		β’Έ—v‹W” = 100
+	ENDIF
+	
+	;-------------------------------------------------------------------
+	;β’Έ‚b
+	•”Κ‰υ΄’l = (CUP:“z—κ:‰υ‚b > 0) * ‘‡‰υ΄’l
+	IF CUP:“z—κ:‰υ‚b + PALAM:“z—κ:‰υ‚b + •”Κ‰υ΄’l >= PALAMLV:4 * 2 * β’Έ—v‹W” / 100
+		‚bβ’Έ‹­“x = 2
+		CDOWN:“z—κ:‰υ‚b = PALAMLV:4 * 2 - •”Κ‰υ΄’l
+	ELSEIF CUP:“z—κ:‰υ‚b + PALAM:“z—κ:‰υ‚b + •”Κ‰υ΄’l >= PALAMLV:4 * β’Έ—v‹W” / 100
+		‚bβ’Έ‹­“x = 1
+		CDOWN:“z—κ:‰υ‚b = PALAMLV:4 - •”Κ‰υ΄’l
+	ELSEIF CUP:“z—κ:‰υ‚b + PALAM:“z—κ:‰υ‚b + •”Κ‰υ΄’l >= PALAMLV:4
+		;ƒC‚―‚ι‚Ν‚Έ‚Θ‚Μ‚ΙƒC‚―‚Θ‚©‚Α‚½κ‡
+		NOWEX:“z—κ:β’Έ‰‰‹Z++
+	ENDIF
+	;CDOWN:“z—κ:‰υ‚b‚Ε‰Ί‚°‚Δ‚ΰβ’ΈΘγ‚Θ‚η
+	;‚»‚Μ’l-1‚Ι‚Θ‚ι‚ζ‚¤‚Ι’²®i10000‚Εβ’Έ‚Θ‚η9999j
+	SIF CUP:“z—κ:‰υ‚b + PALAM:“z—κ:‰υ‚b - CDOWN:“z—κ:‰υ‚b >= PALAMLV:4
+		CDOWN:“z—κ:‰υ‚b = CUP:“z—κ:‰υ‚b + PALAM:“z—κ:‰υ‚b - PALAMLV:4 + 1
+	;-------------------------------------------------------------------
+	;β’Έ‚u
+	•”Κ‰υ΄’l = (CUP:“z—κ:‰υ‚u > 0) * ‘‡‰υ΄’l
+	IF CUP:“z—κ:‰υ‚u + PALAM:“z—κ:‰υ‚u + •”Κ‰υ΄’l >= PALAMLV:4 * 2 * β’Έ—v‹W” / 100
+		‚uβ’Έ‹­“x = 2
+		CDOWN:“z—κ:‰υ‚u = PALAMLV:4 * 2 - •”Κ‰υ΄’l
+	ELSEIF CUP:“z—κ:‰υ‚u + PALAM:“z—κ:‰υ‚u + •”Κ‰υ΄’l >= PALAMLV:4 * β’Έ—v‹W” / 100
+		‚uβ’Έ‹­“x = 1
+		CDOWN:“z—κ:‰υ‚u = PALAMLV:4 - •”Κ‰υ΄’l
+	ELSEIF CUP:“z—κ:‰υ‚u + PALAM:“z—κ:‰υ‚u + •”Κ‰υ΄’l >= PALAMLV:4
+		;ƒC‚―‚ι‚Ν‚Έ‚Θ‚Μ‚ΙƒC‚―‚Θ‚©‚Α‚½κ‡
+		NOWEX:“z—κ:β’Έ‰‰‹Z++
+	ENDIF
+	;CDOWN:“z—κ:‰υ‚u‚Ε‰Ί‚°‚Δ‚ΰβ’ΈΘγ‚Θ‚η
+	;‚»‚Μ’l-1‚Ι‚Θ‚ι‚ζ‚¤‚Ι’²®i10000‚Εβ’Έ‚Θ‚η9999j
+	SIF CUP:“z—κ:‰υ‚u + PALAM:“z—κ:‰υ‚u - CDOWN:“z—κ:‰υ‚u >= PALAMLV:4
+		CDOWN:“z—κ:‰υ‚u = CUP:“z—κ:‰υ‚u + PALAM:“z—κ:‰υ‚u - PALAMLV:4 + 1
+	;-------------------------------------------------------------------
+	;β’Έ‚`
+	•”Κ‰υ΄’l = (CUP:“z—κ:‰υ‚` > 0) * ‘‡‰υ΄’l
+	IF CUP:“z—κ:‰υ‚` + PALAM:“z—κ:‰υ‚` + •”Κ‰υ΄’l >= PALAMLV:4 * 2 * β’Έ—v‹W” / 100
+		‚`β’Έ‹­“x = 2
+		CDOWN:“z—κ:‰υ‚` = PALAMLV:4 * 2 - •”Κ‰υ΄’l
+	ELSEIF CUP:“z—κ:‰υ‚` + PALAM:“z—κ:‰υ‚` + •”Κ‰υ΄’l >= PALAMLV:4 * β’Έ—v‹W” / 100
+		‚`β’Έ‹­“x = 1
+		CDOWN:“z—κ:‰υ‚` = PALAMLV:4 - •”Κ‰υ΄’l
+	ELSEIF CUP:“z—κ:‰υ‚` + PALAM:“z—κ:‰υ‚` + •”Κ‰υ΄’l >= PALAMLV:4
+		;ƒC‚―‚ι‚Ν‚Έ‚Θ‚Μ‚ΙƒC‚―‚Θ‚©‚Α‚½κ‡
+		NOWEX:“z—κ:β’Έ‰‰‹Z++
+	ENDIF
+	;CDOWN:“z—κ:‰υ‚`‚Ε‰Ί‚°‚Δ‚ΰβ’ΈΘγ‚Θ‚η
+	;‚»‚Μ’l-1‚Ι‚Θ‚ι‚ζ‚¤‚Ι’²®i10000‚Εβ’Έ‚Θ‚η9999j
+	SIF CUP:“z—κ:‰υ‚` + PALAM:“z—κ:‰υ‚` - CDOWN:“z—κ:‰υ‚` >= PALAMLV:4
+		CDOWN:“z—κ:‰υ‚` = CUP:“z—κ:‰υ‚` + PALAM:“z—κ:‰υ‚` - PALAMLV:4 + 1
+	;-------------------------------------------------------------------
+	;β’Έ‚a
+	•”Κ‰υ΄’l = (CUP:“z—κ:‰υ‚a > 0) * ‘‡‰υ΄’l
+	IF CUP:“z—κ:‰υ‚a + PALAM:“z—κ:‰υ‚a + •”Κ‰υ΄’l >= PALAMLV:4 * 2 * β’Έ—v‹W” / 100
+		‚aβ’Έ‹­“x = 2
+		CDOWN:“z—κ:‰υ‚a = (PALAMLV:4 * 2 - 1000) - •”Κ‰υ΄’l
+	ELSEIF CUP:“z—κ:‰υ‚a + PALAM:“z—κ:‰υ‚a + •”Κ‰υ΄’l >= PALAMLV:4 * β’Έ—v‹W” / 100
+		‚aβ’Έ‹­“x = 1
+		CDOWN:“z—κ:‰υ‚a = (PALAMLV:4 - 1000) - •”Κ‰υ΄’l
+	ELSEIF CUP:“z—κ:‰υ‚a + PALAM:“z—κ:‰υ‚a + •”Κ‰υ΄’l >= PALAMLV:4
+		;ƒC‚―‚ι‚Ν‚Έ‚Θ‚Μ‚ΙƒC‚―‚Θ‚©‚Α‚½κ‡
+		NOWEX:“z—κ:β’Έ‰‰‹Z++
+	ENDIF
+	;CDOWN:“z—κ:‰υ‚a‚Ε‰Ί‚°‚Δ‚ΰβ’ΈΘγ‚Θ‚η
+	;‚»‚Μ’l-1‚Ι‚Θ‚ι‚ζ‚¤‚Ι’²®i10000‚Εβ’Έ‚Θ‚η9999j
+	SIF CUP:“z—κ:‰υ‚a + PALAM:“z—κ:‰υ‚a - CDOWN:“z—κ:‰υ‚a >= PALAMLV:4
+		CDOWN:“z—κ:‰υ‚a = CUP:“z—κ:‰υ‚a + PALAM:“z—κ:‰υ‚a - PALAMLV:4 + 1
+	;-------------------------------------------------
+	;β’Έ‚Μ’Η‰Α—
+	;-------------------------------------------------
+	;‰υyσ‚Μ—
+	;β’Έ‚Μ•”Κ‚Ζ‹­“x‚Μ‡v‚ªκ’θΘγ‚Εσ‚πζ“Ύ‚·‚ι
+	LOCAL = ‚bβ’Έ‹­“x + ‚uβ’Έ‹­“x * 2 + ‚`β’Έ‹­“x * 2 + ‚aβ’Έ‹­“x
+	;R‚ª4Θγ‚Ε‰υyσ‚R‚Ι‘“–
+	IF LOCAL >= 3 && MARK:“z—κ:‰υyσ < 3
+		TCVAR:“z—κ:‰υy‹­“x = 3
+		;R‚ª3Θγ‚Ε‰υyσ‚Q‚Ι‘“–
+	ELSEIF LOCAL >= 2 && MARK:“z—κ:‰υyσ < 2
+		TCVAR:“z—κ:‰υy‹­“x = 2
+		;R‚ª2Θγ‚Ε‰υyσ‚P‚Ι‘“–
+	ELSEIF LOCAL >= 1 && MARK:“z—κ:‰υyσ < 1
+		TCVAR:“z—κ:‰υy‹­“x = 1
+	ELSE
+		TCVAR:“z—κ:‰υy‹­“x = 0
+	ENDIF
+	IF ‚bβ’Έ‹­“x && ‚uβ’Έ‹­“x && ‚`β’Έ‹­“x && ‚aβ’Έ‹­“x
+		‚bβ’Έ‹­“x *= 8
+		‚uβ’Έ‹­“x *= 8
+		‚`β’Έ‹­“x *= 8
+		‚aβ’Έ‹­“x *= 8
+		NOWEX:“z—κ:ldβ’Έ = 1
+	ELSEIF ‚bβ’Έ‹­“x && ‚uβ’Έ‹­“x && ‚`β’Έ‹­“x
+		‚bβ’Έ‹­“x *= 4
+		‚uβ’Έ‹­“x *= 4
+		‚`β’Έ‹­“x *= 4
+		NOWEX:“z—κ:Odβ’Έ = 1
+	ELSEIF ‚aβ’Έ‹­“x && ‚uβ’Έ‹­“x && ‚`β’Έ‹­“x
+		‚aβ’Έ‹­“x *= 4
+		‚uβ’Έ‹­“x *= 4
+		‚`β’Έ‹­“x *= 4
+		NOWEX:“z—κ:Odβ’Έ = 2
+	ELSEIF ‚bβ’Έ‹­“x && ‚aβ’Έ‹­“x && ‚`β’Έ‹­“x
+		‚bβ’Έ‹­“x *= 4
+		‚aβ’Έ‹­“x *= 4
+		‚`β’Έ‹­“x *= 4
+		NOWEX:“z—κ:Odβ’Έ = 3
+	ELSEIF ‚bβ’Έ‹­“x && ‚uβ’Έ‹­“x && ‚aβ’Έ‹­“x
+		‚bβ’Έ‹­“x *= 4
+		‚uβ’Έ‹­“x *= 4
+		‚aβ’Έ‹­“x *= 4
+		NOWEX:“z—κ:Odβ’Έ = 4
+	ELSEIF ‚bβ’Έ‹­“x && ‚uβ’Έ‹­“x
+		‚bβ’Έ‹­“x *= 2
+		‚uβ’Έ‹­“x *= 2
+		NOWEX:“z—κ:“ρdβ’Έ = 1
+	ELSEIF ‚bβ’Έ‹­“x && ‚`β’Έ‹­“x
+		‚bβ’Έ‹­“x *= 2
+		‚`β’Έ‹­“x *= 2
+		NOWEX:“z—κ:“ρdβ’Έ = 2
+	ELSEIF ‚uβ’Έ‹­“x && ‚`β’Έ‹­“x
+		‚uβ’Έ‹­“x *= 2
+		‚`β’Έ‹­“x *= 2
+		NOWEX:“z—κ:“ρdβ’Έ = 3
+	ELSEIF ‚bβ’Έ‹­“x && ‚aβ’Έ‹­“x
+		‚bβ’Έ‹­“x *= 2
+		‚aβ’Έ‹­“x *= 2
+		NOWEX:“z—κ:“ρdβ’Έ = 4
+	ELSEIF ‚uβ’Έ‹­“x && ‚aβ’Έ‹­“x
+		‚uβ’Έ‹­“x *= 2
+		‚aβ’Έ‹­“x *= 2
+		NOWEX:“z—κ:“ρdβ’Έ = 5
+	ELSEIF ‚`β’Έ‹­“x && ‚aβ’Έ‹­“x
+		‚`β’Έ‹­“x *= 2
+		‚aβ’Έ‹­“x *= 2
+		NOWEX:“z—κ:“ρdβ’Έ = 6
+	ENDIF
+	IF ‚bβ’Έ‹­“x
+		SOURCE:“z—κ:Io += 500 * ‚bβ’Έ‹­“x
+		SOURCE:“z—κ:‹ό] += 200 * ‚bβ’Έ‹­“x
+		SOURCE:“z—κ:”½΄ += 150 * ‚bβ’Έ‹­“x
+		DOWNBASE:“z—κ:‘Μ—Ν += 20
+		DOWNBASE:“z—κ:‹C—Ν += 10
+	ENDIF
+	IF ‚uβ’Έ‹­“x
+		SOURCE:“z—κ:—~ξ += 800 * ‚uβ’Έ‹­“x
+		SOURCE:“z—κ:‹±‡ += 500 * ‚uβ’Έ‹­“x
+		SOURCE:“z—κ:Io += 700 * ‚uβ’Έ‹­“x
+		SOURCE:“z—κ:‹ό] += 400 * ‚uβ’Έ‹­“x
+		SOURCE:“z—κ:”½΄ += 300 * ‚uβ’Έ‹­“x
+		DOWNBASE:“z—κ:‘Μ—Ν += 40
+		DOWNBASE:“z—κ:‹C—Ν += 20
+	ENDIF
+	IF ‚`β’Έ‹­“x
+		SOURCE:“z—κ:—~ξ += 500 * ‚`β’Έ‹­“x
+		SOURCE:“z—κ:‹±‡ += 700 * ‚`β’Έ‹­“x
+		SOURCE:“z—κ:Io += 900 * ‚`β’Έ‹­“x
+		SOURCE:“z—κ:‹ό] += 500 * ‚`β’Έ‹­“x
+		SOURCE:“z—κ:”½΄ += 400 * ‚`β’Έ‹­“x
+		DOWNBASE:“z—κ:‘Μ—Ν += 60
+		DOWNBASE:“z—κ:‹C—Ν += 30
+	ENDIF
+	IF ‚aβ’Έ‹­“x
+		SOURCE:“z—κ:Io += 500 * ‚aβ’Έ‹­“x
+		SOURCE:“z—κ:‹ό] += 200 * ‚aβ’Έ‹­“x
+		SOURCE:“z—κ:”½΄ += 150 * ‚aβ’Έ‹­“x
+		DOWNBASE:“z—κ:‘Μ—Ν += 20
+		DOWNBASE:“z—κ:‹C—Ν += 10
+	ENDIF
+	;NOWEX‚Ιƒf[ƒ^‚π“ό‚κ‚ιiβ’Έϋγ‚Ιg‚¤j
+	NOWEX:“z—κ:‚bβ’Έ = ‚bβ’Έ‹­“x
+	NOWEX:“z—κ:‚uβ’Έ = ‚uβ’Έ‹­“x
+	NOWEX:“z—κ:‚`β’Έ = ‚`β’Έ‹­“x
+	NOWEX:“z—κ:‚aβ’Έ = ‚aβ’Έ‹­“x
+	;β’Έ‰ρ”‚π‘‚β‚·
+	EX:“z—κ:‚bβ’Έ += ‚bβ’Έ‹­“x
+	EX:“z—κ:‚uβ’Έ += ‚uβ’Έ‹­“x
+	EX:“z—κ:‚`β’Έ += ‚`β’Έ‹­“x
+	EX:“z—κ:‚aβ’Έ += ‚aβ’Έ‹­“x
+	;β’Έo±‚π‘
+	EXP:“z—κ:β’Έo± += ‚bβ’Έ‹­“x + ‚uβ’Έ‹­“x + ‚`β’Έ‹­“x + ‚aβ’Έ‹­“x
+	EXP:“z—κ:‚bβ’Έo± += ‚bβ’Έ‹­“x
+	EXP:“z—κ:‚uβ’Έo± += ‚uβ’Έ‹­“x
+	EXP:“z—κ:‚`β’Έo± += ‚`β’Έ‹­“x
+	EXP:“z—κ:‚aβ’Έo± += ‚aβ’Έ‹­“x
+	;ƒrƒfƒI
+	IF TEQUIP:“z—κ:ƒrƒfƒIB‰e
+		IF NOWEX:“z—κ:ldβ’Έ
+			LOCALS = O2/O3/O4/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ENDIF
+		IF NOWEX:“z—κ:Odβ’Έ
+			LOCALS = O2/O3/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ENDIF
+		IF NOWEX:“z—κ:“ρdβ’Έ
+			LOCALS = O2/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ENDIF
+		IF NOWEX:“z—κ:‚bβ’Έ == 2
+			LOCALS = C/C/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ELSEIF NOWEX:“z—κ:‚bβ’Έ == 1
+			LOCALS = C/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ENDIF
+		IF NOWEX:“z—κ:‚uβ’Έ == 2
+			LOCALS = V/V/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ELSEIF NOWEX:“z—κ:‚uβ’Έ == 1
+			LOCALS = V/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ENDIF
+		IF NOWEX:“z—κ:‚`β’Έ == 2
+			LOCALS = A/A/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ELSEIF NOWEX:“z—κ:‚`β’Έ == 1
+			LOCALS = A/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ENDIF
+		IF NOWEX:“z—κ:‚aβ’Έ == 2
+			LOCALS = B/B/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ELSEIF NOWEX:“z—κ:‚aβ’Έ == 1
+			LOCALS = B/
+			TSTR:“®‰ζB‰e‹L^ += LOCALS
+		ENDIF
+	ENDIF
+
+RETURN LOCAL
+
+;-------------------------------------------------------------------------------
+;FIXME:Φ”‚Μΰ–Ύ‚π‘‚Ά‚Δ‚­‚Ύ‚³‚Ά
+;@return 1:xxx,0:xxx
+@MESSAGE_PALAMCNG_B2
+SETCOLOR 255, 180, 0
+	IF NOWEX:6
+		IF !GETBIT(CFLAG:3,2)
+			EXP:Ωνo± ++
+			SETBIT CFLAG:Ωνo±,2
+		ENDIF
+		FONTBOLD
+		PRINTFORML %"Quadruple Orgasm!"%
+		FONTREGULAR
+		PRINTFORML %"(Gems Multiplier x8)"%
+	ELSEIF NOWEX:5
+		SELECTCASE NOWEX:5
+			CASE 1
+				PRINTFORML %"C&V&A Orgasms"%
+				PRINTFORML %"(Gems Multiplier x4)"%
+			CASE 2
+				PRINTFORML %"B&V&A Orgasms"%
+				PRINTFORML %"(Gems Multiplier x4)"%
+			CASE 3
+				PRINTFORML %"C&B&A Orgasms"%
+				PRINTFORML %"(Gems Multiplier x4)"%
+			CASE 4
+				PRINTFORML %"C&V&B Orgasms"%
+				PRINTFORML %"(Gems Multiplier x4)"%
+		ENDSELECT
+	ELSEIF NOWEX:4
+		SELECTCASE NOWEX:4
+			CASE 1
+				PRINTFORML %"C&V Orgasms"%
+				PRINTFORML %"(Gems Multiplier x2)"%
+			CASE 2
+				PRINTFORML %"C&A Orgasms"%
+				PRINTFORML %"(Gems Multiplier x2)"%
+			CASE 3
+				PRINTFORML %"V&A Orgasms"%
+				PRINTFORML %"(Gems Multiplier x2)"%
+			CASE 4
+				PRINTFORML %"C&B Orgasms"%
+				PRINTFORML %"(Gems Multiplier x2)"%
+			CASE 5
+				PRINTFORML %"V&B Orgasms"%
+				PRINTFORML %"(Gems Multiplier x2)"%
+			CASE 6
+				PRINTFORML %"A&B Orgasms"%
+				PRINTFORML %"(Gems Multiplier x2)"%
+		ENDSELECT
+	ELSEIF NOWEX:3
+		IF NOWEX:3 == 2
+			PRINTFORML %"Strong B Orgasm"%
+		ELSE
+			PRINTFORML %"B Orgasm"%
+		ENDIF
+	ELSEIF NOWEX:2
+		IF NOWEX:2 == 2
+			PRINTFORML %"Strong A Orgasm"%
+		ELSE
+			PRINTFORML %"A Orgasm"%
+		ENDIF
+	ELSEIF NOWEX:1
+		IF NOWEX:1 == 2
+			PRINTFORML %"Strong V Orgasm"%
+		ELSE
+			PRINTFORML %"V Orgasm"%
+		ENDIF
+	ELSEIF NOWEX:0
+		IF NOWEX:0 == 2
+			PRINTFORML %"Strong C Orgasm"%
+		ELSE
+			PRINTFORML %"C Orgasm"%
+		ENDIF
+	ENDIF
+	RESETCOLOR
+	;β’Έ‚Ι‚ζ‚ι—~–]‚k‚uƒAƒbƒv
+	LOCAL = 0
+	SIF NOWEX:0 >= 2 || NOWEX:‚aβ’Έ >= 2 || NOWEX:‚uβ’Έ || NOWEX:‚`β’Έ
+		LOCAL = 1
+	SIF NOWEX:1 >= 2 || NOWEX:‚`β’Έ >= 2
+		LOCAL = 2
+	SIF (NOWEX:0 >= 2 || NOWEX:‚aβ’Έ >= 2) && NOWEX:4
+		LOCAL = 2
+	SIF NOWEX:5
+		LOCAL = 3
+	SIF NOWEX:6
+		LOCAL = 4
+	;©§S‚ª‚ ‚ι‚Ζ‚P‰Ί‚ª‚ι
+	SIF TALENT:©§S
+		LOCAL -= 1
+	IF ABL:—~–] < LOCAL
+		ABL:—~–] ++
+		FONTBOLD
+		SETCOLOR COLOR("ORANGE")
+		PRINTFORML Lust has been increased to LV{LOCAL}!
+		RESETCOLOR
+		FONTREGULAR
+		;—~–]‚ΜγΈ‚Ι‚ζ‚ι[—}³]‚ΜΑ–Ε‚πƒ`ƒFƒbƒN
+		CALL YOKUBO_UP_CHECK
+	ENDIF
+	PRINTL 
+
+;-------------------------------------------------
+;’²‹³‘ΞΫ‚Μ•¬“ϋƒ`ƒFƒbƒN
+;-------------------------------------------------
+@TARGET_MILK_CHECK(“z—κ)
+	#DIM “z—κ
+	#DIM •κ“ϋ’~Οξ€’l
+	#DIM •κ“ϋ•¬o—Κ
+	#DIM •κ“ϋ’~Ο—Κ
+
+	SIF !TALENT:“z—κ:•κ“ϋ‘ΜΏ
+		RETURN 0
+
+	;κ‡‚Ι‚ζ‚Α‚Δ‚ΝMAXBASE–Άέ’θ‚Μ‚ά‚ά—‚ι–‚ª‚ ‚ι‚Μ‚Ε0‚Θ‚η‹­§έ’θ‚·‚ι
+	IF MAXBASE:“z—κ:•κ“ϋ == 0
+		MAXBASE:“z—κ:•κ“ϋ = 5000+5000*(!TALENT:“z—κ:ϊ“ϋ)
+	ENDIF
+
+	;‰υ΄‚ΜγΈ—Κ‚©‚η•κ“ϋ’~Οξ€’l‚π’θ
+	•κ“ϋ’~Οξ€’l = CUP:“z—κ:‰υ‚b/5 + CUP:“z—κ:‰υ‚u/5 + CUP:“z—κ:‰υ‚`/5 + CUP:“z—κ:‰υ‚a*3
+
+	;’~Οξ€’l‚ª0A‚Β‚ά‚θhƒ‚ª‚Θ‚―‚κ‚Ξ“Λ‘R•¬‚«o‚µ‚½‚θ‚Ν‚µ‚Θ‚Ά
+	IF (•κ“ϋ’~Οξ€’l == 0)
+		RETURN 0
+	ENDIF
+
+	;Ε‘ε‚Ε‚ΰ150%‚µ‚©‘‚¦‚Θ‚Ά‚ζ‚¤‚Ι‚·‚ιi‘ε—Κ•¬“ϋ‚πΈ‚η‚·j
+	•κ“ϋ’~Ο—Κ = MIN(•κ“ϋ’~Οξ€’l,MAXBASE:“z—κ:•κ“ϋ*3/2)
+
+	;©§S‚Ώ‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚Γ‚η‚Ά
+	SIF TALENT:“z—κ:©§S
+		•κ“ϋ’~Ο—Κ /= 2
+	;‰υ΄‚Ι‘f’Ό‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚β‚·‚Ά
+	SIF TALENT:“z—κ:‰υ΄‰“ > 0
+		TIMES •κ“ϋ’~Ο—Κ , 1.20
+	;‰υ΄‚Μ”Ϋ’θ‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚Γ‚η‚Άiϊ—A©•w‚Ε–³ψj
+	SIF TALENT:“z—κ:‰υ΄‰“ < 0 && !TALENT:“z—κ:ϊ—
+		TIMES •κ“ϋ’~Ο—Κ , 0.80
+	;B•q΄‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚β‚·‚Ά
+	SIF TALENT:“z—κ:‚a΄“x > 0
+		TIMES •κ“ϋ’~Ο—Κ , 1.20
+	;›Z–ςσ‘Τ‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚β‚·‚Ά
+	SIF TEQUIP:“z—κ:›Z–ς
+		•κ“ϋ’~Ο—Κ *= 2
+	;—”Aάσ‘Τ‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚Γ‚η‚Άi…•ª‚ªδNγχ‚Ι‰ρ‚ι‚©‚ηHj
+	SIF TEQUIP:“z—κ:—”Aά
+		•κ“ϋ’~Ο—Κ /= 2
+	;’²‹³Ò‚ª—c™‘ήs‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚β‚·‚Ά
+	SIF TALENT:PLAYER:—c™^—c™‘ήs
+		TIMES •κ“ϋ’~Ο—Κ , 1.20
+	;’²‹³Ò‚ª—c’t‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚β‚·‚Ά
+	SIF TALENT:PLAYER:—c’t
+		TIMES •κ“ϋ’~Ο—Κ , 1.20
+	;•n“ϋ‚Θ‚η•κ“ϋ‚ª’™‚ά‚θ‚Γ‚η‚Ά
+	SIF TALENT:“z—κ:ƒoƒXƒgƒTƒCƒY < 0
+		TIMES •κ“ϋ’~Ο—Κ , 0.50
+
+	BASE:“z—κ:•κ“ϋ += •κ“ϋ’~Ο—Κ
+	
+	;•¬oƒ`ƒFƒbƒNA100%Θγ’™‚ά‚Α‚Δ‚Ά‚κ‚Ξ•K‚ΈA‚»‚¤‚Ε‚Θ‚―‚κ‚Ξ—Κ‚Ζ΅‰ρσ‚―‚½hƒ‚Ι‰‚¶‚Δ•¬o—¦‚ª•Ο‚ν‚ι
+	IF (BASE:“z—κ:•κ“ϋ > MAXBASE:“z—κ:•κ“ϋ)
+		;•¬oγ‚Μ•κ“ϋ—Κ‚ª50%–Ά–‚Ι‚Θ‚ι‚ζ‚¤‚Ι‚·‚ι(A‘±•¬o–h~)
+		•κ“ϋ•¬o—Κ = MAX( RAND(BASE:“z—κ:•κ“ϋ), (BASE:“z—κ:•κ“ϋ-MAXBASE:“z—κ:•κ“ϋ/2) )
+	ELSEIF 	( RAND(MAX(CUP:“z—κ:‰υ‚a,1)) > (MAXBASE:“z—κ:•κ“ϋ-BASE:“z—κ:•κ“ϋ) )
+		;100%’΄‚¦‚Δ‚Ά‚Θ‚Άκ‡‚Ν—Κ‚Ν’m‚κ‚Δ‚ι
+		•κ“ϋ•¬o—Κ = MAX(RAND(BASE:“z—κ:•κ“ϋ),0)
+	ENDIF
+	•κ“ϋ•¬o—Κ = MIN(•κ“ϋ•¬o—Κ, BASE:“z—κ:•κ“ϋ)
+
+	IF •κ“ϋ•¬o—Κ < 1
+		RETURN 0
+	ENDIF
+
+	DOWNBASE:“z—κ:‘Μ—Ν += 20 * MAX(•κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+	DOWNBASE:“z—κ:‹C—Ν += 50 * MAX(•κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+
+	IF EXP:“z—κ:•¬“ϋo± < EXPLV:1
+		SOURCE:“z—κ:Io += MAX(10000 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:‹ό] += MAX( 5000 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:•s‰ += MAX( 2000 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+	ELSEIF EXP:“z—κ:•¬“ϋo± < EXPLV:2
+		SOURCE:“z—κ:Io += MAX( 5000 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:‹ό] += MAX( 3000 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:•s‰ += MAX( 1500 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+	ELSEIF EXP:“z—κ:•¬“ϋo± < EXPLV:3
+		SOURCE:“z—κ:Io += MAX( 3000 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:‹ό] += MAX( 1500 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:•s‰ += MAX( 1000 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+	ELSEIF EXP:“z—κ:•¬“ϋo± < EXPLV:4
+		SOURCE:“z—κ:Io += MAX( 1500 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:‹ό] += MAX(  800 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:•s‰ += MAX(  700 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+	ELSEIF EXP:“z—κ:•¬“ϋo± < EXPLV:5
+		SOURCE:“z—κ:Io += MAX( 1000 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:‹ό] += MAX(  500 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:•s‰ += MAX(  400 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+	ELSE
+		SOURCE:“z—κ:Io += MAX(  500 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+		SOURCE:“z—κ:‹ό] += MAX(  300 * •κ“ϋ•¬o—Κ / MAXBASE:“z—κ:•κ“ϋ, 1)
+	ENDIF
+	CALL COLORMESSAGE(@"sLactationt(%CALLNAME:“z—κ%)",C_PINK,1,1)
+	
+	SELECTCASE •κ“ϋ•¬o—Κ
+		CASE IS > MAXBASE:“z—κ:•κ“ϋ
+			PRINTFORML Large amounts of milk erupted from %CALLNAME:“z—κ%'s %NIPPLE_DESCRIPTION(“z—κ)%.
+			EXP:“z—κ:Ωνo± += (EXP:“z—κ:•¬“ϋo±==0)
+			EXP:“z—κ:•¬“ϋo± += 3
+			NOWEX:“z—κ:•¬“ϋ += 3
+			EX:“z—κ:•¬“ϋ += 3
+		CASE IS > (MAXBASE:“z—κ:•κ“ϋ/2)
+			PRINTFORML A nice amount of milk gushed out from %CALLNAME:“z—κ%'s %NIPPLE_DESCRIPTION(“z—κ)%.
+			EXP:“z—κ:Ωνo± += (EXP:“z—κ:•¬“ϋo±==0)
+			EXP:“z—κ:•¬“ϋo± += 2
+			NOWEX:“z—κ:•¬“ϋ += 2
+			EX:“z—κ:•¬“ϋ += 2
+		CASE IS > (MAXBASE:“z—κ:•κ“ϋ/4)
+			;125%Θγ’™‚ά‚Α‚Δ‚Ά‚½
+			PRINTFORML Some milk has leaked from %CALLNAME:“z—κ%'s %NIPPLE_DESCRIPTION(“z—κ)%.
+			EXP:“z—κ:Ωνo± += (EXP:“z—κ:•¬“ϋo±==0)
+			EXP:“z—κ:•¬“ϋo± += 1
+			NOWEX:“z—κ:•¬“ϋ += 1
+			EX:“z—κ:•¬“ϋ += 1
+		CASEELSE
+			PRINTFORML A little amount of milk oozed from %CALLNAME:“z—κ%'s %NIPPLE_DESCRIPTION(“z—κ)%.
+	ENDSELECT
+
+	;‚a‚Ι•κ“ϋ‰‚κ‚π•t‚―‚ι
+	STAIN:“z—κ:‚a |= ‰‚κ_•κ“ϋ
+
+	;•κ“ϋ‚πΈ‚η‚·
+	BASE:“z—κ:•κ“ϋ -= •κ“ϋ•¬o—Κ
+	;–κ‚ΜΧ‚ΙΕ‘ε•κ“ϋ-1‚Ι‚Θ‚ι‚ζ‚¤‚Ι’²®
+	BASE:“z—κ:•κ“ϋ = MIN(BASE:“z—κ:•κ“ϋ, MAXBASE:“z—κ:•κ“ϋ - 1)
+
+	;ƒrƒfƒIB‰e”»’θ
+	IF TEQUIP:“z—κ:ƒrƒfƒIB‰e
+		IF NOWEX:“z—κ:•¬“ϋ == 1
+			LOCALS = MILK/
+		ELSEIF NOWEX:“z—κ:•¬“ϋ == 2
+			LOCALS = MILK/MILK/
+		ENDIF
+		TSTR:“®‰ζB‰e‹L^ += LOCALS
+	ENDIF
+
+	WAIT

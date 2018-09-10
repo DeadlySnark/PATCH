@@ -1,0 +1,51 @@
+;-------------------------------------------------
+;貞操帯を外してもらう
+;-------------------------------------------------
+;あなたが着用させられている貞操帯を外してもらう
+;
+;
+;-------------------------------------------------
+@COM419
+	#DIM 装着者
+	IF CFLAG:MASTER:ペニス用貞操帯装着者 == 人物_訪問者
+		PRINTFORML %CALLNAME:MASTER% begged %NTR_NAME(0)% to remove the chastity belt.
+		IF TIME_PROGRESS(CFLAG:MASTER:ペニス用貞操帯着用) < 時間_1WEEK
+			;７日経過していない
+			PRINTFORML %NTR_NAME(0)% said that if you don't remember when exactly it was installed and when you should ask for a release,
+			PRINTFORML He'll start counting from this day all over again...
+			;立場をわからされる事で屈服度が増加
+			SOURCE:MASTER:受動 += 100 + 200 * ABL:MASTER:従順
+			CALL NTR_ADD_SURRENDER(MASTER, (20 + RAND:20))
+			;着用日をリセット
+			CFLAG:MASTER:ペニス用貞操帯着用 = TIME_PROGRESS(0)
+		ELSE
+			;７日我慢できた
+			PRINTFORML %NTR_NAME(0)% said that it's about time he'll forgive %CALLNAME:MASTER%, as he removed the chastity belt.
+			;ペニス用貞操帯解除
+			CALL DISMOUNT_P_CHASTITY_BELT(MASTER)
+			SOURCE:MASTER:受動 += 100 + 200 * ABL:MASTER:従順
+		ENDIF
+	ELSE
+		装着者 = CFLAG:MASTER:ペニス用貞操帯装着者
+		PRINTFORML %CALLNAME:MASTER% begged %CALLNAME:装着者% to remove the chastity belt.
+		IF TIME_PROGRESS(CFLAG:MASTER:ペニス用貞操帯着用) < 時間_1DAY
+			;１日経過していない
+			PRINTFORML %CALLNAME:装着者% said that if you don't remember when exactly it was installed and when you should ask for a release,
+			PRINTFORML %HE_SHE(装着者,1)%'ll start counting from this day all over again...
+			;立場をわからされる事で屈服度が増加
+			SOURCE:MASTER:受動 += 100 + 200 * ABL:MASTER:従順
+			CALL NTR_ADD_SURRENDER(MASTER, (20 + RAND:20))
+			;着用日をリセット
+			CFLAG:MASTER:ペニス用貞操帯着用 = TIME_PROGRESS(0)
+		ELSE
+			;１日我慢できた
+			PRINTFORML %CALLNAME:装着者% said that it's about time %HE_SHE(装着者)%'ll forgive %CALLNAME:MASTER%, as %HE_SHE(装着者)% removed the chastity belt.
+			;ペニス用貞操帯解除
+			CALL DISMOUNT_P_CHASTITY_BELT(MASTER)
+			SOURCE:MASTER:受動 += 100 + 200 * ABL:MASTER:従順
+		ENDIF
+	ENDIF
+	
+RETURN 1
+
+

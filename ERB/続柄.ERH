@@ -1,0 +1,71 @@
+;--------------------------------------------------------------------
+;‘±•¿‚Ì•\Ž¦
+
+#DIM CONST ‘¸‘®’Tõ_ãŒÀ		= 6
+#DIM CONST ”Ú‘®’Tõ_ãŒÀ		= 8
+#DIM CONST –TŒn’Tõ_ãŒÀ		= 1
+#DIM CONST ‘±•¿_‘¸‘®_•ƒ			= 0
+#DIM CONST ‘±•¿_‘¸‘®_•ê			= 10
+#DIM CONST ‘±•¿_”Ú‘®			= 20
+#DIM CONST ‘±•¿_–TŒn			= 30
+#DIM CONST ‘±•¿_–TŒn‘¸‘®		= 40
+#DIM CONST ‘±•¿_–TŒn”Ú‘®		= 50
+#DIM CONST ‘±•¿_–{l				= 0
+#DIM CONST ‘±•¿_•ƒ					= 1
+#DIM CONST ‘±•¿_‘c•ƒ				= 2
+#DIM CONST ‘±•¿_‘]‘c•ƒ				= 3
+#DIM CONST ‘±•¿_‚‘c•ƒ				= 4
+#DIM CONST ‘±•¿_‚‘c•ƒ•ê‚Ì•ƒ		= 5
+#DIM CONST ‘±•¿_‚‘c•ƒ•ê‚Ì‘c•ƒ		= 6
+#DIM CONST ‘±•¿_‚‘c•ƒ•ê‚Ì‘]‘c•ƒ	= 7
+#DIM CONST ‘±•¿_‚‘c•ƒ•ê‚Ì‚‘c•ƒ	= 8
+#DIM CONST ‘±•¿_‹ã¢‚Ì‘c			= 9
+#DIM CONST ‘±•¿_\¢‚Ì‘c			= 10
+#DIM CONST ‘±•¿_•ê					= 11
+#DIM CONST ‘±•¿_‘c•ê				= 12
+#DIM CONST ‘±•¿_‘]‘c•ê				= 13
+#DIM CONST ‘±•¿_‚‘c•ê				= 14
+#DIM CONST ‘±•¿_‚‘c•ƒ•ê‚Ì•ê		= 15
+#DIM CONST ‘±•¿_‚‘c•ƒ•ê‚Ì‘c•ê		= 16
+#DIM CONST ‘±•¿_‚‘c•ƒ•ê‚Ì‘]‘c•ê	= 17
+#DIM CONST ‘±•¿_‚‘c•ƒ•ê‚Ì‚‘c•ê	= 18
+#DIM CONST ‘±•¿_‹ã¢‚Ì‘c•ê			= 19
+#DIM CONST ‘±•¿_\¢‚Ì‘c•ê			= 20
+#DIM CONST ‘±•¿_Žq					= 21
+#DIM CONST ‘±•¿_‘·					= 22
+#DIM CONST ‘±•¿_‘]‘·				= 23
+#DIM CONST ‘±•¿_Œº‘·				= 24
+#DIM CONST ‘±•¿_—ˆ‘·				= 25
+#DIM CONST ‘±•¿_©‘·				= 26
+#DIM CONST ‘±•¿_˜¹‘·				= 27
+#DIM CONST ‘±•¿_‰_‘·				= 28
+#DIM CONST ‘±•¿_‰_‘·‚ÌŽq			= 29
+#DIM CONST ‘±•¿_‰_‘·‚Ì‘·			= 30
+#DIM CONST ‘±•¿_ŒZŽo				= 31
+#DIM CONST ‘±•¿_’í–…				= 32
+#DIM CONST ‘±•¿_]ŒZŽo				= 33
+#DIM CONST ‘±•¿_]’í–…				= 34
+#DIM CONST ‘±•¿_Ä]ŒZŽo			= 35
+#DIM CONST ‘±•¿_Ä]’í–…			= 36
+#DIM CONST ‘±•¿_ŽO]ŒZŽo			= 37
+#DIM CONST ‘±•¿_ŽO]’í–…			= 38
+#DIM CONST ‘±•¿_Žl]ŒZŽo			= 39
+#DIM CONST ‘±•¿_Žl]’í–…			= 40
+#DIM CONST ‘±•¿_”Œ•ƒ•ê				= 41
+#DIM CONST ‘±•¿_f•ƒ•ê				= 42
+#DIM CONST ‘±•¿_‰™–Ã				= 51
+#DIM CONST ‘±•¿_‘cæ				= ‘±•¿_‘¸‘®_•ƒ + ‘¸‘®’Tõ_ãŒÀ + 1
+#DIM CONST ‘±•¿_Žq‘·				= ‘±•¿_”Ú‘® + ”Ú‘®’Tõ_ãŒÀ + 1
+#DEFINE ŠÔ•¿_ŽÀ•ƒ		CFLAG:“–l:•ƒe
+#DEFINE ŠÔ•¿_ŽÀ•ê		CFLAG:“–l:•êe
+#DEFINE ŠÔ•¿_‘ŠŽè•ƒ		CFLAG:‘ŠŽè:•ƒe
+#DEFINE ŠÔ•¿_‘ŠŽè•ê		CFLAG:‘ŠŽè:•êe
+#DEFINE ŠÔ•¿_•ƒ•û‘c•ƒ	CFLAG:(ŠÔ•¿_ŽÀ•ƒ):•ƒe
+#DEFINE ŠÔ•¿_•ƒ•û‘c•ê	CFLAG:(ŠÔ•¿_ŽÀ•ƒ):•êe
+#DEFINE ŠÔ•¿_•ê•û‘c•ƒ	CFLAG:(ŠÔ•¿_ŽÀ•ê):•ƒe
+#DEFINE ŠÔ•¿_•ê•û‘c•ê	CFLAG:(ŠÔ•¿_ŽÀ•ê):•êe
+#DEFINE ŠÔ•¿_‘ŠŽè•ƒ•û‘c•ƒ	CFLAG:(ŠÔ•¿_‘ŠŽè•ƒ):•ƒe
+#DEFINE ŠÔ•¿_‘ŠŽè•ƒ•û‘c•ê	CFLAG:(ŠÔ•¿_‘ŠŽè•ƒ):•êe
+#DEFINE ŠÔ•¿_‘ŠŽè•ê•û‘c•ƒ	CFLAG:(ŠÔ•¿_‘ŠŽè•ê):•ƒe
+#DEFINE ŠÔ•¿_‘ŠŽè•ê•û‘c•ê	CFLAG:(ŠÔ•¿_‘ŠŽè•ê):•êe
+

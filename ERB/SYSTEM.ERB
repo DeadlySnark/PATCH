@@ -1,0 +1,165 @@
+;-------------------------------------------------
+;ニューゲーム
+;-------------------------------------------------
+@EVENTFIRST
+TARGET = 0
+ASSI = 0
+
+PBAND = 12
+
+CALL DEFAULT_OPTION
+
+;モード選択
+$MODE_SELECT
+PRINTL ★★Please select the game mode★★
+PRINTL [0]START
+PRINTL 
+PRINTL 　※Special settings (You can toggle more than one)
+IF GETBIT(FLAG:ゲームモード, 1)
+	PRINT 　☆
+ELSE
+	PRINT 　　
+ENDIF
+PRINTL [1]Herm Mode                 All characters except for the Player and the Visitor will be hermaphrodites.
+
+IF GETBIT(FLAG:ゲームモード, 2)
+	PRINT 　☆
+ELSE
+	PRINT 　　
+ENDIF
+PRINTL [2]Biggy Tiddies Mode        All characters except for the Player and the Visitor will have gigantic tits.
+
+IF GETBIT(FLAG:ゲームモード, 3)
+	PRINT 　☆
+ELSE
+	PRINT 　　
+ENDIF
+PRINTL [3]Vigorous Visitor          Visitor will appear from the first day.
+
+IF GETBIT(FLAG:ゲームモード, 4)
+	PRINT 　☆
+ELSE
+	PRINT 　　
+ENDIF
+PRINTL [4]Turn all NTR settings ON  All NTR options will be enabled (Long stay period is 3 days)
+
+$INPUT_LOOP
+INPUT
+
+IF RESULT >= 1 && RESULT <= 4
+	INVERTBIT FLAG:ゲームモード, RESULT
+	GOTO MODE_SELECT
+ELSEIF RESULT != 0
+	GOTO INPUT_LOOP
+ENDIF
+
+PRINTL Would you like to become someone?
+PRINTL [0]Nope
+PRINTL [1]Yeah
+
+$INPUT_LOOP_1
+INPUT
+IF RESULT == 0
+	CALL CUSTOM_CHARAMAKE(MASTER)
+	SIF HAS_PENIS(MASTER)
+		MAXBASE:MASTER:5 = 1500
+	ADDCHARA 1
+	ADDCHARA 2
+	ADDCHARA 3
+	ADDCHARA 4
+	ADDCHARA 5
+	ADDCHARA 6
+	ADDCHARA 7
+	ADDCHARA 8
+	ADDCHARA 9
+	ADDCHARA 10
+	ADDCHARA 11
+	ADDCHARA 12
+	ADDCHARA 13
+ELSEIF RESULT == 1
+	CALL REVERSEMODE_1
+ELSE
+	GOTO INPUT_LOOP_1
+ENDIF
+
+IF GETBIT(FLAG:ゲームモード, 1)
+	FOR LOCAL, 1, CHARANUM
+		TALENT:LOCAL:性別 = 3
+	NEXT
+ENDIF
+IF GETBIT(FLAG:ゲームモード, 2)
+	FOR LOCAL, 1, CHARANUM
+		TALENT:LOCAL:バストサイズ = 2
+	NEXT
+ENDIF
+IF GETBIT(FLAG:ゲームモード, 4)
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 1
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 3
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 4
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 5
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 6
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 7
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 8
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 24
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 25
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 26
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 31
+	INVERTBIT FLAG:ＮＴＲパッチ設定, 32
+	FOR LOCAL, 1, CHARANUM
+		CALL NTR_SET_STAYOUT_MAXIMUM(LOCAL, 3)
+	NEXT
+ENDIF
+
+SAVESTR:10 = /
+
+;キャラカスタム選択
+CALL CHARA_CUSTUM
+SIF HAS_PENIS(MASTER)
+	MAXBASE:MASTER:5 = 1500
+
+;全員処女モード選択
+CALL VIRGIN_CUSTOM
+
+;◆ショートカットモード選択
+CALL SHORT_CUT_MODE
+;◆◆
+
+FOR LOCAL,0,CHARANUM
+	;開始位置
+	CFLAG:LOCAL:現在位置 = CFLAG:LOCAL:311
+	;服装
+	CALL CLOTHES_SETTING(LOCAL,1)
+NEXT
+
+;setting uneven experience for flavor
+FOR LOCAL,1,CHARANUM
+	FOR LOCAL:1,1,CHARANUM
+		SIF EXP:LOCAL:(LOCAL:1) >= 10 && EXP:LOCAL:(LOCAL:1) < 100
+			EXP:LOCAL:(LOCAL:1) -= RAND:3
+		SIF EXP:LOCAL:(LOCAL:1) >= 100
+			EXP:LOCAL:(LOCAL:1) -= RAND:10
+	NEXT
+NEXT
+
+
+;起床時間
+CFLAG:MASTER:312 = 420
+CFLAG:MASTER:睡眠 = 1
+DAY = 1
+MONEY = 1000
+
+FLAG:画像表示 = 6
+FLAG:AA表示 = 1
+
+SETCOLOR C_RED
+PRINTL
+PRINTFORML Remember - you can configure gameplay to your liking in the "400 OPTION" menu before waking up.
+PRINTFORML Pregnancy and many NTR options are disabled by default!
+PRINTFORMW (Also don't forget to check house settings!)
+RESETCOLOR
+
+BEGIN SHOP
+
+@EVENTLOAD
+CALL VERSION_UP
+

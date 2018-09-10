@@ -1,0 +1,1421 @@
+﻿@LOSEVIRGINTEXT(INIT_NUM)
+#DIM INIT_NUM ;INIT_NUM will be getting initiating character's number for checking who it is
+#DIM 受け側 ;for interactions between characters
+#DIMS INITIATOR ;then assigning a correct callname through INITIATOR and target's reaction
+VARSET LOCAL
+;処女喪失
+;Aka Defloration text
+
+;PRINTFORML INIT_NUM = {INIT_NUM}
+FLAG:9059 = 0
+FLAG:9060 = 0
+
+;assigning initiator name
+SELECTCASE INIT_NUM
+	;when initiator is the target
+	CASE IS == -1
+		INITIATOR = %CALLNAME:LOCAL%
+		INIT_NUM = LOCAL
+	CASE IS < CHARANUM
+		INITIATOR = %CALLNAME:INIT_NUM%
+	CASE IS == 人物_訪問者
+		INITIATOR = %NTR_NAME(0)%
+	CASE IS == 人物_客, 人物_村人
+		INITIATOR = Some unknown man
+	CASEELSE
+		INITIATOR = %NTR_NAME(0)%
+ENDSELECT
+
+FOR LOCAL,0,CHARANUM
+IF (TCVAR:LOCAL:破瓜 == 1 || TCVAR:LOCAL:破瓜 == 2)
+;based on how it was done
+IF TFLAG:50 == 3
+PRINTFORM %INITIATOR%'s finger 
+ELSEIF TEQUIP:LOCAL:バイブ
+PRINTFORM %INITIATOR%'s vibrator 
+ELSE
+	IF INIT_NUM < CHARANUM
+		PRINTFORM %INITIATOR%'s \@ HAS_PENIS(INIT_NUM) ? %PENIS_APPEAR(INIT_NUM)% # strapon\@ 
+	ELSEIF INIT_NUM == 998
+		PRINTFORM %INITIATOR%'s %Ｐ大きさ(訪問者_Ｐ大きさ)% %PENIS_APPEAR_SIMPLE()% 
+	ELSE
+		PRINTFORM %INITIATOR%'s %PENIS_APPEAR_SIMPLE()% 
+	ENDIF
+;ELSE
+;PRINTFORM ERROR: Lose_Virgin - Ridiculous Text Generator 2017.exe has stopped working. Please report this as soon as possible.
+ENDIF
+
+SELECTCASE RAND:12
+CASE 0
+	PRINTFORM tears through %CALLNAME:LOCAL%'s hymen
+CASE 1
+	PRINTFORM tears %CALLNAME:LOCAL%'s hymen apart
+CASE 2
+	PRINTFORM pops %CALLNAME:LOCAL%'s cherry
+CASE 3
+	PRINTFORM goes right through %CALLNAME:LOCAL%'s hymen
+CASE 4
+	PRINTFORM breaks %CALLNAME:LOCAL%'s hymen
+CASE 5
+	PRINTFORM torn opens %CALLNAME:LOCAL%'s hymen
+CASE 6
+	PRINTFORM pierces %CALLNAME:LOCAL%'s hymen
+CASE 7
+	PRINTFORM split opens %CALLNAME:LOCAL%'s hymen
+CASE 8
+	PRINTFORM hits %CALLNAME:LOCAL%'s hymen tearing it off
+CASE 9
+	PRINTFORM thrusts %CALLNAME:LOCAL%'s hymen out of the way
+CASE 10
+	PRINTFORM stretches %CALLNAME:LOCAL%'s hymen so wide that it will never interfere again
+CASE 11
+	PRINTFORM feels an obstacle inside %CALLNAME:LOCAL%'s vagina and pushes through it
+ENDSELECT
+
+PRINTFORM , 
+
+;check for restored virginity
+IF TCVAR:LOCAL:破瓜 == 1
+SELECTCASE RAND:25
+CASE 0
+	PRINTFORM relieving her virgin hole of her %VIRGINITY(LOCAL,1)% in one thrust
+CASE 1
+	PRINTFORM taking her %VIRGINITY(LOCAL,1)%
+CASE 2
+	PRINTFORM snatching her %VIRGINITY(LOCAL,1)% away
+CASE 3
+	PRINTFORM robbing her of her %VIRGINITY(LOCAL,1)%
+CASE 4
+	PRINTFORM making her an adult
+CASE 5
+	PRINTFORM claiming her %VIRGINITY(LOCAL,1)%
+CASE 6
+	PRINTFORM claiming her first fuck
+CASE 7
+	PRINTFORM savoring her last moments of %VIRGINITY(LOCAL,1)%
+CASE 8
+	PRINTFORM stealing her %VIRGINITY(LOCAL,1)%
+CASE 9
+	PRINTFORM making her a woman
+CASE 10
+	PRINTFORM finally removing her %VIRGINITY(LOCAL,1)%
+CASE 11
+	PRINTFORM taking her %VIRGINITY(LOCAL,1)%
+CASE 12
+	PRINTFORM deflowering her %VIRGINITY(LOCAL,1)%
+CASE 13
+	PRINTFORM violating her %VIRGINITY(LOCAL,1)%
+CASE 14
+	PRINTFORM taking her %VIRGINITY(LOCAL,1)%
+CASE 15
+	PRINTFORM losing her %VIRGINITY(LOCAL,1)%
+CASE 16
+	PRINTFORM stripping her of her %VIRGINITY(LOCAL,1)% at last
+CASE 17
+	PRINTFORM welcoming her to a whole new world of pleasure
+CASE 18
+	PRINTFORM releasing her of her %VIRGINITY(LOCAL,1)%
+CASE 19
+	PRINTFORM helping her to take out her %VIRGINITY(LOCAL,1)%
+CASE 20
+	PRINTFORM unwrapping her brand new hole from her %VIRGINITY(LOCAL,1)%
+CASE 21
+	PRINTFORM officially making it the first thing that was in her vagina
+CASE 22
+	PRINTFORM finally getting to use her cunt as it was meant to be used
+CASE 23
+	PRINTFORM invading her tender vagina that never been used like that before
+CASE 24
+	PRINTFORM freshly molding her insides to the shape of invading object
+ENDSELECT
+ELSEIF TCVAR:LOCAL:破瓜 == 2
+SELECTCASE RAND:18
+CASE 0
+	PRINTFORM relieving her virgin hole of her %VIRGINITY(LOCAL,2)% in one thrust for one more time
+CASE 1
+	PRINTFORM taking her %VIRGINITY(LOCAL,2)%
+CASE 2
+	PRINTFORM snatching her %VIRGINITY(LOCAL,2)% away
+CASE 3
+	PRINTFORM robbing her of her %VIRGINITY(LOCAL,2)%
+CASE 4
+	PRINTFORM making her feel like an adult again
+CASE 5
+	PRINTFORM claiming her %VIRGINITY(LOCAL,2)%
+CASE 6
+	PRINTFORM savoring her last moments of %VIRGINITY(LOCAL,2)%
+CASE 7
+	PRINTFORM stealing her %VIRGINITY(LOCAL,2)%
+CASE 8
+	PRINTFORM finally removing her %VIRGINITY(LOCAL,2)%
+CASE 9
+	PRINTFORM taking off her %VIRGINITY(LOCAL,2)%
+CASE 10
+	PRINTFORM deflowering her %VIRGINITY(LOCAL,2)%
+CASE 11
+	PRINTFORM violating her %VIRGINITY(LOCAL,2)%
+CASE 12
+	PRINTFORM losing her %VIRGINITY(LOCAL,2)%
+CASE 13
+	PRINTFORM stripping her of her %VIRGINITY(LOCAL,2)%
+CASE 14
+	PRINTFORM making her feel familiar sensation once again
+CASE 15
+	PRINTFORM releasing her of her %VIRGINITY(LOCAL,2)%
+CASE 16
+	PRINTFORM helping her to take out her %VIRGINITY(LOCAL,2)%
+CASE 17
+	PRINTFORM making her relive the moments of defloration once again
+ENDSELECT
+ENDIF
+PRINTFORM  as 
+
+;when doing it with the person she loves without vibrator and fingering spoiling the fun
+;TODO: somehow implement the check for interactions between residents too without making it too crude
+[SKIPSTART]
+	受け側 = CFLAG:LOCAL:住人同士イベント相手
+	IF INHABITANT_FRIENDSHIP_POWER(INIT_NUM) > INHABITANT_FRIENDSHIP_POWER(受け側)
+		受け側 = CFLAG:LOCAL:住人同士イベント相手
+		攻め側 = INIT_NUM
+	ELSEIF INHABITANT_FRIENDSHIP_POWER(INIT_NUM) < INHABITANT_FRIENDSHIP_POWER(受け側)
+		受け側 = INIT_NUM
+		攻め側 = CFLAG:LOCAL:住人同士イベント相手
+	ELSE
+		;暫定処理：立場が等しい場合はキャラ番号が小さい方を優先
+		IF CFLAG:LOCAL:住人同士イベント立場 >= CFLAG:受け側:住人同士イベント立場
+			受け側 = CFLAG:LOCAL:住人同士イベント相手
+			攻め側 = INIT_NUM
+		ELSEIF CFLAG:LOCAL:住人同士イベント立場 < CFLAG:受け側:住人同士イベント立場
+			受け側 = INIT_NUM
+			攻め側 = CFLAG:LOCAL:住人同士イベント相手
+		ELSE
+			PRINTW CFLAG Illegal value is being used for a position.
+			RETURN 0
+		ENDIF
+	ENDIF
+[SKIPEND]
+
+IF TFLAG:50 != 3 && !TEQUIP:LOCAL:バイブ && ( TALENT:LOCAL:恋慕 && INIT_NUM == MASTER || TALENT:LOCAL:NTR && INIT_NUM == 998 || (INIT_NUM < CHARANUM && TA:LOCAL:INIT_NUM:TA_好感度 >= CFLAG:LOCAL:体を許す好感度) )
+$LOOP_VIRGIN
+;Affection
+IF RAND:3 == 0
+SELECTCASE RAND:6
+CASE 0
+	PRINTFORM she smiles and holds %INITIATOR%'s hands, thanking \@ INIT_NUM >= CHARANUM ? him # %HIM_HER(INIT_NUM) %\@
+CASE 1
+	PRINTFORM she sheds tears of happiness, smiling at %INITIATOR%
+CASE 2
+	PRINTFORM she joyfully trembles from losing it with %INITIATOR%
+CASE 3
+	PRINTFORM she hugs %INITIATOR% and pushes \@ INIT_NUM >= CHARANUM ? him # %HIM_HER(INIT_NUM) %\@ deeper
+CASE 4
+	PRINTFORM she holds %INITIATOR% tightly, trembling with joy
+CASE 5
+	PRINTFORM she immersed in a delight, finally sharing her %VIRGINITY(TARGET)% with %INITIATOR%
+ENDSELECT
+;Lewd
+ELSEIF RAND:9 == 0
+SELECTCASE RAND:7
+CASE 0
+	PRINTFORM she lets out a passionate sigh, finally being free of it
+CASE 1
+	PRINTFORM she loudly moans, looking forward to new experience
+CASE 2
+	PRINTFORM she smiles wryly, looking at %INITIATOR% with confidence
+CASE 3
+	PRINTFORM she clings to %INITIATOR%, holding \@ INIT_NUM >= CHARANUM ? him # %HIM_HER(INIT_NUM) %\@ tightly and whispering lewd words
+CASE 4
+	PRINTFORM she closes her hands around %INITIATOR%, making \@ INIT_NUM >= CHARANUM ? him # %HIM_HER(INIT_NUM) %\@ plunge deeper
+CASE 5
+	PRINTFORM she gets so excited she can't stay still
+CASE 6
+	PRINTFORM she starts to masturbate, licking off her hymen blood in a pure fit of ecstasy
+ENDSELECT
+;Submissive
+ELSEIF RAND:6 == 0
+SELECTCASE RAND:5
+CASE 0
+	PRINTFORM she holds still, ignoring pain
+CASE 1
+	PRINTFORM she spreads her legs, making it easier for %INITIATOR%
+CASE 2
+	PRINTFORM she forces a smile, even though it hurts a lot
+CASE 3
+	PRINTFORM she tightens up around %INITIATOR%, making it very pleasurable
+CASE 4
+	PRINTFORM she starts to move, helping %INITIATOR% to remove the remains of her hymen
+ENDSELECT
+ELSE
+GOTO LOOP_VIRGIN
+ENDIF
+
+;other status
+ELSEIF TALENT:LOCAL:貞操 == 1 && ( !TALENT:LOCAL:恋慕 && INIT_NUM == MASTER || !TALENT:LOCAL:NTR && INIT_NUM == 998 || (INIT_NUM < CHARANUM && TA:LOCAL:INIT_NUM:TA_好感度 >= CFLAG:LOCAL:体を許す好感度) )
+	PRINTFORM she starts to cry from losing something truly valuable
+
+ELSE
+SELECTCASE RAND:10
+CASE 0
+	PRINTFORM she shivers in pain
+CASE 1
+	PRINTFORM she cries out in pain
+CASE 2
+	PRINTFORM sharp pain strikes her entire body
+CASE 3
+	PRINTFORM she tightens up in momentary pain
+CASE 4
+	PRINTFORM she clasps her hands in pain
+CASE 5
+	PRINTFORM she closes her eyes in pain
+CASE 6
+	PRINTFORM she lets out a pained yelp
+CASE 7
+	PRINTFORM she bites her bottom lip
+CASE 8
+	PRINTFORM she sobs and moans in pain
+CASE 9
+	PRINTFORM she lets out a sharp cry
+ENDSELECT
+ENDIF
+PRINTFORMW .
+
+;If ejaculated during defloration and without a condom
+IF (INIT_NUM < CHARANUM && NOWEX:INIT_NUM:11 && !TEQUIP:INIT_NUM:コンドーム) || EXP_UP(81,LOCAL)
+PRINTFORMW Red blood mixed with %SAMEN_DESCRIPTION()% flows down from %CALLNAME:LOCAL%'s %CROTCH(LOCAL)%, proving %HIS_HER(LOCAL)% %VIRGINITY(LOCAL)%...
+;Losing virginity without ejaculation
+ELSE
+PRINTFORMW Red blood drips down from %CALLNAME:LOCAL%'s %CROTCH(LOCAL)%, proving %HIS_HER(LOCAL)% %VIRGINITY(LOCAL)%...
+ENDIF
+
+TCVAR:LOCAL:破瓜 = 0 
+
+;final endif
+ENDIF
+
+
+NEXT
+;Anal virginity text
+;Ａ処女喪失
+FOR LOCAL,0,CHARANUM
+
+		IF EXP_UP(21,LOCAL) && EXP:LOCAL:21 == 1
+			PRINTFORMW %CALLNAME:LOCAL%'s body stiffens as %HIS_HER(LOCAL)% %ANUS(LOCAL)% has been forcibly pried open for the first time...
+			PRINTFORML %HE_SHE(LOCAL,1)% frowned a bit from pain.
+			PRINTFORMW %HIS_HER(LOCAL,1)% %ASS(LOCAL)% will be sure a bit sore for a while...
+		ENDIF
+
+NEXT
+
+
+;First kiss text
+FOR LOCAL,0,CHARANUM
+	IF EXP_UP(27,LOCAL) && EXP:LOCAL:27 == 1
+		PRINTFORMW %CALLNAME:LOCAL% feels a strange sensation for the first time in %HIS_HER(LOCAL)% life as %HIS_HER(LOCAL)% lips meet with \@ !LOCAL ? %YOURS(TARGET)% # %INITIATOR%'s \@...
+	ENDIF
+NEXT
+
+
+;Male virginity text
+;IF TFLAG:175 && TFLAG:160 == 1
+;	SIF TALENT:PLAYER:100
+;	PRINTFORML %YOUR(PLAYER,1)% small cunny clamps around %YOUR(TARGET)% %PENIS(TARGET)% as if choking on it.
+;	
+;	PRINTFORMW %CALLNAME:TARGET% feels incredible warmness and tightness for the first time as %YOUR(PLAYER)% %VAGINA(PLAYER)% keeps squeezing and squirming around %HIS_HER(TARGET)% %PENIS(TARGET)%...
+;ENDIF
+
+;Male virginity text for player
+IF !TALENT:PLAYER:1 && HAS_PENIS(PLAYER)
+	;PRINTL PLAYER MALE VIRG
+	SELECTCASE SELECTCOM
+		CASE 60,61,65,67,68
+		SIF TALENT:100 <= -1
+			PRINTFORML %CALLNAME:TARGET%'s small cunny clamps around %YOUR(PLAYER)% %PENIS_APPEAR(PLAYER)% as if choking on it.
+	
+		PRINTFORMW %CALLNAME:PLAYER% feels incredible warmness and tightness for the first time as %YOUR(TARGET)% %VAGINA(TARGET)% keeps squeezing and squirming around %HIS_HER(PLAYER)% %PENIS_APPEAR(PLAYER)%...
+		
+	CASE 62,63,66,69,70
+		SIF TALENT:100 <= -1
+		PRINTFORML %CALLNAME:TARGET%'s small anus clamps around %YOUR(PLAYER)% %PENIS_APPEAR(PLAYER)% as if choking on it.
+	
+		PRINTFORMW %CALLNAME:PLAYER% feels incredible warmness and tightness for the first time as %YOUR(TARGET)% %ANUS(TARGET)% keeps squeezing and squirming around %HIS_HER(PLAYER)% %PENIS_APPEAR(PLAYER)%...
+	ENDSELECT
+ENDIF
+
+;Male virginity text for target
+FOR LOCAL,0,CHARANUM
+IF INIT_NUM < CHARANUM && !TALENT:INIT_NUM:1 && HAS_PENIS(INIT_NUM) && ( EXP_UP(20,LOCAL) || EXP_UP(21,LOCAL) )
+SELECTCASE INIT_NUM
+	CASE IS < CHARANUM
+		INITIATOR = %CALLNAME:INIT_NUM%
+	CASE IS == 人物_訪問者
+		INITIATOR = %NTR_NAME(0)%
+	CASE IS == 人物_客, 人物_村人
+		INITIATOR = Some unknown man
+	CASEELSE
+		INITIATOR = %NTR_NAME(0)%
+ENDSELECT
+
+
+	;PRINTL TARGET MALE VIRG
+	SELECTCASE SELECTCOM
+		CASE 64,97,98,99
+			SIF TALENT:LOCAL:100 <= -1
+				PRINTFORML %CALLNAME:LOCAL%'s small cunny clamps around %INITIATOR%'s \@ INIT_NUM >= CHARANUM ? dick # %PENIS_APPEAR(INIT_NUM)% \@ as if choking on it.
+	
+				PRINTFORMW %CALLNAME:INIT_NUM% feels incredible warmness and tightness for the first time as %CALLNAME:LOCAL%'s \@ LOCAL >= CHARANUM ? vagina # %VAGINA(LOCAL)% \@ keeps squeezing and squirming around %INITIATOR%'s \@ INIT_NUM >= CHARANUM ? dick # %PENIS_APPEAR(INIT_NUM)% \@...
+		CASE 92,93,94
+			SIF TALENT:INIT_NUM:100 <= -1
+				PRINTFORML %CALLNAME:LOCAL%'s small anus clamps around %INITIATOR%'s \@ INIT_NUM >= CHARANUM ? dick # %PENIS_APPEAR(INIT_NUM)% \@ as if choking on it.
+	
+				PRINTFORMW %CALLNAME:INIT_NUM% feels incredible warmness and tightness for the first time as %CALLNAME:LOCAL%'s \@ LOCAL >= CHARANUM ? anus # %ANUS(LOCAL)% \@ keeps squeezing and squirming around %INITIATOR%'s \@ INIT_NUM >= CHARANUM ? dick # %PENIS_APPEAR(INIT_NUM)% \@...
+		CASE 71, 72		; 二穴挿し not tested really
+			IF MASTER_POSE(6,1,1)
+				SIF TALENT:INIT_NUM:100 <= -1
+				PRINTFORML %CALLNAME:LOCAL%'s small anus clamps around %INITIATOR%'s \@ INIT_NUM >= CHARANUM ? dick # %PENIS_APPEAR(INIT_NUM)% \@ as if choking on it.
+	
+				PRINTFORMW %CALLNAME:INIT_NUM% feels incredible warmness and tightness for the first time as %CALLNAME:LOCAL%'s \@ LOCAL >= CHARANUM ? anus # %ANUS(LOCAL)% \@ keeps squeezing and squirming around %INITIATOR%'s \@ INIT_NUM >= CHARANUM ? dick # %PENIS_APPEAR(INIT_NUM)% \@...
+			ELSE
+				SIF TALENT:LOCAL:100 <= -1
+				PRINTFORML %CALLNAME:LOCAL%'s small cunny clamps around %INITIATOR%'s \@ INIT_NUM >= CHARANUM ? dick # %PENIS_APPEAR(INIT_NUM)% \@ as if choking on it.
+	
+				PRINTFORMW %CALLNAME:INIT_NUM% feels incredible warmness and tightness for the first time as %CALLNAME:LOCAL%'s \@ LOCAL >= CHARANUM ? vagina # %VAGINA(LOCAL)% \@ keeps squeezing and squirming around %INITIATOR%'s \@ INIT_NUM >= CHARANUM ? dick # %PENIS_APPEAR(INIT_NUM)% \@...
+			ENDIF
+	ENDSELECT
+ENDIF
+NEXT
+
+
+;Random virgin loss causes
+;for those who starts up as non-virgins
+
+@LOSE_VIRGIN_VAG(ARG)
+#FUNCTIONS
+VARSET LOCALS
+
+IF CSTR:ARG:Ｖ初体験の相手 == ""
+SELECTCASE RAND:231
+CASE 0
+	LOCALS = She lost her virginity with the unknown man.
+CASE 1
+	LOCALS = She lost her virginity after drinking too much and being too careless...
+CASE 2 TO 12
+	LOCALS = She lost her virginity to one of her previous boyfriends.
+CASE 13 TO 18
+	LOCALS = She lost her virginity at the wedding night with her first husband.
+CASE 19 TO 22
+	LOCALS = She accidentally deflorated herself after masturbating too intensely.
+CASE 23 TO 25
+	LOCALS = She deflorated herself with a toy she bought from Kappas.
+CASE 26 TO 29
+	LOCALS = She doesn't remember who was her first, but she knows it wasn't good.
+CASE 30
+	LOCALS = She got raped and used for a while by thugs...
+CASE 31 TO 34
+	LOCALS = She lost her virginity while experimenting with her sexuality.
+CASE 35 TO 38
+		LOCALS = She lost her virginity to some girl's fingers after trying out something out of ordinary.
+CASE 39 TO 43
+	LOCALS = Her hymen was torn after riding horses too much.
+CASE 44 TO 48
+	LOCALS = She actually was born without a hymen.
+CASE 49 TO 54
+	LOCALS = Her hymen was torn after doing stretches when she was young.
+CASE 55 TO 57
+	LOCALS = She tore off her hymen accidentally when she tried to insert her tampon inside.
+CASE 58 TO 62
+	LOCALS = She lost her virginity when she was too horny to think straight and just had sex with the first man she met...
+CASE 63 TO 67
+	LOCALS = She was abused and deceived by a smooth-talking handsome man who just used her as a fucktoy for a night.
+CASE 68 TO 71
+	LOCALS = She lost her virginity in a one night stand when she though it would be a good idea to try something new.
+CASE 72 TO 75
+	LOCALS = She lost her virginity with a boyfriend she didn't love out of desperation...
+CASE 76
+	LOCALS = She was bullied by other girls and got her hymen torn with a stick when she was young.
+CASE 77
+	LOCALS = She sold her virginity for a lot of money to some millionaire.
+CASE 78
+	LOCALS = She lost her virginity with another girl together using twin dildo.
+CASE 79 TO 82
+	LOCALS = She just wanted to know how it feels to be cummed inside and figured it out the hard way.
+CASE 83
+	LOCALS = She was shamed into losing her virginity with some man she didn't know...
+CASE 84
+	LOCALS = She lost her virginity with her husband in the arranged marriage who dumped her not so long after that...
+CASE 85
+	LOCALS = She thought that "doing it" meant something else besides the act that followed after...
+CASE 86
+	LOCALS = She wasn't really trying to preserve her virginity, losing it with someone just for a momentary pleasure.
+CASE 87
+	LOCALS = Her virginity was stolen from her by someone in an instant. Nobody knows what actually happened, but she got a lot of semen inside too.
+CASE 88
+	LOCALS = She was captured and trained by some unknown man a long time ago. She managed to escape after convincing him that she loves him and killing him.
+CASE 89 TO 92
+	LOCALS = She lost her virginity after prostituting herself for a while when she needed money.
+CASE 93
+	LOCALS = She was captured and raped by unknown man for a while before escaping.
+CASE 95
+	LOCALS = She was talked into it and thought it would be okay to help others to relieve their needs.
+CASE 96
+	LOCALS = She kept the bed warm for her party members in her adventurous past.
+CASE 97
+	LOCALS = Her hymen was sacrificed to the god of virility on one of the festivals.
+CASE 98
+	LOCALS = She had to tear her own hymen in order to not get sacrificed as a virgin for some dark ritual.
+CASE 99 TO 104
+	LOCALS = She believed that she was incomplete as a woman without having an intercourse at least once. Or twice. Or many more.
+CASE 105
+	LOCALS = She wanted to put her cunt to a good use.
+CASE 106
+	LOCALS = She always liked helping people. That's what she did when she lost her virginity while helping some lonely man to lose his...
+CASE 107
+	LOCALS = She lost her virginity to the man she admired for a long time. Even though they parted their ways shortly after that, she doesn't regret it.
+CASE 108
+	LOCALS = She couldn't resist the advances of some persistent guy and the next thing she remembered that she was under him in some abandoned shack.
+CASE 109
+	LOCALS = One of her relatives enjoyed her first time when she was a child and didn't understand what is going on.
+CASE 110
+	LOCALS = She thought it would be a good idea to press that one particular membrane and push all fingers inside.
+CASE 111
+	LOCALS = She desperately tried to become a mother but failed along the way.
+CASE 112
+	LOCALS = She was captured by a wild tentacle monster and was forced to be its incubator before she was rescued.
+CASE 113
+	LOCALS = A doctor forced his penis inside of her on a medical examination when she was very young.
+CASE 114
+	LOCALS = She was molested and unable to fight back. Or maybe she wasn't willing to?
+CASE 115
+	LOCALS = She was forced to mate with other men by the laws of her village.
+CASE 116
+	LOCALS = She wanted to lose it as fast as possible to feel pleasure later on so she seduced her own dog.
+CASE 117
+	LOCALS = She got too overconfident and was unable to stop before it was too late.
+CASE 118
+	LOCALS = She couldn't turn down her friend and helped him to relax.
+CASE 119
+	LOCALS = She was accompanied by her female friend and her boyfriend to her house and then got suddenly pushed down, only to get rid of her, as they described it, annoying virginity.
+CASE 120
+	LOCALS = She wanted to learn a lot from old and experienced men, so they taught her a lesson or two.
+CASE 121
+	LOCALS = She lost her virginity after being convinced by her friend. She was there the entire time too, supporting her.
+CASE 122
+	LOCALS = She lost her virginity from being in the wrong place at the wrong time...
+CASE 123
+	LOCALS = She got raped by horny soldiers who didn't taste a woman in a long time...
+CASE 124 TO 126
+	LOCALS = She was raped in her sleep and filled to the brim as she didn't feel anything.
+CASE 127
+	LOCALS = She was knocked unconscious in the toilet. When she awake, she felt a numb pain coming out of her bleeding crotch...
+CASE 128
+	LOCALS = She was violated by her mentor when he got too lonely and couldn't resist anymore.
+CASE 129
+	LOCALS = She crossed the cemetery at the wrong time. She attracted lots of undead who were longing for a sweet scent of warmth...
+CASE 130
+	LOCALS = A bunch of angry and drunk Oni decided to play the bloody virgin game.
+CASE 131
+	LOCALS = The lost souls from Former Hell managed to obtain a physical body and they saw her right when she was the most vulnerable...
+CASE 132
+	LOCALS = She lost her virginity to a desperate bullied little boy who tried to kill himself. She was dumped by him later on when he recovered from his misery, leaving her in her own.
+CASE 133
+	LOCALS = She was pushed down by her only friend and was betrayed by him all night long...
+CASE 134
+	LOCALS = She lost her virginity after she was convinced that her boyfriend won't insert it in after leaving her immobile and bound with a rope.
+CASE 135
+	LOCALS = Turns out that even a tongue can tear hymen off if it's thin enough.
+CASE 136
+	LOCALS = She was hypnotized into losing it. The last thing she saw was a big ugly man.
+CASE 137
+	LOCALS = Her superiors decided that it's time for her to be a bit more useful.
+CASE 138
+	LOCALS = An intruder managed to rape her before he was banished back.
+CASE 139
+	LOCALS = She thought she could have some fun and then deceive everyone by using a counterfeit Red Candy, but it was not only useless, but expired too. Her stomach actually felt worse than her vagina.
+CASE 140
+	LOCALS = She decided to sell her virginity on auction and got a decent amount of money that let her achieve some of her dreams.
+CASE 141
+	LOCALS = She was a local town bicycle for youkai before she got a disease. After that she stopped being too promiscuous.
+CASE 142
+	LOCALS = She was a local idol who got overwhelmed by her fans at one of her concerts and used by them. She quickly lost her popularity after that.
+CASE 143
+	LOCALS = Unable to understand her feelings and confess to the person she loved, she instead was quickly charmed and then used as a fuck toy by a local charismatic nobleman.
+CASE 144
+	LOCALS = She was captured by a local sadistic mistress who kept her as her personal urinal. She lost her virginity when her mistress decided to use her vagina as a candlestick. For hundred lit candles.
+CASE 145
+	LOCALS = She liked to spread her legs. When she learned that she can earn money and pleasure by doing that, she decided to do just that.
+CASE 146
+	LOCALS = She doesn't know how, but one day she just awoke sitting on top of some man, riding on his dick.
+CASE 147
+	LOCALS = She was violated by her jealous friend who thought that she tried to steal her boyfriend. She inserted a vibrator all the way inside of her vagina and forced her to wear it for a week.
+CASE 148
+	LOCALS = She was raped by her lesbian acquaintance who was obsessed with her.
+CASE 149
+	LOCALS = She lost her virginity to her mistress who decided to grow up a dick and use it on one of her servants.
+CASE 150
+	LOCALS = When she thought that her boyfriend would be satisfied with only blowjobs, she got overwhelmed and before she knew it, she was already being fucked in a missionary position.
+CASE 151
+	LOCALS = She thought it would be cool to lose it before all other girls did. She bragged about it a lot, though everyone just thought that she was crazy.
+CASE 150 TO 160
+	LOCALS = She shared her firsts with a childhood friend a long time ago.
+CASE 161
+	LOCALS = She lost her virginity with the classmate with whom she was going out. She thought it wasn't serious, but she was wrong.
+CASE 162
+	LOCALS = She lost it with her friend together.
+CASE 163
+	LOCALS = She was blackmailed into it and lost her virginity even after finding out that she could easily avoid it.
+CASE 164
+	LOCALS = She thought that her hymen could regenerate. She got it wrong.
+CASE 165
+	LOCALS = She was raped by a burglars when she was a child.
+CASE 166
+	LOCALS = She was forced to lose her virginity with a pig from her mistress' order.
+CASE 167
+	LOCALS = She was suddenly penetrated from the back by her friend as a joke, but he didn't know that she was a virgin.
+CASE 168 TO 171
+	LOCALS = She lost her virginity when she was on a path of finding her true self.
+CASE 172 TO 175
+	LOCALS = She lost her virginity out of sheer curiosity with the first man she met.
+CASE 176
+	LOCALS = She wanted to lose her virginity for money, but was deceived and blackmailed instead, then got robbed not only of her virginity but her pride, dignity and all her possessions. She was young and stupid too.
+CASE 177
+	LOCALS = She was convinced by her friends that she can get pregnant just from touching males and in order to avoid it she needs to plug her vagina with a vibrator to not let the child out. She figured out the truth shortly after.
+CASE 178
+	LOCALS = She never thought that public toilet play would include her being used as an actual meat toilet.
+CASE 179
+	LOCALS = She lost her virginity with a man that called himself Master.
+CASE 180
+	LOCALS = She secretly deflorated herself because her boyfriend hated seeing her in pain and disliked blood. But then she was dumped by him because he also hated non-virgins too.
+CASE 181
+	LOCALS = Her first partner accidentally inserted it in after giving him a thighjob. Her other partners did the same.
+CASE 182
+	LOCALS = She woke up with her crotch hot and burning, covered in blood. She brushed it off thinking that it's just a menstruation. She was a bit surprised after her first actual sex.
+CASE 183
+	LOCALS = She was bullied as a non-virgin slut so she had to prove them wrong.
+CASE 184
+	LOCALS = An older man used her naivety to use her holes as well.
+CASE 185
+	LOCALS = She got fisted as a punishment for entering the places she wasn't supposed to enter.
+CASE 186
+	LOCALS = She thought it's a good idea to cockblock her boyfriend and got cocked herself for that.
+CASE 187 TO 190
+	LOCALS = She wanted to experience all those new fascinating thing.
+CASE 191
+	LOCALS = She was snatched and raped in the nearby alley.
+CASE 192
+	LOCALS = She lost her virginity at her birthday as a present from her loving father.
+CASE 193
+	LOCALS = She was overwhelmed by a bunch of underlings after bullying them too much.
+CASE 194
+	LOCALS = She went ballistic after being two-timed by her boyfriend and had a promiscuous past where she tried to numb the pain, but to no avail...
+CASE 195
+	LOCALS = She had her first time stolen from her by a band member when she experimented with music.
+CASE 196
+	LOCALS = She was deflorated on a Christmas by her best friend with a strapon.
+CASE 197
+	LOCALS = She thought it was just a Delusional Masturbation. But in reality she deluded herself to think that way.
+CASE 198
+	LOCALS = She thought that she must insert the pregnancy test deep inside in order to get the results. Why did she decide to use it in the first place? Nobody knows.
+CASE 200 TO 230
+	VARSET LOCALS
+	SELECTCASE RAND:14
+		CASE 0
+			LOCALS += "She was raped by "
+		CASE 1
+			LOCALS += "She was fucked from the back by "
+		CASE 2
+			LOCALS += "She made love with "
+		CASE 3
+			LOCALS += "She decided to lose it on her own with "
+		CASE 4
+			LOCALS += "She allowed to do it once and sold it for " + @"{RAND:50+1}" + "k￥ to "
+		CASE 5
+			LOCALS += "She was robbed out of it by "
+		CASE 6
+			LOCALS += "She was raped in her sleep by "
+		CASE 7
+			LOCALS += "She was raped when she passed out from drinking too much by "
+		CASE 8
+			LOCALS += "She was convinced to do it by "
+		CASE 9
+			LOCALS += "She was blackmailed into doing it by "
+		CASE 10
+			LOCALS += "She was kidnapped and molested by "
+		CASE 11
+			LOCALS += "She was hypnotized and abused by "
+		CASE 12
+			LOCALS += "She shared her firsts with "
+		CASE 13
+			LOCALS += "She was deflorated by "
+	ENDSELECT
+	SELECTCASE RAND:35
+		CASE 0
+			LOCALS += "her own dad "
+		CASE 1
+			LOCALS += "an unknown mister "
+		CASE 2
+			LOCALS += "some guy from the neighborhood "
+		CASE 3
+			LOCALS += "her brother "
+		CASE 4
+			LOCALS += "her mentor "
+		CASE 5
+			LOCALS += "a boy from her class "
+		CASE 6
+			LOCALS += "a nobleman "
+		CASE 7
+			LOCALS += "her little brother "
+		CASE 8
+			LOCALS += "an intruder "
+		CASE 9
+			LOCALS += "an old man and his dog "
+		CASE 10
+			LOCALS += "her teacher "
+		CASE 11
+			LOCALS += "a youkai "
+		CASE 12
+			LOCALS += "oni "
+		CASE 13
+			LOCALS += "a fairy "
+		CASE 14
+			LOCALS += "a goddess "
+		CASE 15
+			LOCALS += "a god "
+		CASE 16
+			LOCALS += "a celestial "
+		CASE 17
+			LOCALS += "a divine spirit "
+		CASE 18
+			LOCALS += "a zombie "
+		CASE 19
+			LOCALS += "her acquaintances "
+		CASE 20
+			LOCALS += "a molester "
+		CASE 21
+			LOCALS += "a rapist "
+		CASE 22
+			LOCALS += "a handsome man "
+		CASE 23
+			LOCALS += "her boyfriend "
+		CASE 24
+			LOCALS += "her previous husband "
+		CASE 25
+			LOCALS += "a vagrant "
+		CASE 26
+			LOCALS += "a local thirsty virgin who got too desperate "
+		CASE 27
+			LOCALS += "a childhood friend "
+		CASE 28
+			LOCALS += "a local celebrity "
+		CASE 29
+			LOCALS += "a pedophile "
+		CASE 30
+			LOCALS += "an old influential businessman "
+		CASE 31
+			LOCALS += "bunch of men from Human Village "
+		CASE 32
+			LOCALS += "local thugs "
+		CASE 33
+			LOCALS += "an ugly fat man "
+		CASE 34
+		$NAMELOOP
+		LOCAL:99 = 0
+		LOCALS:1 =
+		FOR LOCAL,1,CHARANUM
+			SIF TALENT:LOCAL:童貞 && HAS_PENIS(LOCAL)
+				LOCAL:99 ++
+		NEXT
+			IF LOCAL:99
+				FOR LOCAL,1,CHARANUM
+				SIF TALENT:LOCAL:童貞 && HAS_PENIS(LOCAL) && !RAND:40 && LOCALS:1 == ""
+					LOCALS:1 = %CALLNAME:LOCAL%
+				NEXT
+			ENDIF
+		SIF !LOCAL:99
+			RESTART
+		SIF LOCALS:1 == "" || LOCALS:1 == CALLNAME:ARG
+			GOTO NAMELOOP
+			
+		LOCALS += LOCALS:1 + " "
+	ENDSELECT
+	SELECTCASE RAND:9
+		CASE 0
+			LOCALS += "on her birthday "
+		CASE 1
+			LOCALS += "during holidays "
+		CASE 2
+			LOCALS += "on a Christmas "
+		CASE 3
+			LOCALS += "on Valentine's Day "
+		CASE 4
+			LOCALS += "on a festival "
+		CASE 5
+			LOCALS += "on her parents' wedding anniversary "
+		CASE 6
+			LOCALS += "on a completely ordinary day "
+		CASE 7
+			LOCALS += "on a one-night stand "
+		CASE 8
+			LOCALS += "on a party "
+	ENDSELECT
+	SELECTCASE RAND:16
+		CASE 0
+			LOCALS += "at the love hotel"
+		CASE 1
+			LOCALS += "at her house"
+		CASE 2
+			LOCALS += "at elementary school"
+		CASE 3
+			LOCALS += "at the public bath"
+		CASE 4
+			LOCALS += "in the nearby park"
+		CASE 5
+			LOCALS += "on a field"
+		CASE 6
+			LOCALS += "in a cave"
+		CASE 7
+			LOCALS += "in the Former Hell"
+		CASE 8
+			LOCALS += "in the mountains"
+		CASE 9
+			LOCALS += "in the abandoned shack"
+		CASE 10
+			LOCALS += "in one of the shrine's old rooms"
+		CASE 11
+			LOCALS += "near Misty Lake"
+		CASE 12
+			LOCALS += "in a bamboo forest"
+		CASE 13
+			LOCALS += "in a village"
+		CASE 14
+			LOCALS += "during her adventures"
+		CASE 15
+			LOCALS += "in the forest"
+	ENDSELECT
+	SELECTCASE RAND:6
+		CASE 0
+			LOCALS += " when she was young."
+		CASE 1
+			LOCALS += " when she was a child."
+		CASE 2
+			LOCALS += " a long time ago."
+	CASEELSE
+			LOCALS += "."
+	ENDSELECT
+CASEELSE
+	LOCALS = She lost her virginity with the unknown man.
+ENDSELECT
+CSTR:ARG:Ｖ初体験の相手 = %LOCALS%
+ENDIF
+RETURNF CSTR:ARG:Ｖ初体験の相手
+
+@LOSE_VIRGIN_MALE(ARG)
+#FUNCTIONS
+IF CSTR:ARG:ＭＶ初体験の相手 == ""
+	VARSET LOCALS
+	SELECTCASE RAND:16
+		CASE 0
+			LOCALS += HE_SHE(ARG, 1) + " was raped by "
+		CASE 1
+			LOCALS += HE_SHE(ARG, 1) + " made love with "
+		CASE 2
+			LOCALS += HE_SHE(ARG, 1) + " decided to lose it on " + HIS_HER(ARG) + " own with "
+		CASE 3
+			LOCALS += HE_SHE(ARG, 1) + " spent " + @"{RAND:30+1}" + "k￥ to lose it with "
+		CASE 4
+			LOCALS += HE_SHE(ARG, 1) + " was robbed out of it by "
+		CASE 5
+			LOCALS += HE_SHE(ARG, 1) + " was raped in " + HIS_HER(ARG) + " sleep by "
+		CASE 6
+			LOCALS += HE_SHE(ARG, 1) + " was raped when " + HE_SHE(ARG) + " passed out from drinking too much by "
+		CASE 7
+			LOCALS += HE_SHE(ARG, 1) + " was convinced to do it by "
+		CASE 8
+			LOCALS += HE_SHE(ARG, 1) + " was kidnapped and molested by "
+		CASE 9
+			LOCALS += HE_SHE(ARG, 1) + " was hypnotized and abused by "
+		CASE 10
+			LOCALS += HE_SHE(ARG, 1) + " shared " + HIS_HER(ARG) + " firsts with "
+		CASE 11
+			LOCALS += "Out of desperation, " + HE_SHE(ARG) + " raped "
+		CASE 12
+			LOCALS += "Unable to control " + HIM_HER(ARG) + "self, " + HE_SHE(ARG) + " molested "
+		CASE 13
+			LOCALS += HE_SHE(ARG, 1) + " had to beg to let him lose it with "
+		CASE 14
+			LOCALS += "Using " + HIS_HER(ARG) + " persuasion skills " + HE_SHE(ARG) + " managed to lose it with "
+		CASE 15
+			LOCALS += "By a sheer chance or luck " + HE_SHE(ARG) + " got laid with "
+	ENDSELECT
+	SELECTCASE 43 ;RAND:42
+		CASE 0
+			LOCALS += HIS_HER(ARG) + " own mother "
+		CASE 1
+			LOCALS += "an unknown madam "
+		CASE 2
+			LOCALS += "some girl from the neighborhood "
+		CASE 3
+			LOCALS += HIS_HER(ARG) + " sister "
+		CASE 4
+			LOCALS += HIS_HER(ARG) + " mentor "
+		CASE 5
+			LOCALS += "a girl from " + HIS_HER(ARG) + " class "
+		CASE 6
+			LOCALS += "a noblewoman "
+		CASE 7
+			LOCALS += HIS_HER(ARG) + " little sister "
+		CASE 8
+			LOCALS += "a girl from the kindergarten "
+		CASE 9
+			LOCALS += "a nurse from school "
+		CASE 10
+			LOCALS += HIS_HER(ARG) + " teacher "
+		CASE 11
+			LOCALS += "a youkai "
+		CASE 12
+			LOCALS += "oni "
+		CASE 13
+			LOCALS += "a fairy "
+		CASE 14
+			LOCALS += "a goddess "
+		CASE 15
+			LOCALS += "a god "
+		CASE 16
+			LOCALS += "a celestial "
+		CASE 17
+			LOCALS += "a divine spirit "
+		CASE 18
+			LOCALS += "a zombie "
+		CASE 19
+			LOCALS += HIS_HER(ARG) + " acquaintances "
+		CASE 20
+			LOCALS += "a female molester "
+		CASE 21
+			LOCALS += "a female rapist "
+		CASE 22
+			LOCALS += "a beautiful girl "
+		CASE 23
+			LOCALS += HIS_HER(ARG) + " girlfriend "
+		CASE 24
+			LOCALS += HIS_HER(ARG) + " previous wife "
+		CASE 25
+			LOCALS += "a female vagrant "
+		CASE 26
+			LOCALS += "a local maiden that was charmed by him "
+		CASE 27
+			LOCALS += "a childhood friend "
+		CASE 28
+			LOCALS += "a local celebrity "
+		CASE 29
+			LOCALS += "a female adventurer "
+		CASE 30
+			LOCALS += "an old influential businesswoman "
+		CASE 31
+			LOCALS += "bunch of girls from Human Village "
+		CASE 32
+			LOCALS += "a male virgin hunter "
+		CASE 33
+			LOCALS += "a pregnant woman "
+		CASE 34
+			LOCALS += "a sorceress "
+		CASE 35
+			LOCALS += "a witch "
+		CASE 36
+			LOCALS += "a shrine maiden "
+		CASE 37
+			LOCALS += "a holy woman "
+		CASE 38
+			LOCALS += "a local whore "
+		CASE 39
+			LOCALS += "a succubus "
+		CASE 40
+			LOCALS += "an ugly fat woman "
+		CASE 41
+		;Experimenting
+		;Rolling a random name of some unvirgin whore in the list
+		;first, reset the var, then roll, if there's no name - roll again, stop when get a name and then add it to the text
+		;at the end also checking if rolled name is the same for the target to avoid selfcesting mindfuck
+		$NAMELOOP
+		LOCAL:99 = 0
+		LOCALS:1 =
+		FOR LOCAL,1,CHARANUM
+			SIF !TALENT:LOCAL:処女 && HAS_VAGINA(LOCAL)
+				LOCAL:99 ++
+		NEXT
+		IF LOCAL:99
+			FOR LOCAL,1,CHARANUM
+				SIF !TALENT:LOCAL:処女 && HAS_VAGINA(LOCAL) && !RAND:40 && LOCALS:1 == ""
+					LOCALS:1 = %CALLNAME:LOCAL%
+			NEXT
+		ENDIF
+		;to prevent infinite loop if there's no suitable characters
+		SIF !LOCAL:99
+			RESTART
+		SIF LOCALS:1 == "" || LOCALS:1 == CALLNAME:ARG
+			GOTO NAMELOOP
+			
+		LOCALS += LOCALS:1 + " "
+		CASE 42
+			LOCALS += "prostitute "
+	ENDSELECT
+	SELECTCASE RAND:10
+		CASE 0
+			LOCALS += "on " + HIS_HER(ARG) + " birthday "
+		CASE 1
+			LOCALS += "during holidays "
+		CASE 2
+			LOCALS += "on a Christmas "
+		CASE 3
+			LOCALS += "on Valentine's Day "
+		CASE 4
+			LOCALS += "on a festival "
+		CASE 5
+			LOCALS += "on " + HIS_HER(ARG) + " parents' wedding anniversary "
+		CASE 6
+			LOCALS += "on a completely ordinary day "
+		CASE 7
+			LOCALS += "on a one-night stand "
+		CASE 8
+			LOCALS += "on a party "
+		CASE 9
+			LOCALS += "during delusional masturbation that wasn't in fact a delusion "
+	ENDSELECT
+	SELECTCASE RAND:16
+		CASE 0
+			LOCALS += "at the love hotel"
+		CASE 1
+			LOCALS += "at " + HIS_HER(ARG) + " house"
+		CASE 2
+			LOCALS += "at the elementary school"
+		CASE 3
+			LOCALS += "at the public bath"
+		CASE 4
+			LOCALS += "in the nearby park"
+		CASE 5
+			LOCALS += "on a field"
+		CASE 6
+			LOCALS += "in a cave"
+		CASE 7
+			LOCALS += "in the Former Hell"
+		CASE 8
+			LOCALS += "in the mountains"
+		CASE 9
+			LOCALS += "in the abandoned shack"
+		CASE 10
+			LOCALS += "in one of the shrine's old rooms"
+		CASE 11
+			LOCALS += "near Misty Lake"
+		CASE 12
+			LOCALS += "in a bamboo forest"
+		CASE 13
+			LOCALS += "in a village"
+		CASE 14
+			LOCALS += "during " + HIS_HER(ARG) + " adventures"
+		CASE 15
+			LOCALS += "in the forest"
+	ENDSELECT
+	SELECTCASE RAND:6
+		CASE 0
+			LOCALS += " when " + HE_SHE(ARG) + " was young."
+		CASE 1
+			LOCALS += " when " + HE_SHE(ARG) + " was a child."
+		CASE 2
+			LOCALS += " a long time ago."
+	CASEELSE
+			LOCALS += "."
+	ENDSELECT
+CSTR:ARG:ＭＶ初体験の相手 = %LOCALS%
+ENDIF
+RETURNF CSTR:ARG:ＭＶ初体験の相手
+
+@LOSE_VIRGIN_ANAL(ARG)
+#FUNCTIONS
+IF CSTR:ARG:Ａ初体験の相手 == ""
+	VARSET LOCALS
+	SELECTCASE RAND:14
+		CASE 0
+			LOCALS += HE_SHE(ARG, 1) + "she was raped in the ass by "
+		CASE 1
+			LOCALS += HE_SHE(ARG, 1) + " was fucked from the back by "
+		CASE 2
+			LOCALS += HE_SHE(ARG, 1) + " made love with "
+		CASE 3
+			LOCALS += HE_SHE(ARG, 1) + " decided to put it for good use on her own with "
+		CASE 4
+			LOCALS += HE_SHE(ARG, 1) + " allowed to do it once and sold it for " + @"{RAND:18+1}" + "k￥ to "
+		CASE 5
+			LOCALS += HE_SHE(ARG, 1) + " was robbed out of it by "
+		CASE 6
+			LOCALS += HE_SHE(ARG, 1) + " was raped in her sleep by "
+		CASE 7
+			LOCALS += HE_SHE(ARG, 1) + " was raped when " + HE_SHE(ARG) + " passed out from drinking too much by "
+		CASE 8
+			LOCALS += HE_SHE(ARG, 1) + " was convinced to do it by "
+		CASE 9
+			LOCALS += HE_SHE(ARG, 1) + " was blackmailed into doing it by "
+		CASE 10
+			LOCALS += HE_SHE(ARG, 1) + " was kidnapped and molested by "
+		CASE 11
+			LOCALS += HE_SHE(ARG, 1) + " was hypnotized and abused by "
+		CASE 12
+			LOCALS += HE_SHE(ARG, 1) + " shared " + HIS_HER(ARG) + " firsts with "
+		CASE 13
+			LOCALS += HE_SHE(ARG, 1) + " was butt-deflorated by "
+	ENDSELECT
+	SELECTCASE RAND:35
+		CASE 0
+			LOCALS += HIS_HER(ARG) + " own dad "
+		CASE 1
+			LOCALS += "an unknown mister "
+		CASE 2
+			LOCALS += "some guy from the neighborhood "
+		CASE 3
+			LOCALS += HIS_HER(ARG) + " brother "
+		CASE 4
+			LOCALS += HIS_HER(ARG) + " mentor "
+		CASE 5
+			LOCALS += "a boy from " + HIS_HER(ARG) + " class "
+		CASE 6
+			LOCALS += "a nobleman "
+		CASE 7
+			LOCALS += HIS_HER(ARG) + " little brother "
+		CASE 8
+			LOCALS += "an intruder "
+		CASE 9
+			LOCALS += "an old man and his dog "
+		CASE 10
+			LOCALS += HIS_HER(ARG) + " teacher "
+		CASE 11
+			LOCALS += "a youkai "
+		CASE 12
+			LOCALS += "oni "
+		CASE 13
+			LOCALS += "a fairy "
+		CASE 14
+			LOCALS += "a goddess "
+		CASE 15
+			LOCALS += "a god "
+		CASE 16
+			LOCALS += "a celestial "
+		CASE 17
+			LOCALS += "a divine spirit "
+		CASE 18
+			LOCALS += "a zombie "
+		CASE 19
+			LOCALS += HIS_HER(ARG) + " acquaintances "
+		CASE 20
+			LOCALS += "a molester "
+		CASE 21
+			LOCALS += "a rapist "
+		CASE 22
+			LOCALS += "a handsome man "
+		CASE 23
+			LOCALS += HIS_HER(ARG) + " " + \@TALENT:(ARG):性別 == 2 ? girlfriend # boyfriend\@ + " "
+		CASE 24
+			LOCALS += HIS_HER(ARG) + " previous " + \@TALENT:(ARG):性別 == 2 ? wife # husband\@ + " "
+		CASE 25
+			LOCALS += "a vagrant "
+		CASE 26
+			LOCALS += "a local thirsty virgin who got too desperate "
+		CASE 27
+			LOCALS += "a childhood friend "
+		CASE 28
+			LOCALS += "a local celebrity "
+		CASE 29
+			LOCALS += "a pedophile "
+		CASE 30
+			LOCALS += "an old influential businessman "
+		CASE 31
+			LOCALS += "bunch of men from Human Village "
+		CASE 32
+			LOCALS += "local thugs "
+		CASE 33
+			LOCALS += "an ugly fat man "
+		CASE 34
+		$NAMELOOP
+		LOCAL:99 = 0
+		LOCALS:1 =
+		FOR LOCAL,1,CHARANUM
+			SIF TALENT:LOCAL:童貞 && HAS_PENIS(LOCAL)
+				LOCAL:99 ++
+		NEXT
+			IF LOCAL:99
+				FOR LOCAL,1,CHARANUM
+				SIF TALENT:LOCAL:童貞 && HAS_PENIS(LOCAL) && !RAND:40 && LOCALS:1 == ""
+					LOCALS:1 = %CALLNAME:LOCAL%
+				NEXT
+			ENDIF
+		SIF !LOCAL:99
+			RESTART
+		SIF LOCALS:1 == "" || LOCALS:1 == CALLNAME:ARG
+			GOTO NAMELOOP
+			
+		LOCALS += LOCALS:1 + " "
+	ENDSELECT
+	SELECTCASE RAND:9
+		CASE 0
+			LOCALS += "on " + HIS_HER(ARG) + " birthday "
+		CASE 1
+			LOCALS += "during holidays "
+		CASE 2
+			LOCALS += "on a Christmas "
+		CASE 3
+			LOCALS += "on Valentine's Day "
+		CASE 4
+			LOCALS += "on a festival "
+		CASE 5
+			LOCALS += "on " + HIS_HER(ARG) + " parents' wedding anniversary "
+		CASE 6
+			LOCALS += "on a completely ordinary day "
+		CASE 7
+			LOCALS += "on a one-night stand "
+		CASE 8
+			LOCALS += "on a party "
+	ENDSELECT
+	SELECTCASE RAND:17
+		CASE 0
+			LOCALS += "at the love hotel"
+		CASE 1
+			LOCALS += "at " + HIS_HER(ARG) + " house"
+		CASE 2
+			LOCALS += "at elementary school"
+		CASE 3
+			LOCALS += "at the public bath"
+		CASE 4
+			LOCALS += "in the nearby park"
+		CASE 5
+			LOCALS += "on a field"
+		CASE 6
+			LOCALS += "in a cave"
+		CASE 7
+			LOCALS += "in the Former Hell"
+		CASE 8
+			LOCALS += "in the mountains"
+		CASE 9
+			LOCALS += "in the abandoned shack"
+		CASE 10
+			LOCALS += "in one of the shrine's old rooms"
+		CASE 11
+			LOCALS += "near Misty Lake"
+		CASE 12
+			LOCALS += "in a bamboo forest"
+		CASE 13
+			LOCALS += "in a village"
+		CASE 14
+			LOCALS += "during " + HIS_HER(ARG) + " adventures"
+		CASE 15
+			LOCALS += "in the forest"
+		CASE 16
+			LOCALS += "somewhere in SDM"
+	ENDSELECT
+	SELECTCASE RAND:6
+		CASE 0
+			LOCALS += " when " + HE_SHE(ARG) + " was young."
+		CASE 1
+			LOCALS += " when " + HE_SHE(ARG) + " was a child."
+		CASE 2
+			LOCALS += " a long time ago."
+	CASEELSE
+			LOCALS += "."
+	ENDSELECT
+CSTR:ARG:Ａ初体験の相手 = %LOCALS%
+ENDIF
+RETURNF CSTR:ARG:Ａ初体験の相手
+
+@LOSE_VIRGIN_MOUTH(ARG)
+#FUNCTIONS
+IF CSTR:ARG:Ｍ初体験の相手 == ""
+	VARSET LOCALS
+	SELECTCASE RAND:16
+		CASE 0
+			LOCALS += HE_SHE(ARG, 1) + " kissed "
+		CASE 1
+			LOCALS += HE_SHE(ARG, 1) + " accidentally touched " + HIS_HER(ARG) + " lips with "
+		CASE 2
+			LOCALS += HE_SHE(ARG, 1) + " had " + HIS_HER(ARG, 1) + " first passionate kiss with "
+		CASE 3
+			LOCALS += HE_SHE(ARG, 1) + " decided to experiment and kissed with "
+		CASE 4
+			LOCALS += HE_SHE(ARG, 1) + " allowed to do it once and sold it for " + @"{RAND:12+1}" + "k￥ to "
+		CASE 5
+			LOCALS += HE_SHE(ARG, 1) + " was robbed out of it by "
+		CASE 6
+			LOCALS += HE_SHE(ARG, 1) + " was kissed in her sleep by "
+		CASE 7
+			LOCALS += HE_SHE(ARG, 1) + " was forcibly kissed when " + HE_SHE(ARG) + " passed out from drinking too much by "
+		CASE 8
+			LOCALS += HE_SHE(ARG, 1) + " was convinced to do it by "
+		CASE 9
+			LOCALS += HE_SHE(ARG, 1) + " was blackmailed into doing it by "
+		CASE 10
+			LOCALS += HE_SHE(ARG, 1) + " was kidnapped and kissed by "
+		CASE 11
+			LOCALS += HE_SHE(ARG, 1) + " was hypnotized and kissed by "
+		CASE 12
+			LOCALS += HE_SHE(ARG, 1) + " shared " + HIS_HER(ARG) + " first kiss with "
+		CASE 13
+			LOCALS += HE_SHE(ARG, 1) + " was surprise-kissed by "
+		CASE 14
+			LOCALS += HE_SHE(ARG, 1) + " lost a bet and had to be kissed by "
+		CASE 15
+			LOCALS += HE_SHE(ARG, 1) + " kissed while playing spinning bottle game by "
+	ENDSELECT
+	SELECTCASE RAND:36
+		CASE 0
+			LOCALS += HIS_HER(ARG) + " own dad "
+		CASE 1
+			LOCALS += "an unknown mister "
+		CASE 2
+			LOCALS += "some guy from the neighborhood "
+		CASE 3
+			LOCALS += HIS_HER(ARG) + " brother "
+		CASE 4
+			LOCALS += HIS_HER(ARG) + " mentor "
+		CASE 5
+			LOCALS += "a boy from " + HIS_HER(ARG) + " class "
+		CASE 6
+			LOCALS += "a nobleman "
+		CASE 7
+			LOCALS += HIS_HER(ARG) + " little brother "
+		CASE 8
+			LOCALS += "an intruder "
+		CASE 9
+			LOCALS += "an old man and his dog "
+		CASE 10
+			LOCALS += HIS_HER(ARG) + " teacher "
+		CASE 11
+			LOCALS += "a youkai "
+		CASE 12
+			LOCALS += "oni "
+		CASE 13
+			LOCALS += "a fairy "
+		CASE 14
+			LOCALS += "a goddess "
+		CASE 15
+			LOCALS += "a god "
+		CASE 16
+			LOCALS += "a celestial "
+		CASE 17
+			LOCALS += "a divine spirit "
+		CASE 18
+			LOCALS += "a zombie "
+		CASE 19
+			LOCALS += HIS_HER(ARG) + " acquaintances "
+		CASE 20
+			LOCALS += "a molester "
+		CASE 21
+			LOCALS += "a rapist "
+		CASE 22
+			LOCALS += "a handsome man "
+		CASE 23
+			LOCALS += HIS_HER(ARG) + " " + \@TALENT:(ARG):性別 == 2 ? girlfriend # boyfriend\@ + " "
+		CASE 24
+			LOCALS += HIS_HER(ARG) + " previous " + \@TALENT:(ARG):性別 == 2 ? wife # husband\@ + " "
+		CASE 25
+			LOCALS += "a vagrant "
+		CASE 26
+			LOCALS += "a local thirsty virgin who got too desperate "
+		CASE 27
+			LOCALS += "a childhood friend "
+		CASE 28
+			LOCALS += "a local celebrity "
+		CASE 29
+			LOCALS += "a pedophile "
+		CASE 30
+			LOCALS += "an old influential businessman "
+		CASE 31
+			LOCALS += "bunch of men from Human Village "
+		CASE 32
+			LOCALS += "local thugs "
+		CASE 33
+			LOCALS += "an ugly fat woman "
+		CASE 34
+			LOCALS += "an ugly fat man "
+		CASE 35
+		$NAMELOOP
+		LOCAL:99 = 0
+		LOCALS:1 =
+		FOR LOCAL,1,CHARANUM
+			SIF EXP:LOCAL:キス経験
+				LOCAL:99 ++
+		NEXT
+		IF LOCAL:99
+			FOR LOCAL,1,CHARANUM
+				SIF EXP:LOCAL:キス経験 && !RAND:40 && LOCALS:1 == ""
+					LOCALS:1 = %CALLNAME:LOCAL%
+			NEXT
+		ENDIF
+		SIF !LOCAL:99
+			RESTART
+		SIF LOCALS:1 == "" || LOCALS:1 == CALLNAME:ARG
+			GOTO NAMELOOP
+			
+		LOCALS += LOCALS:1 + " "
+	ENDSELECT
+	SELECTCASE RAND:9
+		CASE 0
+			LOCALS += "on " + HIS_HER(ARG) + " birthday "
+		CASE 1
+			LOCALS += "during holidays "
+		CASE 2
+			LOCALS += "on a Christmas "
+		CASE 3
+			LOCALS += "on Valentine's Day "
+		CASE 4
+			LOCALS += "on a festival "
+		CASE 5
+			LOCALS += "on " + HIS_HER(ARG) + " parents' wedding anniversary "
+		CASE 6
+			LOCALS += "on a completely ordinary day "
+		CASE 7
+			LOCALS += "on a one-night stand "
+		CASE 8
+			LOCALS += "on a party "
+	ENDSELECT
+	SELECTCASE RAND:17
+		CASE 0
+			LOCALS += "at the love hotel"
+		CASE 1
+			LOCALS += "at " + HIS_HER(ARG) + " house"
+		CASE 2
+			LOCALS += "at elementary school"
+		CASE 3
+			LOCALS += "at the public bath"
+		CASE 4
+			LOCALS += "in the nearby park"
+		CASE 5
+			LOCALS += "on a field"
+		CASE 6
+			LOCALS += "in a cave"
+		CASE 7
+			LOCALS += "in the Former Hell"
+		CASE 8
+			LOCALS += "in the mountains"
+		CASE 9
+			LOCALS += "in the abandoned shack"
+		CASE 10
+			LOCALS += "in one of the shrine's old rooms"
+		CASE 11
+			LOCALS += "near Misty Lake"
+		CASE 12
+			LOCALS += "in a bamboo forest"
+		CASE 13
+			LOCALS += "in a village"
+		CASE 14
+			LOCALS += "during " + HIS_HER(ARG) + " adventures"
+		CASE 15
+			LOCALS += "in the forest"
+		CASE 16
+			LOCALS += "somewhere in SDM"
+	ENDSELECT
+	SELECTCASE RAND:6
+		CASE 0
+			LOCALS += " when " + HE_SHE(ARG) + " was young."
+		CASE 1
+			LOCALS += " when " + HE_SHE(ARG) + " was a child."
+		CASE 2
+			LOCALS += " a long time ago."
+	CASEELSE
+			LOCALS += "."
+	ENDSELECT
+CSTR:ARG:Ｍ初体験の相手 = %LOCALS%
+ENDIF
+RETURNF CSTR:ARG:Ｍ初体験の相手

@@ -1,0 +1,45 @@
+;==============================================================================
+@EVENT_WC_COUNTER_PUNISHMENT(ARG,ARG:1)
+IF NO:ARG == 999
+	;CALL COM461_PUNISHMENT_FINISH
+	RETURN 0
+ENDIF
+VARSET LOCAL
+LOCAL = 1
+WHILE LOCAL
+LOCAL:1 = RAND:10
+RESULT = 1
+TRYCALLFORM WC_PUNISHMENT_{LOCAL:1}(ARG,ARG:1)
+LOCAL = RESULT
+WEND
+DRAWLINE
+WAIT
+;パンツを脱がせる
+@WC_PUNISHMENT_0(ARG,ARG:1)
+SIF !CFLAG:PLAYER:服装_下半身下着２
+	RETURN 1
+CFLAG:PLAYER:服装_下半身下着２ = 0
+
+PRINTFORML %CALLNAME:ARG% stole %YOUR(PLAYER)% underwear.
+PRINTFORML Because of that you'll have to spend a day without your panties...
+RETURN 0
+
+;ローター挿入
+@WC_PUNISHMENT_1(ARG,ARG:1)
+SIF !HAS_VAGINA(PLAYER)
+	RETURN 1
+
+CFLAG:PLAYER:ローター挿入 = 240
+CFLAG:PLAYER:ローター挿入者 = ARG
+PRINTFORML %CALLNAME:ARG% inserted rotor into %YOUR(PLAYER)% %VAGINA(PLAYER)%.
+PRINTFORML You were ordered to stay with it for a while...
+RETURN 0
+
+;ローターA挿入
+@WC_PUNISHMENT_2(ARG,ARG:1)
+
+CFLAG:PLAYER:ローターA挿入 = 240
+CFLAG:PLAYER:ローター挿入者 = ARG
+PRINTFORML %CALLNAME:ARG% inserted anal rotor into %YOUR(MASTER)% %ANUS(PLAYER)%.
+PRINTFORML You were ordered to stay with it for a while...
+RETURN 0

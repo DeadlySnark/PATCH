@@ -1,0 +1,191 @@
+;-------------------------------------------------
+;YOUR
+;used instead this abomination:
+;\@ CALLNAME:MASTER == "You" ? your#%CALLNAME:MASTER%'s\@
+;
+;for above variant simply do %YOUR()% (it's the same as %YOUR(MASTER)%) in your PRINTFORM
+;if you want to use this for PLAYER you use %YOUR(PLAYER)%
+;
+;ARG:1 is when you want to start with capitalized letter (Your)
+;-------------------------------------------------
+@YOUR(ARG = 0, ARG:1 = 0)
+#FUNCTIONS
+IF CALLNAME:ARG == "You"
+	 LOCALS = Your
+	 SIF !ARG:1
+		LOCALS = %TOLOWER(LOCALS)%
+	RETURNF LOCALS
+ENDIF
+RETURNF CALLNAME:ARG + "'s"
+
+@YOURS(ARG = 0, ARG:1 = 0)
+#FUNCTIONS
+IF CALLNAME:ARG == "You"
+	 LOCALS = Yours
+	 SIF !ARG:1
+		LOCALS = %TOLOWER(LOCALS)%
+	RETURNF LOCALS
+ENDIF
+RETURNF CALLNAME:ARG + "'s"
+
+;-------------------------------------------------
+;HE_SHE
+;return she or he depending on the gender
+;the second parameter is for big-letter start
+;just in case there also is same function name like TohoK
+;-------------------------------------------------
+@HE_SHE(ARG:0,ARG:1)
+#FUNCTIONS
+IF ARG:1
+	IF CALLNAME:(ARG:0) == "You"
+		RETURNF "You"
+	ELSEIF TALENT:(ARG:0):ê´ï  == 2
+		RETURNF "He"
+	ELSE
+		RETURNF "She"
+	ENDIF
+ELSE
+	IF CALLNAME:(ARG:0) == "You"
+		RETURNF "you"
+	ELSEIF TALENT:(ARG:0):ê´ï  == 2
+		RETURNF "he"
+	ELSE
+		RETURNF "she"
+	ENDIF
+ENDIF
+
+@TOSTR_THIRD(ARG:0, ARG:1)
+#FUNCTIONS
+RETURNF HE_SHE(ARG:0,ARG:1)
+
+;-------------------------------------------------
+;HIS_HER; HIM_HER
+;same as above but returns his/him her
+;-------------------------------------------------
+@HIS_HER(ARG:0,ARG:1)
+#FUNCTIONS
+IF ARG:1
+	IF CALLNAME:(ARG:0) == "You"
+		RETURNF "Your"
+	ELSEIF TALENT:(ARG:0):ê´ï  == 2
+		RETURNF "His"
+	ELSE
+		RETURNF "Her"
+	ENDIF
+ELSE
+	IF CALLNAME:(ARG:0) == "You"
+		RETURNF "your"
+	ELSEIF TALENT:(ARG:0):ê´ï  == 2
+		RETURNF "his"
+	ELSE
+		RETURNF "her"
+	ENDIF
+ENDIF
+
+@HIM_HER(ARG:0,ARG:1)
+#FUNCTIONS
+IF ARG:1
+	IF CALLNAME:(ARG:0) == "You"
+		RETURNF "You"
+	ELSEIF TALENT:(ARG:0):ê´ï  == 2
+		RETURNF "Him"
+	ELSE
+		RETURNF "Her"
+	ENDIF
+ELSE
+	IF CALLNAME:(ARG:0) == "You"
+		RETURNF "you"
+	ELSEIF TALENT:(ARG:0):ê´ï  == 2
+		RETURNF "him"
+	ELSE
+		RETURNF "her"
+	ENDIF
+ENDIF
+
+@HIS_HERS(ARG:0,ARG:1)
+#FUNCTIONS
+IF ARG:1
+	IF CALLNAME:(ARG:0) == "You"
+		RETURNF "Yours"
+	ELSEIF TALENT:(ARG:0):ê´ï  == 2
+		RETURNF "His"
+	ELSE
+		RETURNF "Hers"
+	ENDIF
+ELSE
+	IF CALLNAME:(ARG:0) == "You"
+		RETURNF "yours"
+	ELSEIF TALENT:(ARG:0):ê´ï  == 2
+		RETURNF "his"
+	ELSE
+		RETURNF "hers"
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;if you want to get name of month - sometimes looks/reads/feels better than number
+;-------------------------------------------------
+@MONTH_NAME(ARG:0)
+#FUNCTIONS
+SELECTCASE ARG:0
+	CASE 1
+		RETURNF "January"
+	CASE 2
+		RETURNF "February"
+	CASE 3
+		RETURNF "March"
+	CASE 4
+		RETURNF "April"
+	CASE 5
+		RETURNF "May"
+	CASE 6
+		RETURNF "June"
+	CASE 7
+		RETURNF "July"
+	CASE 8
+		RETURNF "August"
+	CASE 9
+		RETURNF "September"
+	CASE 10
+		RETURNF "October"
+	CASE 11
+		RETURNF "November"
+	CASE 12
+		RETURNF "December"
+	CASEELSE
+		RETURNF "wrong month..."
+ENDSELECT
+
+;Function that centers the text
+;Because emuera lacks a convenient way for this
+;Usage: %CENTER(TEXT, #Num of spaces)%
+@CENTER(ARGS, ARG)
+#FUNCTIONS
+LOCAL = (ARG/2) - (STRLENS(ARGS) / 2)
+ARGS = %"", LOCAL%%ARGS%%"", ((LOCAL+ARG%2)-(STRLENS(ARGS)%2))%
+RETURNF ARGS
+
+;-------------------------------------------------
+;Showing amount of money
+;Use ARG to eliminate PRINTL at the end
+;-------------------------------------------------
+@SHOW_MONEY(ARG)
+PRINTFORML Money on hand: $\@MONEY == 0 ?0#%TOSTR(MONEY,"#,###")%\@
+SIF !ARG
+	PRINTL 
+
+;-------------------------------------------------
+;For calendar days and other things
+;-------------------------------------------------
+@CALENDAR_COUNT(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+CASE 1, 21, 31
+	RETURNF "st"
+CASE 2, 22
+	RETURNF "nd"
+CASE 3, 23
+	RETURNF "rd"
+CASEELSE
+	RETURNF "th"
+ENDSELECT

@@ -1,0 +1,194 @@
+@SHOW_SHOP
+	TRYCALL COM461_PUNISHMENT_END
+	TRYCALL 追加パッチVerUP
+
+	;奴隷購入ページフラグ
+	TFLAG:100 = 0
+	DRAWLINE
+	LOCAL = CFLAG:MASTER:通常起床時間 / 60 + 1000
+	PRINTFORML %日付_月(暦法月)%, {暦法日}%CALENDAR_COUNT(暦法日)%(%GET_DAY()%) [Day: {DAY}] (Wake up time: {LOCAL - 1000, 2, LEFT} hours) 
+	CALL SHOW_MONEY(1)
+	PRINT STA:
+		CALL PRINT_COLORBAR, BASE:MASTER:0,MAXBASE:MASTER:0,28, UNICODE(0x2585), UNICODE(0x2585), BARCOLORSET("赤"), RESULT:1
+		PRINTFORML  ({BASE:MASTER:体力,5}/{MAXBASE:MASTER:体力,5})  
+	PRINT ENE:
+		CALL PRINT_COLORBAR, BASE:MASTER:1,MAXBASE:MASTER:1,28, UNICODE(0x2585), UNICODE(0x2585), BARCOLORSET("緑"), RESULT:1
+		PRINTFORML  ({BASE:MASTER:1,5}/{MAXBASE:MASTER:1,5})  
+	PRINTL
+
+	PRINT [100] - Wake up              
+	PRINTL [101] - Abilities
+	SIF STRLENS(SAVESTR:10) > 1
+		PRINT [102] - Collection           
+	PRINTL [103] - Mail order
+	PRINTL [104] - House setting        
+	PRINTL
+	PRINT [200] - SAVE　　　　　       
+	PRINTL [300] - LOAD
+	PRINT [400] - OPTION　　　　       
+	PRINTL [500] - Hermaphrodite Settings
+	TRYCALL 妊娠パッチDEBUG88
+
+@USERSHOP
+
+	TRYCALL 妊娠パッチDEBUG88COM
+
+	IF RESULT == 100
+		BEGIN TRAIN
+		RETURN 1
+	ELSEIF RESULT == 101
+		CALL SHOW_CHARADATA
+	ELSEIF RESULT == 102 && STRLENS(SAVESTR:10) > 1
+		CALL SHOW_COLLECTION
+	ELSEIF RESULT == 103
+		CALL ITEM_BUY
+	ELSEIF RESULT == 104
+		CALL SCHEDULE
+	ELSEIF RESULT == 200
+		CALL SAVEGAME_EX
+	ELSEIF RESULT == 300
+		CALL LOADGAME_EX
+	ELSEIF RESULT == 400
+		CALL OPTION
+	ELSEIF RESULT == 500
+		CALL SET_FUTANARI_ALL
+	ENDIF
+
+
+@SCHEDULE
+	#DIM LOOP_CHR
+	
+	PRINT [0] - Wake up time settings
+	PRINTFORML  　　　　Current setting: Wake up at {CFLAG:MASTER:通常起床時間 / 60, 2, LEFT}
+	SIF FLAG:陥落人数
+		PRINTFORML [1] - Personal room settings　　　　Current setting: %GETPLACENAME(CFLAG:MASTER:開始位置)%
+	PRINTFORML [2] - %NTR_NAME(0)% status settings
+	PRINTFORML [3] - Call children
+	PRINTL [100] - Return
+	INPUT
+	IF RESULT == 100
+		RETURN 0
+	ELSEIF RESULT == 0
+		LOCAL = CFLAG:MASTER:通常起床時間 / 60 + 1000
+		$INPUT_LOOP
+		PRINTFORML Current wake up time is {LOCAL - 1000, 2, LEFT} hours.
+		PRINTL When do you wake up? (Please input a value between 0～23)
+		PRINTBUTTON "[－]", (LOCAL == 1000 ? 1023 # LOCAL - 1)
+		PRINTBUTTON "[＋]", (LOCAL == 1023 ? 1000 # LOCAL + 1)
+		PRINTL
+		PRINTFORML [0] [1] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12]
+		PRINTFORML [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23]
+		PRINTL 
+		PRINTL [100] - Confirm
+		INPUT
+		IF RESULT == 100
+			CFLAG:MASTER:通常起床時間 = (LOCAL - 1000) * 60
+		ELSEIF RESULT >= 0 && RESULT < 24
+			CFLAG:MASTER:通常起床時間 = RESULT * 60
+		ELSE
+			SIF RESULT >= 1000 && RESULT < 1024
+				LOCAL = RESULT
+			CLEARLINE 5
+			GOTO INPUT_LOOP
+		ENDIF
+		RESTART
+	ELSEIF RESULT == 1 && FLAG:陥落人数
+		PRINTL You can change your personal room where you will wake up.
+		PRINTL [0] - Your room
+		FOR LOOP_CHR,1,CHARANUM
+			SIF TALENT:LOOP_CHR:恋慕
+				PRINTFORML [{LOOP_CHR}] - %CALLNAME:LOOP_CHR%'s room
+		NEXT
+		$INPUT_LOOP2
+		INPUT
+		
+		IF RESULT < 0 || RESULT >= CHARANUM
+			CLEARLINE 1
+			GOTO INPUT_LOOP2
+		ELSEIF RESULT == 0
+			CFLAG:MASTER:開始位置 = 15
+		ELSEIF TALENT:RESULT:恋慕
+			CFLAG:MASTER:開始位置 = CFLAG:RESULT:311
+		ELSE
+			CLEARLINE 1
+			GOTO INPUT_LOOP2
+		ENDIF
+		PRINTW Changes will be applied on the next day.
+		RESTART
+	ELSEIF RESULT == 2
+		CALL MAN_SET
+		RESTART
+	ELSEIF RESULT == 3
+		CALL 子供訪問_設定
+		RESTART
+	ENDIF
+
+RETURN 1
+
+@SET_FUTANARI_ALL
+	#DIM LOOP_CHR
+	#DIM IS_TARGET_CHILD
+	#DIM FUTA
+
+	$INPUT_LOOP
+	PRINTL Warning! Changes will be immediate and cannot be reverted back!
+	PRINTL [100] - Return
+	PRINTL [101] - Hermaphrodite daughters: 0%
+	PRINTL [102] - Hermaphrodite daughters: 50%
+	PRINTL [103] - Hermaphrodite daughters: 100%
+	PRINTL [104] - Initial characters:      0%
+	PRINTL [105] - Initial characters:      50%
+	PRINTL [106] - Initial characters:      100%
+
+	INPUT
+	IF RESULT == 100
+		RETURN 1
+	ELSEIF RESULT >= 101 && RESULT <= 106
+		IF RESULT >= 101 && RESULT <= 103
+			IS_TARGET_CHILD = 1
+		ELSE
+			IS_TARGET_CHILD = 0
+		ENDIF
+		FOR LOOP_CHR,0,CHARANUM
+			SIF LOOP_CHR == MASTER
+				CONTINUE
+			IF CHILDREM_CHECK(LOOP_CHR)
+				SIF IS_TARGET_CHILD == 0
+					CONTINUE
+			ELSE
+				SIF IS_TARGET_CHILD != 0
+					CONTINUE
+			ENDIF
+			SIF TALENT:LOOP_CHR:2 == 2
+				CONTINUE
+			IF RESULT == 101 || RESULT == 104
+				FUTA = 0
+			ELSEIF RESULT == 102 || RESULT == 105
+				FUTA = RAND:2
+			ELSE
+				FUTA = 1
+			ENDIF
+			; 生やしたり消したりする処理はSHOP_ITEM.ERBからコピペ＆改変
+			IF FUTA == 0 && TALENT:LOOP_CHR:2 == 3
+				TALENT:LOOP_CHR:2 = 1
+				MAXBASE:LOOP_CHR:2 = 0
+				MAXBASE:LOOP_CHR:精力 = 0
+			ELSEIF FUTA != 0 && TALENT:LOOP_CHR:2 == 1
+				TALENT:LOOP_CHR:2 |= 2
+				MAXBASE:LOOP_CHR:射精 = 10000
+				IF MAXBASE:LOOP_CHR:精力 > 0
+					MAXBASE:LOOP_CHR:精力 = LIMIT(MAXBASE:LOOP_CHR:精力,200,1000)
+				ELSE
+					MAXBASE:LOOP_CHR:精力 = 1000
+				ENDIF
+				IF MAXBASE:LOOP_CHR:勃起 > 0
+					MAXBASE:LOOP_CHR:勃起 = LIMIT(MAXBASE:LOOP_CHR:勃起,500,1500)
+				ELSE
+					MAXBASE:LOOP_CHR:勃起 = 1500
+				ENDIF
+			ENDIF
+		NEXT
+	ENDIF
+
+	GOTO INPUT_LOOP
+

@@ -1,0 +1,355 @@
+;-------------------------------------------------------------------------------
+;Ｖ初体験を記録する
+;すでに初体験が記録されている場合は無視される
+@memorial_v_append(キャラ番号,相手番号,内容,V_TYPE)
+	#DIM キャラ番号
+	#DIM 相手番号
+	#DIM V_TYPE
+	#DIMS 内容
+
+	SIF !INRANGE(キャラ番号,0,CHARANUM)
+		RETURN 0
+	;行為者が行為者の唇を奪うことの回避。
+	IF キャラ番号 == 相手番号
+		RETURN 0
+	ENDIF
+
+	;文字列生成は memorial_create()内で処理
+	;TEQUIP:キャラ番号:Ｖセックス / Ａセックス
+	;TCVAR:キャラ番号:行為者
+	;この２つが違った場合の記録方法に少し悩む
+	;IF (TEQUIP:キャラ番号:Ｖセックス >= 0) && (TEQUIP:キャラ番号:Ｖセックス != TCVAR:キャラ番号:行為者)
+	;	SELECTCASE TEQUIP:キャラ番号:Ｖセックス
+	;		CASE IS < CHARANUM
+	;			相手 = %CALLNAME:(TEQUIP:キャラ番号:Ｖセックス)+"に"%
+	;		CASE IS == 人物_訪問者
+	;			相手 = %NTR_NAME(0)+"に"%
+	;		CASE IS == 人物_客, 人物_村人
+	;			相手 = %NTR_NAME(TALENT:キャラ番号:恋慕+1)+"に"%
+	;		CASEELSE
+	;			相手 = %NTR_NAME(0)+"に"%
+	;	ENDSELECT
+	;ELSE
+	;	相手 = %""%
+	;ENDIF
+	IF CSTR:キャラ番号:Ｖ初体験の相手 == ""
+			CSTR:キャラ番号:Ｖ初体験の相手 = %memorial_create(キャラ番号,相手番号,内容,V_TYPE)%
+	ENDIF
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;Ａ初体験を記録する
+;すでに初体験が記録されている場合は無視される
+@memorial_a_append(キャラ番号,相手番号,内容,V_TYPE)
+	#DIM キャラ番号
+	#DIM 相手番号
+	#DIM V_TYPE
+	#DIMS 内容
+
+	SIF !INRANGE(キャラ番号,0,CHARANUM)
+		RETURN 0
+	;行為者が行為者の唇を奪うことの回避。
+	IF キャラ番号 == 相手番号
+		RETURN 0
+	ENDIF
+
+	;文字列生成は memorial_create()内で処理
+	;TEQUIP:キャラ番号:Ｖセックス / Ａセックス
+	;TCVAR:キャラ番号:行為者
+	;この２つが違った場合の記録方法に少し悩む
+	;IF (TEQUIP:キャラ番号:Ａセックス >= 0) && (TEQUIP:キャラ番号:Ａセックス != TCVAR:キャラ番号:行為者)
+	;	SELECTCASE TEQUIP:キャラ番号:Ａセックス
+	;		CASE IS < CHARANUM
+	;			相手 = %CALLNAME:(TEQUIP:キャラ番号:Ａセックス)+"に"%
+	;		CASE IS == 人物_訪問者
+	;			相手 = %NTR_NAME(0)+"に"%
+	;		CASE IS == 人物_客, 人物_村人
+	;			相手 = %NTR_NAME(TALENT:キャラ番号:恋慕+1)+"に"%
+	;		CASEELSE
+	;			相手 = %NTR_NAME(0)+"に"%
+	;	ENDSELECT
+	;ELSE
+	;	相手 = %""%
+	;ENDIF
+	IF CSTR:キャラ番号:Ａ初体験の相手 == ""
+			CSTR:キャラ番号:Ａ初体験の相手 = %memorial_create(キャラ番号,相手番号,内容,V_TYPE)%
+	ENDIF
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;Ｍ初体験を記録する
+;すでに初体験が記録されている場合は無視される
+@memorial_m_append(キャラ番号,相手番号,内容,V_TYPE)
+	#DIM キャラ番号
+	#DIM 相手番号
+	#DIM V_TYPE
+	#DIMS 内容
+
+	SIF !INRANGE(キャラ番号,0,CHARANUM)
+		RETURN 0
+	;行為者が行為者の唇を奪うことの回避。
+	IF キャラ番号 == 相手番号
+		RETURN 0
+	ENDIF
+
+	;文字列生成は memorial_create()内で処理
+	;行為者が行為者の唇を奪うことの回避。
+	;IF キャラ番号 == TCVAR:キャラ番号:行為者 
+	;	IF 相手 == ""
+	;		相手 = %CALLNAME:TARGET+"に"%
+	;	ENDIF
+	;ENDIF
+	;IF 内容 == ""
+	;	SELECTCASE TCVAR:キャラ番号:行為者
+	;		CASE IS == 0
+	;			IF TALENT:キャラ番号:恋慕
+	;				内容 = %"devoted "%
+	;			ELSEIF GETBIT(CFLAG:キャラ番号:既成事実,0)
+	;				内容 = %"gave "%
+	;			ELSE
+	;				内容 = %"奪われた"%
+	;			ENDIF
+	;		CASE IS == 人物_訪問者
+	;			IF TALENT:キャラ番号:NTR
+	;				内容 = %"devoted "%
+	;			ELSEIF NTR_CHK_FAVORABLY(キャラ番号, FAV_キスする程度)
+	;				内容 = %"gave "%
+	;			ELSEIF TALENT:キャラ番号:浮気公認
+	;				内容 = %"奪ってもらった"%
+	;			ELSE
+	;				内容 = %"奪われた"%
+	;			ENDIF
+	;		CASEELSE
+	;			内容 = %"奪われた"%
+	;	ENDSELECT
+	;ENDIF
+	IF CSTR:キャラ番号:Ｍ初体験の相手 == ""
+		CSTR:キャラ番号:Ｍ初体験の相手 = %memorial_create(キャラ番号,相手番号,内容,V_TYPE)%
+	ENDIF
+RETURN 0
+;-------------------------------------------------------------------------------
+;ＭＶ初体験を記録する
+;すでに初体験が記録されている場合は無視される
+@memorial_mv_append(キャラ番号,相手番号,内容,V_TYPE)
+	#DIM キャラ番号
+	#DIM 相手番号
+	#DIM V_TYPE
+	#DIMS 内容
+
+	SIF !INRANGE(キャラ番号,0,CHARANUM)
+		RETURN 0
+	;行為者が行為者の唇を奪うことの回避。
+	IF キャラ番号 == 相手番号
+		RETURN 0
+	ENDIF
+
+	;文字列生成は memorial_create()内で処理
+	;TEQUIP:キャラ番号:Ｖセックス / Ａセックス
+	;TCVAR:キャラ番号:行為者
+	;この２つが違った場合の記録方法に少し悩む
+	;IF (TEQUIP:キャラ番号:Ｖセックス >= 0) && (TEQUIP:キャラ番号:Ｖセックス != TCVAR:キャラ番号:行為者)
+	;	SELECTCASE TEQUIP:キャラ番号:Ｖセックス
+	;		CASE IS < CHARANUM
+	;			相手 = %CALLNAME:(TEQUIP:キャラ番号:Ｖセックス)+"に"%
+	;		CASE IS == 人物_訪問者
+	;			相手 = %NTR_NAME(0)+"に"%
+	;		CASE IS == 人物_客, 人物_村人
+	;			相手 = %NTR_NAME(TALENT:キャラ番号:恋慕+1)+"に"%
+	;		CASEELSE
+	;			相手 = %NTR_NAME(0)+"に"%
+	;	ENDSELECT
+	;ELSE
+	;	相手 = %""%
+	;ENDIF
+	IF CSTR:キャラ番号:ＭＶ初体験の相手 == ""
+		CSTR:キャラ番号:ＭＶ初体験の相手 = %memorial_create(キャラ番号,相手番号,内容,V_TYPE)%
+	ENDIF
+RETURN 0
+
+;-------------------------------------------------------------------------------
+;キス未経験チェック
+;　戻り値　1:キス未経験　0:キス経験済み
+@is_virgin_m(キャラ番号)
+	#FUNCTION
+	#DIM キャラ番号
+	;IF CSTR:キャラ番号:Ｍ初体験の相手 == ""
+	;キス経験も判定に含める
+	;口淫経験も判定に含めるべきか？
+	IF CSTR:キャラ番号:Ｍ初体験の相手 == "" && EXP:キャラ番号:キス経験 == 0
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+
+;-------------------------------------------------------------------------------
+;初体験の文字列を作成する
+;　相手番号が-1の時、バイブ相手などの特殊ケース
+;V_TYPE - how target is losing their virginity
+;1 - V, 2 - A, 3 - M, 4 - Male Virginity to V, 5 - Male Virginity to A
+;1 - Penis, 2 - Vibrator, 3 - Anal Vibrator, 4 - Fingers, 5 - Lips, 6 - Male Virginity to V, 7 - Male Virginity to A
+@memorial_create(キャラ番号,相手番号,内容,V_TYPE)
+	#FUNCTIONS
+	#DIM キャラ番号
+	#DIM 相手番号
+	#DIM V_TYPE
+	#DIMS 内容
+	#DIMS 日時
+	#DIMS 場所
+	#DIMS 相手 = ""
+
+	SIF !INRANGE(キャラ番号,0,CHARANUM)
+		RETURNF 
+
+	;悩むところだけど、具体的な日付が明らかじゃない方が個人的に好み
+	;日時 = %暦法月+"月"+暦法日+"日"%
+	日時 = on the %天候(天候値)% day of %日付_月(暦法月)%, {暦法日}%CALENDAR_COUNT(暦法日)%(%GET_DAY()%)
+
+	場所 = at %GETPLACENAME(CFLAG:キャラ番号:現在位置)%
+	
+	;行為者が行為者の初めてを奪うことの回避。
+	IF キャラ番号 == 相手番号
+		RETURNF 
+	ENDIF
+	;IF キャラ番号 == TCVAR:キャラ番号:行為者
+	;	IF 相手 == ""
+	;		IF 相手 != CALLNAME:TARGET
+	;			相手 = %CALLNAME:TARGET+"に"%
+	;		ELSE
+	;			相手 = %CALLNAME:PLAYER+"に"%
+	;		ENDIF
+	;	ENDIF
+	;ENDIF
+	SELECTCASE 相手番号
+		CASE IS == -1
+			;自分でバイブで破った場合
+			相手 = on %HIS_HER(キャラ番号)% own
+		CASE IS < CHARANUM
+			相手 = %CALLNAME:相手番号%
+		CASE IS == 人物_訪問者
+			相手 = %NTR_NAME(0)%
+		CASE IS == 人物_客, 人物_村人
+			相手 = some unknown man
+		CASEELSE
+			相手 = %NTR_NAME(0)%
+	ENDSELECT
+	
+	;Defining chara number of the initiating partner to TCVAR:Initiator
+	FLAG:9060 = 相手番号
+	
+	;PENIS_APPEAR might crash if used on someone who doesn't have a dick, careful here
+	SELECTCASE V_TYPE
+		CASE 1
+			IF 相手番号 < CHARANUM
+				相手 += "'s " + \@ HAS_PENIS(相手番号) ? %PENIS_APPEAR(相手番号)% # strapon\@
+			ELSEIF 相手番号 == 998
+				相手 += "'s " + Ｐ大きさ(訪問者_Ｐ大きさ) + " " + PENIS_APPEAR_SIMPLE()
+			ELSE
+				相手 += "'s " + PENIS_APPEAR_SIMPLE()
+			ENDIF
+		CASE 2
+			相手 += "'s vibrator"
+		CASE 3
+			相手 += "'s anal vibrator"
+		CASE 4
+			相手 += "'s fingers"
+		CASE 5
+			相手 += "'s lips"
+		CASE 6
+			IF 相手番号 < CHARANUM
+				相手 += "'s " + VAGINA(相手番号)
+			ELSE
+				相手 += "'s vagina"
+			ENDIF
+		CASE 7
+			IF 相手番号 < CHARANUM
+				相手 += "'s " + ANUS(相手番号)
+			ELSE
+				相手 += "'s anus"
+			ENDIF
+	ENDSELECT
+
+	IF 内容 == ""
+		SELECTCASE TCVAR:キャラ番号:行為者
+			CASE IS == 0
+				; 行為者があなた
+				IF TALENT:キャラ番号:恋慕
+					内容 = %"devoted it to"%
+				ELSEIF GETBIT(CFLAG:キャラ番号:既成事実,0)
+					内容 = %"gave it to"%
+				ELSE
+					内容 = %"got robbed of it by"%
+				ENDIF
+			CASE IS == 人物_訪問者
+				IF TALENT:キャラ番号:NTR || (キャラ番号 == 人物_あなた && (FLAG:1840 >= 11 && FLAG:1840 <= 15))
+					内容 = %"devoted it to"%
+				ELSEIF NTR_CHK_FAVORABLY(キャラ番号, FAV_寝取られ寸前) || (キャラ番号 == 人物_あなた && FLAG:1840 == 10)
+					内容 = %"devoted it to"%
+				ELSEIF NTR_CHK_FAVORABLY(キャラ番号, FAV_寝取られそう)
+					内容 = %"gave it to"%
+				ELSEIF NTR_CHK_FAVORABLY(キャラ番号, FAV_主人より高い)
+					内容 = %"gave it to"%
+				ELSEIF NTR_CHK_FAVORABLY(キャラ番号, FAV_うふふする程度) 
+					内容 = %"gave it to"%
+				ELSEIF TALENT:キャラ番号:浮気公認
+					内容 = %"submitted it to"%
+				ELSE
+					内容 = %"got robbed of it by"%
+				ENDIF
+			CASE IS == 人物_客
+				内容 = %"sold it to"%
+			CASEELSE
+				; 行為者が住人
+				; 住人からの行動なので「奪われた」は無い。
+				IF キャラ番号 ==  TCVAR:キャラ番号:行為者
+					;奪った側
+					IF 相手番号 == 0
+						;相手があなた
+						IF TALENT:相手番号:恋慕
+							内容 = %"devoted it to"%
+						ELSE
+							内容 = %"gave it to"%
+						ENDIF
+					ELSEIF 相手番号 == 人物_訪問者
+						IF TALENT:相手番号:NTR
+							内容 = %"devoted it to"%
+						ELSEIF NTR_CHK_FAVORABLY(相手番号, FAV_寝取られ寸前) 
+							内容 = %"devoted it to"%
+						ELSE
+							内容 = %"gave it to"%
+						ENDIF
+					ELSE
+						; 住人同士
+						内容 = %"gave it to"%
+					ENDIF
+				ELSE
+					;奪われた側（たぶんここは死に分岐）
+					IF 相手番号 == 0
+						;相手があなた
+						IF TALENT:キャラ番号:恋慕
+							内容 = %"devoted it to"%
+						ELSEIF GETBIT(CFLAG:キャラ番号:既成事実,0)
+							内容 = %"gave it to"%
+						ELSE
+							内容 = %"gave it to"%
+						ENDIF
+					ELSEIF 相手番号 == 人物_訪問者
+						IF TALENT:キャラ番号:NTR
+							内容 = %"devoted it to"%
+						ELSEIF NTR_CHK_FAVORABLY(キャラ番号, FAV_寝取られ寸前)
+							内容 = %"devoted it to"%
+						ELSEIF TALENT:キャラ番号:浮気公認
+							内容 = %"submitted it to"%
+						ELSE
+							内容 = %"gave it to"%
+						ENDIF
+					ELSE
+						; 住人同士
+						内容 = %"gave it to"%
+					ENDIF
+				ENDIF
+		ENDSELECT
+	ENDIF
+;RETURNF 日時+場所+相手+内容
+;Spaces included
+;Format: She gave her (Virginity) to (Target) at (Place) on (Day)
+RETURNF HE_SHE(キャラ番号, 1) + " " + 内容 + " " + 相手 + " " + 場所 + " " + 日時

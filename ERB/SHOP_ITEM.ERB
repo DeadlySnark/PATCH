@@ -1,0 +1,1013 @@
+@ITEM_BUY
+	#DIM LC
+	#DIM ITEM_NO
+	#DIM LOOP_CHR
+	#DIM LOOP_ITEM
+	
+	;PRINTFORML {ITEMSALES:62}
+	CALL ITEM_SALES
+
+	DRAWLINE
+	LC = LINECOUNT
+	CALL LIST_ITEM("全て")
+	SIF LC != LINECOUNT
+		DRAWLINE
+	;とりあえず無条件に全部表示にしたがTYPE指定も可能
+	PRINTFORM Please select the item you want to purchase. 
+	CALL SHOW_MONEY(1)
+	CALL SHOW_ITEM
+	DRAWLINE
+	PRINTL [200] - Training items　[300] - Consumables　[400] - Daily essentials　[500] - Food and drink　[600] - Talents　[700] - Body change
+	PRINT [999] - Show all        [100] - Return       [998] - Item reset
+	
+	;先に共通処理
+	;SHOP購入可能なITEMを追加したら無効範囲を合わせること
+	DO
+		INPUT
+		ITEM_NO = RESULT
+		SELECTCASE ITEM_NO
+		CASE 100
+			RETURN 0
+		CASE 998
+			LOCALS = Would you like to reset the items in the shop to sell them again?\nDoesn't work on talents since you can have only one.
+			CALL CHOICE(LOCALS, "Yes", "No")
+			SIF RESULT
+				RESTART
+			FOR LOOP_ITEM, 0, 100
+				ITEMSALES:LOOP_ITEM = 0
+			NEXT
+			RESTART
+		CASE 999
+			TFLAG:表示アイテム種類 = 0
+			RESTART
+		CASE 200, 300, 400, 500, 600, 700
+			TFLAG:表示アイテム種類 = ITEM_NO / 100
+			RESTART
+		CASE IS < 0, IS > 100
+			; 無効範囲
+			RESTART
+		CASEELSE
+			SIF !ITEM_TYPE(ITEM_NO, TFLAG:表示アイテム種類)
+				CONTINUE
+			SELECTCASE ITEMSTOCK(ITEM_NO)
+			CASE 1, 4
+				;
+			CASE 2
+				REUSELASTLINE It's sold out.
+				;
+			CASE 3
+				REUSELASTLINE Not enough money.
+				;
+			CASE 5
+				REUSELASTLINE You've got enough already.
+				;
+			CASEELSE
+				; 次のステップへ
+				BREAK
+			ENDSELECT
+			WAIT
+			RESTART
+		ENDSELECT
+	LOOP 1
+
+	;アイテムの説明
+	DRAWLINE
+	PRINTL
+	PRINTFORML ～%ITEMNAME:ITEM_NO%～
+	CALLFORM アイテム説明_{ITEM_NO}
+	PRINTL
+	DRAWLINE
+
+	;個別に処理すべきもの
+	SELECTCASE ITEM_NO
+	CASE 60 TO 62
+		LOCALS = Do you want to learn %ITEMNAME:ITEM_NO%?
+		CALL CHOICE(LOCALS, "Yes", "No")
+		SIF RESULT
+			RESTART
+		MONEY -= ITEMPRICE:ITEM_NO
+		SELECTCASE ITEM_NO
+			CASE 60
+				TALENT:MASTER:汚臭耐性 = 2
+			CASE 61
+				TALENT:MASTER:調合知識 = 1
+			CASE 62
+				TALENT:MASTER:禁断の知識 = 1
+		ENDSELECT
+		ITEMSALES:ITEM_NO = -1
+		RESTART
+
+	CASE 63
+		CALL CHOICE("Would you like to purchase【Technique UP】", "Yes", "No")
+		SIF RESULT
+			RESTART
+		MONEY -= ITEMPRICE:ITEM_NO
+		ABL:MASTER:技巧 += 1
+		RESTART
+	CASE 64
+		CALL CHOICE("Would you like to purchase【Technique DOWN】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		MONEY -= ITEMPRICE:ITEM_NO
+		ABL:MASTER:技巧 -= 1
+		RESTART
+	CASE 70
+		CALL CHOICE("Would you like to purchase【Energetic】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			IF BASE:LOOP_CHR:0 < MAXBASE:LOOP_CHR:0
+				PRINTFORM [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR),18,LEFT% STA: 
+				CALL PRINT_COLORBAR, BASE:LOOP_CHR:0,MAXBASE:LOOP_CHR:0,24, UNICODE(0x2585), UNICODE(0x2585), BARCOLORSET("緑"), RESULT:1
+				PRINTL
+			ENDIF
+		NEXT
+		$INPUT_LOOP_70
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || BASE:RESULT:0 == MAXBASE:RESULT:0
+			GOTO INPUT_LOOP_70
+		ELSE
+			MONEY -= ITEMPRICE:ITEM_NO
+			BASE:RESULT:0 += 300
+			PRINTFORMW %CALLNAME:RESULT%'s STA has been recovered +300
+			SIF BASE:RESULT:0 > MAXBASE:RESULT:0
+				BASE:RESULT:0 = MAXBASE:RESULT:0
+		ENDIF
+		RESTART
+	CASE 71
+		CALL CHOICE("Would you like to purchase【Herm Medicine】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF TALENT:LOOP_CHR:2 == 1
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR)% 
+		NEXT
+		$INPUT_LOOP_71
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || TALENT:RESULT:2 != 1
+			GOTO INPUT_LOOP_71
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT% has been transformed into hermaphrodite.
+			MONEY -= ITEMPRICE:ITEM_NO
+			TALENT:RESULT:2 |= 2
+			MAXBASE:RESULT:射精 = 10000
+			IF MAXBASE:RESULT:精力 > 0
+				MAXBASE:RESULT:精力 = LIMIT(MAXBASE:RESULT:精力,200,1000)
+			ELSE
+				MAXBASE:RESULT:精力 = 1000
+			ENDIF
+			IF MAXBASE:RESULT:勃起 > 0
+				MAXBASE:RESULT:勃起 = LIMIT(MAXBASE:RESULT:勃起,500,1500)
+			ELSE
+				MAXBASE:RESULT:勃起 = 1500
+			ENDIF
+		ENDIF
+		RESTART
+	CASE 72
+		CALL CHOICE("Would you like to purchase【Herm Removal Medicine】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF TALENT:LOOP_CHR:2 == 3
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR)% 
+		NEXT
+		$INPUT_LOOP_72
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || TALENT:RESULT:2 != 3
+			GOTO INPUT_LOOP_72
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT% has been transformed into a girl.
+			MONEY -= ITEMPRICE:ITEM_NO
+			TALENT:RESULT:2 = 1
+			MAXBASE:RESULT:2 = 0
+			MAXBASE:RESULT:精力 = 0
+		ENDIF
+		RESTART
+	CASE 73
+		CALL CHOICE("【 Would you like to purchase【Blue Candy】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF !TALENT:LOOP_CHR:母乳体質
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR)% 
+		NEXT
+		$INPUT_LOOP_73
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || TALENT:RESULT:149
+			GOTO INPUT_LOOP_73
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT%'s breasts started [Lactating].
+			MONEY -= ITEMPRICE:ITEM_NO
+			TALENT:RESULT:母乳体質 = 1
+		ENDIF
+		RESTART
+	CASE 74
+		CALL CHOICE("Would you like to purchase【Red Candy】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF HAS_VAGINA(LOOP_CHR) && !TALENT:LOOP_CHR:処女
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR)% 
+		NEXT
+		$INPUT_LOOP_74
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || (TALENT:RESULT:処女 || !HAS_VAGINA(RESULT))
+			GOTO INPUT_LOOP_74
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT%'s hymen has been restored.
+			MONEY -= ITEMPRICE:ITEM_NO
+			TALENT:RESULT:処女 = 2
+		ENDIF
+		RESTART
+	CASE 77
+		CALL CHOICE("Would you like to purchase【Orange Candy】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL (※The higher the childbirth intensity, the easier it will be to increase the number of children born at once.)
+		PRINTL (※Maximum intensity is 6. When using this item for a character with maximum birth intensity, it will return to 0.)
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF TALENT:LOOP_CHR:2 != 2
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR),18,LEFT% (Intensity: {CFLAG:LOOP_CHR:355})
+		NEXT
+		$INPUT_LOOP_77
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || (TALENT:RESULT:0 || TALENT:RESULT:1)
+			GOTO INPUT_LOOP_77
+		ELSE
+			IF CFLAG:RESULT:355 == 6
+				CFLAG:RESULT:355 = 0
+			ELSE
+				CFLAG:RESULT:355 ++
+			ENDIF
+			PRINTFORML Orange candy has been used on %CALLNAME:RESULT%.
+			PRINTFORMW Current childbirth intensity: {CFLAG:RESULT:355}
+			MONEY -= ITEMPRICE:ITEM_NO
+		ENDIF
+		RESTART
+	CASE 91
+		CALL CHOICE("Would you like to purchase【Fertility Drug】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+			PRINTL Who do you use it on?
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF NO:(LOOP_CHR) == 149 && CFLAG:LOOP_CHR:75 < 3 && !TALENT:MASTER:禁断の知識
+				CONTINUE
+			SIF TALENT:LOOP_CHR:妊娠
+				CONTINUE
+			LOCALS = 
+			SIF TALENT:LOOP_CHR:危険日
+				LOCALS = Dangerous Day
+			SIF CFLAG:LOOP_CHR:卵子生存日数 == 1
+				LOCALS = Ovulating
+			SIF GETBIT(TALENT:LOOP_CHR:2,0) && CFLAG:LOOP_CHR:81 != 3
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR),18,LEFT% \@LOCALS != "" ?(%LOCALS%)#\@
+		NEXT
+		PRINTL [999] - Return
+		$INPUT_LOOP_91
+		INPUT
+		IF RESULT == 999
+			RESTART
+		ELSEIF RESULT >= CHARANUM || !GETBIT(TALENT:RESULT:2,0)
+			GOTO INPUT_LOOP_91
+		ELSE
+			PRINTFORM %CALLNAME:RESULT%
+			IF RESULT == 0
+				PRINTW  took the Fertility Drug.
+			ELSE
+				PRINTW  received a Fertility Drug.
+			ENDIF
+			MONEY -= ITEMPRICE:ITEM_NO
+			CFLAG:RESULT:81 = 2
+			TRYCALL 排卵誘発剤追加処理, RESULT
+		ENDIF
+		RESTART
+	CASE 92
+		CALL CHOICE("Would you like to purchase【Pill】", "Yes", "No")
+		SIF RESULT
+			RESTART
+			PRINTL Who do you use it on?
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF NO:(LOOP_CHR) == 149 && CFLAG:LOOP_CHR:75 < 3 && !TALENT:MASTER:禁断の知識
+				CONTINUE
+			SIF TALENT:LOOP_CHR:妊娠
+				CONTINUE
+			LOCALS = 
+			SIF TALENT:LOOP_CHR:危険日
+				LOCALS = Dangerous Day
+			SIF CFLAG:LOOP_CHR:卵子生存日数 == 1
+				LOCALS = Ovulating
+			SIF GETBIT(TALENT:LOOP_CHR:2,0) && CFLAG:LOOP_CHR:81 != 3
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR),18,LEFT% \@LOCALS != "" ?(%LOCALS%)#\@
+		NEXT
+		PRINTL [999] - Return
+		$INPUT_LOOP_92
+		INPUT
+		IF RESULT == 999
+			RESTART
+		ELSEIF RESULT >= CHARANUM || !GETBIT(TALENT:RESULT:2,0)
+			GOTO INPUT_LOOP_92
+		ELSE
+			PRINTFORM %CALLNAME:RESULT%
+			IF RESULT == 0
+				PRINTW  took the Pill.
+			ELSE
+				PRINTW  received a Pill.
+			ENDIF
+			MONEY -= ITEMPRICE:ITEM_NO
+			CFLAG:RESULT:81 = 3
+		ENDIF
+		RESTART
+	CASE 93
+		CALL CHOICE("Would you like to purchase【Rainbow Candy】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF !TALENT:LOOP_CHR:恋慕
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR)% 
+		NEXT
+		$INPUT_LOOP_93
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || TALENT:RESULT:3
+			GOTO INPUT_LOOP_93
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT% obtained [Love].
+			MONEY -= ITEMPRICE:ITEM_NO
+			TALENT:RESULT:NTR = 0
+			TALENT:RESULT:公衆便所 = 0
+			TALENT:RESULT:浮気公認 = 0
+			TALENT:RESULT:恋慕 = 1
+			IF LOCAL == FLAG:貞操帯鍵購入フラグ
+				FLAG:貞操帯鍵購入フラグ = 0
+				FLAG:貞操帯鍵有効カウンタ = 0
+			ENDIF
+		ENDIF
+		RESTART
+	CASE 94
+		CALL CHOICE("Would you like to purchase【Black Candy】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF !TALENT:LOOP_CHR:NTR
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR)% 
+		NEXT
+		$INPUT_LOOP_94
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || TALENT:RESULT:6
+			GOTO INPUT_LOOP_94
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT% obtained [NTR].
+			MONEY -= ITEMPRICE:ITEM_NO
+			TALENT:RESULT:恋慕 = 0
+			TALENT:RESULT:人妻 = 0
+			TALENT:RESULT:NTR = 1
+		ENDIF
+		RESTART
+	CASE 95
+		CALL CHOICE("Would you like to purchase【Diamond】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 0, CHARANUM
+			SIF CFLAG:LOOP_CHR:MASTERの弱味
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR)% 
+		NEXT
+		$INPUT_LOOP_95
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || TALENT:RESULT:6
+			GOTO INPUT_LOOP_95
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT% forgot about your weakness.
+			MONEY -= ITEMPRICE:ITEM_NO
+			CFLAG:RESULT:MASTERの弱味 = 0
+		ENDIF
+		RESTART
+	CASE 96
+		CALL CHOICE("Would you like to purchase【Wedding Ring】?", "Yes", "No")
+		SIF RESULT
+			RESTART
+		PRINTL Who do you use it on?
+		PRINTL (※Requires Deep Affection or Love with more than 5000 Favorability)
+		PRINTL [-1] - Return
+		FOR LOOP_CHR, 1, CHARANUM
+			SIF (TALENT:LOOP_CHR:親愛||(TALENT:LOOP_CHR:恋慕&&CFLAG:LOOP_CHR:好感度>5000))&&TALENT:LOOP_CHR:人妻 == 0
+				PRINTFORML [{LOOP_CHR,2}] - %CALLNAME:(LOOP_CHR)% 
+		NEXT
+		$INPUT_LOOP_96
+		INPUT
+		IF RESULT == -1
+			RESTART
+		ELSEIF RESULT <= -1 || RESULT >= CHARANUM || TALENT:RESULT:6
+			GOTO INPUT_LOOP_96
+		ELSE
+			PRINTFORMW %CALLNAME:RESULT% received a ring from and became your wife.
+			MONEY -= ITEMPRICE:ITEM_NO
+			TALENT:RESULT:人妻 = 1
+		ENDIF
+		RESTART
+
+	;IF ITEM_NO == 41
+	;	MONEY -= ITEMPRICE:ITEM_NO
+	;	ITEM:ITEM_NO ++
+	;	PRINTW 媚薬を精製しました
+	;	RESTART
+	;ENDIF
+	;複数所持アイテム
+
+	CASE 40 TO 60, 91, 92,
+		CALL ITEM_MATOMEGAI(ITEM_NO)
+		RESTART
+	;単品アイテム
+	CASE 0 TO 39
+		PRINTFORML Would you like to purchase %ITEMNAME:ITEM_NO%?
+		PRINTL [0] - Yes  [1] - No
+		INPUT
+		SIF RESULT
+			RESTART
+		ITEM:ITEM_NO ++
+		ITEMSALES:ITEM_NO --
+		MONEY -= ITEMPRICE:ITEM_NO
+		RESTART
+	ENDSELECT
+
+;----------------------------------------------------------------------
+;  メニューの通信販売で使用される項目の表示メニュー
+;	ARGS:0 は 表示アイテムのタイプ
+;	ARG:0 (DISCOUNT) は河童用
+@SHOW_ITEM, ARGS:0 = "SHOP", ARG:0 = 1
+#DIM DISCOUNT
+#DIM WIDTH
+#DIM 項目数
+#DIM LOOP_LO
+#DIM LOOP_HI
+DISCOUNT = MAX( 1, ARG:0 )
+
+DRAWLINE
+WIDTH = GETCONFIG("PRINTCの文字数")
+項目数 = 0
+CALL ITEM_RANGE, ARGS
+LOOP_LO = RESULT:0
+LOOP_HI = RESULT:1
+
+FOR LOCAL,LOOP_LO,LOOP_HI
+	;表示しない
+
+	;雑穀(48)を表示させていなかったのはなぜ？
+	;SIF LOCAL == 48
+	;	CONTINUE
+	SIF GROUPMATCH( ITEMSTOCK(LOCAL), 1, 4 )
+		CONTINUE
+	SIF ARGS:0 == "SHOP" && !ITEM_TYPE(LOCAL, TFLAG:表示アイテム種類)
+		CONTINUE
+
+	LOCALS = [{LOCAL,2}]%ITEMNAME:LOCAL%
+	SELECTCASE ITEMSTOCK(LOCAL)
+	;売り切れ
+	CASE 2
+		LOCALS:1 = Sold Out
+		SETCOLOR 150,150,150
+	CASE 5
+		LOCALS:1 = Full
+		SETCOLOR 150,150,150
+	CASEELSE
+		LOCALS:1 = ￥{ITEMPRICE:LOCAL / DISCOUNT}
+	ENDSELECT
+	PRINTFORM    %LOCALS,WIDTH,LEFT%%LOCALS:1,8%  
+	RESETCOLOR
+	項目数 ++
+	SIF 項目数 % 3 == 0
+		PRINTL
+NEXT
+;最後のループで改行してなかったら、ここで改行しておく
+SIF 項目数 % 3 != 0
+	PRINTL 
+;--------------------------------------------------------------
+; ITEM_RANGE
+;	各種類のITEMの値の範囲の最小値と最大値+1を RESULT:0 と RESULT:1 で返す
+;	ループを回すためのものなので、範囲内でも必ずしも指定の種別のITEMとは限らない。
+;	ITEM_TYPE(S)で確認すること
+;--------------------------------------------------------------
+@ITEM_RANGE, ARGS = "", ARG = 0
+#LOCALSIZE 1
+#DIM LO
+#DIM HI
+LO = 0
+HI = 1000
+SIF ARGS == ""
+	ARGS '= TOSTR( ARG )
+SELECTCASE ARGS
+CASE "全て", "0"
+	;0～1000
+CASE "SHOP", "1"
+	LO = 0
+	HI = 100
+CASE "調教", "SHOP_調教", "2"
+	LO = 0
+	HI = 30
+CASE "消耗品", "SHOP_消耗品", "3"
+	LO = 40
+	HI = 50
+CASE "日用品", "SHOP_日用品", "4"
+	LO = 30
+	HI = 100
+CASE "飲食物", "SHOP_飲食物", "5"
+	LO = 47
+	HI = 60
+CASE "素質", "SHOP_素質", "6"
+	LO = 60
+	HI = 70
+CASE "体質変化", "SHOP_体質変化", "7"
+	LO = 70
+	HI = 80
+
+;コマンド用
+; 以下は重複する
+CASE "河童道具", "10"
+	;プールと調教道具
+	LO = 0
+	HI = 40
+CASE "うさぎ薬品", "20"
+;うさぎ用
+	LO = 40
+	HI = 600
+CASE "食材の買い出し", "30"
+	LO = 47
+	HI = 51
+CASE "酒屋", "40"
+	LO = 51
+	HI = 60
+
+;以降、CSVを見ながら適当に
+
+CASE "花屋", "園芸用品", "50"
+;150～は園芸関連
+	LO = 150
+	HI = 200
+CASE "チョコ", "60"
+	LO = 120
+	HI = 130
+CASE "野菜", "70"
+	LO = 350
+	HI = 390
+CASE "その他", "80"
+;いい名前を思いつかなかったのでこれで
+;依頼用品や景品類など？
+	LO = 200
+	HI = 260
+CASE "専用", "90"
+;現状では一種類のみ？（魔水晶のペンダント(399)）
+	LO = 399
+	HI = 500
+CASE "回復", "100"
+	LO = 500
+	HI = 600
+CASE "素材", "110"
+;600～は素材
+	LO = 600
+	HI = 700
+CASE "お肉", "120"
+;700～はお肉
+	LO = 700
+	HI = 800
+CASE "衣装", "130"
+;800～は衣装？？？
+	LO = 800
+	HI = 900
+CASE "特殊", "140"
+;900～は祭壇だけ
+;未実装だからどう形容したものか感覚がわかんないや
+	LO = 900
+	HI = 1000
+ENDSELECT
+RETURN LO, HI
+
+@ITEM_TYPE(ARG,ARG:1)
+#FUNCTION
+SIF ARG < 0 || ARG >= 1000 || ITEMNAME:ARG == ""
+	RETURNF 0
+SELECTCASE ARG:1
+	CASE 0
+		RETURNF 1
+	CASE 2	;調教
+		SIF INRANGE( ARG, 0, 27 )
+			RETURNF 1
+	CASE 3	;消耗品
+		SIF INRANGE( ARG, 40, 46 ) || ARG == 49
+			RETURNF 1
+	CASE 4	;日用品
+		SIF GROUPMATCH(ARG, 35,36,38,39,95,96)
+			RETURNF 1
+	CASE 5	;"飲食物"
+		SIF ARG >= 50 && ARG < 60 || ARG == 47
+			RETURNF 1
+		; 白米、雑穀
+		SIF GROUPMATCH( ARG, 47, 48 )
+			RETURNF 1
+	CASE 6	;"素質"
+		SIF ARG >= 60 && ARG < 70 || ARG == 93 || ARG == 94
+			RETURNF 1
+	CASE 7	;"体質変化"
+		SIF ARG >= 70 && ARG < 80 || ARG == 91 || ARG == 92
+			RETURNF 1
+
+	; 以下は重複する
+	CASE 10	;河童道具
+		;プールと調教道具
+		SIF ARG == 38 || INRANGE(ARG, 0, 23)
+			RETURNF 1
+	CASE 20	;うさぎ薬品
+		SIF GROUPMATCH( ARG, 40, 45, 49, 250, 252, 501, 502, 510, 520)
+			RETURNF 1
+	CASE 30	;食材の買い出し
+		SIF GROUPMATCH( ARG, 47, 48, 50 )
+			RETURNF 1
+	CASE 40	;酒店
+		SIF ARG >= 51 && ARG < 60
+			RETURNF 1
+	CASE 50	;花屋
+		SIF ARG >= 150 && ARG < 200
+			RETURNF 1
+	CASE 60 ;チョコ
+		SIF ARG >= 120 && ARG < 130
+			RETURNF 1
+	CASE 70 ;野菜
+		SIF ARG >= 350 && ARG < 390
+			RETURNF 1
+	CASE 80	;"その他"
+		SIF ARG >= 200 && ARG < 260
+			RETURNF 1
+	CASE 90	;"専用"
+		SIF ARG >= 399 && ARG < 500
+			RETURNF 1
+	CASE 100	;"回復"
+		SIF ARG >= 500 && ARG < 600
+			RETURNF 1
+	CASE 110	;"素材"
+		SIF ARG >= 600 && ARG < 700
+			RETURNF 1
+	CASE 120	;"お肉"
+		SIF ARG >= 700 && ARG < 800
+			RETURNF 1
+	CASE 130	;"衣装"
+		SIF ARG >= 800 && ARG < 900
+			RETURNF 1
+	CASE 140	;"特殊"
+		SIF ARG >= 900 && ARG < 1000
+			RETURNF 1
+ENDSELECT
+RETURNF 0
+
+;ITEM_TYPE()の文字列でのタイプ指定
+@ITEM_TYPES, ARG:0, ARGS:0
+#FUNCTION
+#LOCALSIZE 1
+#DIM TYPE
+
+TYPE = 0
+SELECTCASE ARGS:0
+CASE "全て"
+	RETURNF 1
+CASE "調教", "SHOP_調教"
+	TYPE = 2
+CASE "消耗品", "SHOP_消耗品"
+	TYPE = 3
+CASE "日用品", "SHOP_日用品"
+	TYPE = 4
+CASE "飲食物", "SHOP_飲食物"
+	TYPE = 5
+CASE "素質", "SHOP_素質"
+	TYPE = 6
+CASE "体質変化", "SHOP_体質変化"
+	TYPE = 7
+
+; 以下は重複する
+CASE "河童道具"
+	;プールと調教道具
+	TYPE = 10
+CASE "うさぎ薬品"
+	TYPE = 20
+CASE "食材の買い出し"
+	TYPE = 30
+CASE "チョコ"
+	TYPE = 35
+CASE "酒屋"
+	TYPE = 40
+CASE "花屋", "園芸用品"
+	TYPE = 50
+CASE "チョコ"
+	TYPE = 60
+CASE "野菜"
+	TYPE = 70
+CASE "その他"
+	TYPE = 80
+CASE "専用"
+	TYPE = 90
+CASE "回復"
+	TYPE = 100
+CASE "素材"
+	TYPE = 110
+CASE "お肉"
+	TYPE = 120
+CASE "衣装"
+	TYPE = 130
+CASE "特殊"
+	TYPE = 140
+ENDSELECT
+SIF TYPE
+	RETURNF ITEM_TYPE( ARG, TYPE )
+RETURNF 0
+
+;条件付きアイテムの処理
+@ITEM_SALES
+	#DIM LOOP_I
+	#DIM LOOP_CHR
+	;ITEMSALES = 0 購入可
+	;ITEMSALES = -1 売切
+	;ITEMSALES = -2 封印
+	;技巧
+	IF ABL:MASTER:技巧 < 5
+		ITEMSALES:63 = 0
+	ELSE
+		ITEMSALES:63 = -2
+	ENDIF
+	IF ABL:MASTER:技巧
+		ITEMSALES:64 = 0
+	ELSE
+		ITEMSALES:64 = -2
+	ENDIF
+
+	SIF TALENT:MASTER:禁断の知識
+		ITEMSALES:62 = -1
+	SIF TALENT:MASTER:調合知識
+		ITEMSALES:61 = -1
+	SIF TALENT:MASTER:汚臭耐性 == 2
+		ITEMSALES:60 = -1
+
+	;結婚
+	;SIF TALENT:MASTER:恋慕 || TALENT:MASTER:親愛
+	;		ITEMSALES:96 =  0
+	ITEMSALES:96 =  0
+
+	;媚薬
+	IF ABL:MASTER:教養 < 1
+		ITEMSALES:41 = -2
+	ELSE
+		IF ITEM:41
+			ITEMSALES:41 = -1
+		ELSE
+			ITEMSALES:41 = 0
+		ENDIF
+	ENDIF
+
+	;禁断
+	FOR LOOP_I,70,96
+		;売切の場合はそのまま
+		SIF ITEMSALES:LOOP_I == -1
+			CONTINUE
+		ITEMSALES:LOOP_I = -2
+		;禁断の知識
+		IF (LOOP_I > 70 && LOOP_I < 89) || LOOP_I == 90 || LOOP_I == 95
+			SIF TALENT:MASTER:禁断の知識 || (ASSI > 0 && TALENT:ASSI:禁断の知識)
+				ITEMSALES:LOOP_I = 0
+		;調合知識
+		ELSEIF LOOP_I == 70 || LOOP_I == 91 || LOOP_I == 92 || LOOP_I == 93 || LOOP_I == 94
+			SIF TALENT:MASTER:調合知識 || (ASSI > 0 && TALENT:ASSI:調合知識)
+				ITEMSALES:LOOP_I = 0
+		ENDIF
+	NEXT
+
+;アイテムまとめ買い関数
+;うどんちゃんからまとめ買いしたかったので独立関数化
+;必ず先に@ITEMSTOCKで判定して購入可能なアイテムのみで呼び出すこと
+;単体購入専用だろうがまとめ買い可能だろうが購入可不可の判定は必要なので先に共通で行って下さい
+;ARG：購入対象アイテム
+@ITEM_MATOMEGAI(ARG)
+#DIM 購入可能数
+#DIM CONST 最大個数 = 99
+
+PRINTFORM How much of %ITEMNAME:ARG%s would you like to buy?
+;ITEM:50以外の個数限定アイテムでも動くようにした（ここのSIF以降の処理では元々そうなってた）
+;不具合出るかも
+;SIF ARG == 50
+SIF ITEMSALES:ARG > 0
+	PRINTFORM  ({ITEMSALES:ARG} left in the shop)
+PRINTL 
+
+購入可能数 = MIN( 最大個数  - ITEM:ARG, ( ITEMPRICE:ARG > 0 ? MONEY / ITEMPRICE:ARG # 最大個数  ), ( ITEMSALES:ARG > 0 ? ITEMSALES:ARG # 最大個数  ) )
+購入可能数 = LIMIT( 購入可能数, 0, 最大個数 )
+
+;金欠、アイテム数の超過はあとで合わせる
+PRINTL [0]  - Cancel
+SIF 購入可能数
+ PRINT [1]  - 1　
+SIF 購入可能数 >= 5
+ PRINT [5]  - 5　
+SIF 購入可能数 >= 10
+ PRINT [10] - 10　
+SIF 購入可能数 >= 20
+ PRINT [20] - 20　
+SIF 購入可能数 >= 50
+ PRINT [50] - 50　
+SIF NOSAMES(購入可能数, 0, 1, 5, 10, 20, 50)
+ PRINT [99] - As much as possible
+INPUT
+
+IF RESULT >= 1
+	RESULT = LIMIT( MIN( 購入可能数, RESULT ), 0, 99 )
+	;個数限定
+	IF ITEMSALES:ARG > 0
+		RESULT = MIN( ITEMSALES:ARG, RESULT )
+		ITEMSALES:ARG -= RESULT
+		SIF ITEMSALES:ARG <= 0
+			ITEMSALES:ARG = -1
+	ENDIF
+	;購入処理
+	ITEM:ARG += RESULT
+	PRINTFORMW Bought {RESULT} %ITEMNAME:ARG%\@RESULT > 1? s # \@ for %TOSTR(RESULT * ITEMPRICE:ARG,"#,###")%\\
+	MONEY -= RESULT * ITEMPRICE:ARG
+ENDIF
+
+
+
+;ITEM所持数リスト表示関数
+;「とりあえず現状で見やすい形での実装」をすることにした
+;本来は@ITEM_TYPEで判定するほうがスマートなのだが引数が整数型なのがネックである
+;これからも増築に増築を重ねていくと齟齬をきたすのは間違いないがひとまず独自に分類する
+;今後の発展にともなって実情から乖離していくおそれがあるので注意
+;迂闊にDRAWLINEをやるとTYPE == "全て"で酷いことになるので呼び出し元でやる
+;ITEMが無いときにDRAWLINE二重表示等の弊害はあるかもだがしゃーない
+@LIST_ITEM(TYPE = "全て")
+#DIMS TYPE
+#DIM DYNAMIC 表示数
+#DIM DYNAMIC LO
+#DIM DYNAMIC HI
+LO = 0
+HI = 1000
+表示数 = 0
+
+SELECTCASE TYPE
+CASE "全て"
+;見やすいリストにしたつもり
+;ITEM番号順ではなく用途や性質の近いもので並べている点に注意
+
+;常備品など
+	CALL LIST_ITEM("SHOP_調教")
+	CALL LIST_ITEM("SHOP_日用品")
+	CALL LIST_ITEM("SHOP_素質")
+	CALL LIST_ITEM("SHOP_体質変化")
+
+;消耗品類
+;その他もたぶん消耗品
+	CALL LIST_ITEM("SHOP_消耗品")
+	CALL LIST_ITEM("SHOP_飲食物")
+	CALL LIST_ITEM("チョコ")
+	CALL LIST_ITEM("野菜")
+	CALL LIST_ITEM("園芸用品")
+	CALL LIST_ITEM("その他")
+	CALL LIST_ITEM("回復")
+
+;素材など、現状ほぼ未実装？
+	CALL LIST_ITEM("素材")
+	CALL LIST_ITEM("お肉")
+	CALL LIST_ITEM("衣装")
+
+;貴重品？
+	CALL LIST_ITEM("専用")
+	CALL LIST_ITEM("特殊")
+
+;コマンド
+CASE "うさぎ薬品", "河童道具"
+	CALL ITEM_RANGE, TYPE
+	LO = RESULT:0
+	HI = RESULT:1
+	FOR LOCAL, LO, HI
+		IF ITEM:LOCAL && ITEM_TYPES(LOCAL, TYPE)
+			表示数 ++
+			PRINTFORMLC 　%ITEMNAME:LOCAL%\@ ITEM:LOCAL > 1 ? ×{ITEM:LOCAL} #\@
+			SIF 表示数 % PRINTCPERLINE() == 0
+				PRINTL 
+		ENDIF
+	NEXT
+	SIF !LINEISEMPTY()
+			PRINTL 
+	
+;各種ITEM : @ITEM_TYPES と ITEM_RANGEによる分類
+; 上のコマンド用と同じにしてもいいけど、分けておく
+{
+CASE "SHOP_調教", "SHOP_消耗品", "SHOP_日用品", "SHOP_飲食物", "SHOP_素質", "SHOP_体質変化",
+		"チョコ", "園芸用品", "野菜", "その他", "専用", "回復",
+		"素材", "お肉", "衣装", "特殊"
+}
+	; ループ範囲の取得: 別に 0～1000固定でも良いんだけど
+	CALL ITEM_RANGE, TYPE
+	LO = RESULT:0
+	HI = RESULT:1
+
+	FOR LOCAL, LO, HI
+		IF ITEM:LOCAL && ITEM_TYPES(LOCAL, TYPE)
+			表示数 ++
+			PRINTFORMLC 　%ITEMNAME:LOCAL%\@ ITEM:LOCAL > 1 ? ×{ITEM:LOCAL} #\@
+			SIF 表示数 % PRINTCPERLINE() == 0
+				PRINTL 
+		ENDIF
+	NEXT
+	SIF !LINEISEMPTY()
+			PRINTL 
+ENDSELECT
+
+;------------------------------------------------------------------------
+;  お米・お酒・苗の在庫補充
+;	雑穀は1日の終わりに+10、お店には最大で20が保管されます
+;	古米は1日の終わりに+7、お店の最大在庫は15です
+;	白米は1日の終わりに+5、お店の最大在庫は10です
+;
+@EVENTTURNEND
+#DIM zaiko_lcount
+#DIM loop_lo
+#DIM loop_hi
+#PRI
+CALL お店に入荷, "雑穀",		10,	20
+CALL お店に入荷, "古米",		7,	15
+CALL お店に入荷, "白米",		5,	10
+
+; 通販のお酒は在庫が少ないです
+;	沢山買いたければ、里まで行きましょう
+CALL お店に入荷, "どぶろく",	5,	10
+CALL お店に入荷, "清酒",		3,	10
+CALL お店に入荷, "鬼殺し",		1,	10
+CALL お店に入荷, "甘酒",		7,	20
+
+CALL ITEM_RANGE, "花屋"
+loop_lo = RESULT:0 + 1
+loop_hi = RESULT:1
+FOR zaiko_lcount, loop_lo, loop_hi
+	; 苗は1種1日1つ入荷、最大在庫も3です
+	;	苗を粗末にするとゆうかりんに怒られますよ？
+	CALL お店に入荷, TOSTR(zaiko_lcount), 1,	3
+NEXT
+; RETURN 1 してはいけません
+
+;------------------------------------------------
+; お店に入荷 関数
+;	EVENTTURNENDでの入荷と 酒屋での売却の時に使う
+;
+@お店に入荷, 名前, 入荷量, 最大在庫
+#LOCALSIZE 1
+#DIMS 名前
+#DIM 入荷量
+#DIM 最大在庫
+#DIM ITEM_NO
+SIF 名前 == "" || !入荷量 || !最大在庫
+	RETURN
+IF ISNUMERIC( 名前 )
+	ITEM_NO = TOINT( 名前 )
+ELSE
+	ITEM_NO = GETNUM( ITEM, 名前 )
+ENDIF
+SIF ITEM_NO < 0
+	RETURN
+
+SELECTCASE ITEMSALES:ITEM_NO
+CASE -1
+	ITEMSALES:ITEM_NO = 入荷量
+CASE IS >= 最大在庫
+	; 過剰在庫のときは在庫入荷しない
+CASE IS > 0
+	ITEMSALES:ITEM_NO = MIN( ITEMSALES:ITEM_NO + 入荷量, 最大在庫 )
+ENDSELECT
+
+

@@ -1,0 +1,330 @@
+;--------------------------------------------------------------------
+;受け攻めの決定にサドっ気, マゾっ気, 地位で計算されます
+;計算後の値が同じだった場合は立場で強制的に決定するので立場には同じ数値を使わないでください
+;数値が大きい方が攻め側になりやすくなります
+
+@INHABITANT_SETTINGS_FIRST
+	LOCAL:1 = 0
+	LOCAL:2 = INHABITANT_LOOP_MAX()
+	SIF !GETBIT(FLAG:住人同士イベント設定,0)
+		RETURN 0
+	FOR LOCAL:0,1,LOCAL:2
+		LOCAL:1 += CFLAG:(LOCAL:0):住人同士イベント地位
+		LOCAL:1 += CFLAG:(LOCAL:0):住人同士イベント立場
+	NEXT
+	IF LOCAL:1 == 0
+		CFLAG:人物_美鈴:住人同士イベント地位 = 1
+		CFLAG:人物_小悪魔:住人同士イベント地位 = 1
+		CFLAG:人物_パチュリー:住人同士イベント地位 = 3
+		CFLAG:人物_咲夜:住人同士イベント地位 = 2
+		CFLAG:人物_レミリア:住人同士イベント地位 = 4
+		CFLAG:人物_フラン:住人同士イベント地位 = 3
+		CFLAG:人物_子悪魔:住人同士イベント地位 = 1
+		CFLAG:人物_チルノ:住人同士イベント地位 = 0
+		CFLAG:人物_大妖精:住人同士イベント地位 = 0
+		CFLAG:人物_魔理沙:住人同士イベント地位 = 1
+		CFLAG:人物_霊夢:住人同士イベント地位 = 3
+		CFLAG:人物_ルーミア:住人同士イベント地位 = 0
+		CFLAG:人物_アリス:住人同士イベント地位 = 3
+		
+		CFLAG:人物_美鈴:住人同士イベント立場 = 5
+		CFLAG:人物_小悪魔:住人同士イベント立場 = 4
+		CFLAG:人物_パチュリー:住人同士イベント立場 = 9
+		CFLAG:人物_咲夜:住人同士イベント立場 = 7
+		CFLAG:人物_レミリア:住人同士イベント立場 = 12
+		CFLAG:人物_フラン:住人同士イベント立場 = 10
+		CFLAG:人物_子悪魔:住人同士イベント立場 = 3
+		CFLAG:人物_チルノ:住人同士イベント立場 = 2
+		CFLAG:人物_大妖精:住人同士イベント立場 = 0
+		CFLAG:人物_魔理沙:住人同士イベント立場 = 6
+		CFLAG:人物_霊夢:住人同士イベント立場 = 11
+		CFLAG:人物_ルーミア:住人同士イベント立場 = 1
+		CFLAG:人物_アリス:住人同士イベント立場 = 8
+		
+		CFLAG:人物_美鈴:体を許す好感度 = 500
+		CFLAG:人物_小悪魔:体を許す好感度 = 500
+		CFLAG:人物_パチュリー:体を許す好感度 = 500
+		CFLAG:人物_咲夜:体を許す好感度 = 500
+		CFLAG:人物_レミリア:体を許す好感度 = 500
+		CFLAG:人物_フラン:体を許す好感度 = 500
+		CFLAG:人物_子悪魔:体を許す好感度 = 500
+		CFLAG:人物_チルノ:体を許す好感度 = 500
+		CFLAG:人物_大妖精:体を許す好感度 = 500
+		CFLAG:人物_魔理沙:体を許す好感度 = 500
+		CFLAG:人物_霊夢:体を許す好感度 = 500
+		CFLAG:人物_ルーミア:体を許す好感度 = 500
+		CFLAG:人物_アリス:体を許す好感度 = 500
+				
+		CFLAG:人物_美鈴:行為の上限 = 2000
+		CFLAG:人物_小悪魔:行為の上限 = 2000
+		CFLAG:人物_パチュリー:行為の上限 = 2000
+		CFLAG:人物_咲夜:行為の上限 = 2000
+		CFLAG:人物_レミリア:行為の上限 = 2000
+		CFLAG:人物_フラン:行為の上限 = 2000
+		CFLAG:人物_子悪魔:行為の上限 = 2000
+		CFLAG:人物_チルノ:行為の上限 = 2000
+		CFLAG:人物_大妖精:行為の上限 = 2000
+		CFLAG:人物_魔理沙:行為の上限 = 2000
+		CFLAG:人物_霊夢:行為の上限 = 2000
+		CFLAG:人物_ルーミア:行為の上限 = 2000
+		CFLAG:人物_アリス:行為の上限 = 2000
+	ENDIF
+	FOR LOCAL:0,1,LOCAL:2
+		SIF CFLAG:(LOCAL:0):体を許す好感度 == 0 
+			CFLAG:(LOCAL:0):体を許す好感度 = 1000
+		SIF CFLAG:(LOCAL:0):行為の上限 == 0
+			CFLAG:(LOCAL:0):行為の上限 = 2000
+	NEXT
+RETURN 0
+
+@INHABITANT_SETTINGS
+	CALL INHABITANT_SETTINGS_FIRST
+	$INPUT_INHABITANT_SETTINGS_START
+	LOCAL:2 = 0
+	IF GETBIT(FLAG:住人同士イベント設定,0)
+		LOCAL:2 = INHABITANT_LOOP_MAX()
+	ENDIF
+	DRAWLINE
+	PRINTL Dominant and receiving partners are decided depending on their social standing (status) and position.
+	PRINTL If the value after calculation was the same, position will be set forcibly, so please don't use the same value for the position.
+	PRINTL Those who have larger values are more likely to become the dominant side.
+	DRAWLINE
+	PRINTFORML [0] Events between the residents: \@ GETBIT(FLAG:住人同士イベント設定,0) ?ON#OFF\@
+	IF GETBIT(FLAG:住人同士イベント設定,0)
+		PRINTFORM Target group: Initial characters
+		SIF GETBIT(FLAG:住人同士イベント設定,1)
+			PRINTFORM , Daughters\@ GETBIT(FLAG:住人同士イベント設定,3) ?, Sons#\@
+		PRINTFORML
+	ENDIF
+	DRAWLINE
+	FOR LOCAL:0,1,LOCAL:2
+		IF GETBIT(TALENT:(LOCAL:0):性別,0) || GETBIT(FLAG:住人同士イベント設定,3)
+			PRINTFORM [{LOCAL:0,2}]
+			PRINTFORM %CALLNAME:(LOCAL:0),25,LEFT%
+			PRINTFORM Status: {CFLAG:(LOCAL:0):住人同士イベント地位,2}　
+			PRINTFORM Position: {CFLAG:(LOCAL:0):住人同士イベント立場,2}　
+			PRINTFORM Favorability needed for consent: {CFLAG:(LOCAL:0):体を許す好感度,4}　
+			PRINTFORML Action limit: {CFLAG:(LOCAL:0):行為の上限,4}
+		ENDIF
+	NEXT
+	DRAWLINE
+	SIF GETBIT(FLAG:住人同士イベント設定,0)
+		PRINT [999] Favorability display　
+	PRINTL [1000] Return
+	$INPUT_INHABITANT_SETTINGS_0
+	INPUT
+	LOCAL:1 = RESULT
+	IF RESULT == 0
+		$INPUT_INHABITANT_SETTINGS_1_1
+		DRAWLINE
+		PRINTFORML %"[0] - Events between the residents",40, LEFT% \@ GETBIT(FLAG:住人同士イベント設定,0) ?ON#OFF\@
+		IF GETBIT(FLAG:住人同士イベント設定,0)
+			PRINTFORML %"[1] - Target children as well",40, LEFT% \@ GETBIT(FLAG:住人同士イベント設定,1) ?ON#OFF\@
+			IF GETBIT(FLAG:住人同士イベント設定,1)
+			PRINTFORML %"[2] - Target gender",40, LEFT% \@ GETBIT(FLAG:住人同士イベント設定,3) ?Daughters and sons#Daughters only\@
+			ELSE
+				PRINTFORML
+			ENDIF
+			IF GETBIT(FLAG:住人同士イベント設定,1)
+				PRINTFORML %"[3] - Increase Succumbing Rate",40, LEFT% \@ GETBIT(FLAG:住人同士イベント設定,4) ?ON#OFF\@
+			ELSE
+				PRINTFORML
+			ENDIF
+				PRINTFORML %"[4] - Gossip mode",40, LEFT% \@ GETBIT(FLAG:住人同士イベント設定,2) ?ON#OFF\@
+		ELSE
+			PRINTFORML
+			PRINTFORML
+			PRINTFORML
+		ENDIF
+		DRAWLINE
+		PRINTL [1000] Return
+		$INPUT_INHABITANT_SETTINGS_1_2
+		INPUT
+		IF RESULT == 0
+			PRINTL Toggle events between the residents ON/OFF.
+			PRINTL [0] ON　[1] OFF
+			INPUT
+			IF RESULT == 0
+				SETBIT FLAG:住人同士イベント設定,0
+				CALL INHABITANT_SETTINGS_FIRST
+			ELSE
+				CLEARBIT FLAG:住人同士イベント設定,0
+			ENDIF
+			GOTO INPUT_INHABITANT_SETTINGS_1_1
+		ELSEIF RESULT == 1
+			PRINTL Should events between the residents also target children?
+			PRINTL [0] ON　[1] OFF
+			INPUT
+			IF RESULT == 0
+				SETBIT FLAG:住人同士イベント設定,1
+				CALL INHABITANT_SETTINGS_FIRST
+			ELSE
+				CLEARBIT FLAG:住人同士イベント設定,1
+			ENDIF
+			GOTO INPUT_INHABITANT_SETTINGS_1_1
+		ELSEIF RESULT == 2
+			PRINTL Should male children be also included in the event?
+			PRINTL [0] ON　[1] OFF
+			INPUT
+			IF RESULT == 0
+				SETBIT FLAG:住人同士イベント設定,3
+				CALL INHABITANT_SETTINGS_FIRST
+			ELSE
+				CLEARBIT FLAG:住人同士イベント設定,3
+			ENDIF
+			GOTO INPUT_INHABITANT_SETTINGS_1_1
+		ELSEIF RESULT == 3
+			PRINTFORML Increase Succumbing Rate together with Favorability when interacting with children who have [Visitor's Pedigree] talent?
+			PRINTL [0] ON　[1] OFF
+			INPUT
+			IF RESULT == 0
+				SETBIT FLAG:住人同士イベント設定,4
+				PRINTFORMW Succumbing Rate increment will be enabled.
+			ELSE
+				CLEARBIT FLAG:住人同士イベント設定,4
+				PRINTFORMW Succumbing Rate increment will be disabled.
+			ENDIF
+			GOTO INPUT_INHABITANT_SETTINGS_1_1
+		ELSEIF RESULT == 4
+			PRINTFORML Would you like to overhear interactions between the characters?
+			PRINTL [0] ON　[1] OFF
+			INPUT
+			IF RESULT == 0
+				SETBIT FLAG:住人同士イベント設定,2
+				PRINTFORMW Interactions between the characters will be visible.
+			ELSE
+				CLEARBIT FLAG:住人同士イベント設定,2
+				PRINTFORMW Interactions between the characters will be hidden.
+			ENDIF
+			GOTO INPUT_INHABITANT_SETTINGS_1_1
+		ELSEIF RESULT == 1000
+			GOTO INPUT_INHABITANT_SETTINGS_START
+		ENDIF
+		GOTO INPUT_INHABITANT_SETTINGS_1_2
+	ELSEIF RESULT > 0 && RESULT <= LOCAL:2
+		$INPUT_INHABITANT_SETTINGS_3
+		DRAWLINE
+		PRINTFORML %CALLNAME:(LOCAL:1)%
+		PRINTFORML [0] Status: {CFLAG:(LOCAL:1):住人同士イベント地位}
+		PRINTFORML [1] Position: {CFLAG:(LOCAL:1):住人同士イベント立場}
+		PRINTFORML [2] Favorability needed for consent: {CFLAG:(LOCAL:1):体を許す好感度}
+		PRINTFORML [3] Action limit: {CFLAG:(LOCAL:1):行為の上限}
+		DRAWLINE
+		PRINTFORML [1000] Return
+		$INPUT_INHABITANT_SETTINGS_2
+		INPUT
+		IF RESULT == 0
+			PRINTFORML Please enter %CALLNAME:(LOCAL:1)%'s status value.
+			INPUT
+			CFLAG:(LOCAL:1):住人同士イベント地位 = RESULT
+			GOTO INPUT_INHABITANT_SETTINGS_3
+		ELSEIF RESULT == 1
+			PRINTFORML Please enter %CALLNAME:(LOCAL:1)%'s position value.
+			INPUT
+			CFLAG:(LOCAL:1):住人同士イベント立場 = RESULT
+			GOTO INPUT_INHABITANT_SETTINGS_3
+		ELSEIF RESULT == 2
+			PRINTFORML Please enter %CALLNAME:(LOCAL:1)%'s favorability value needed for consent.
+			PRINTFORML Any sexual action will be treated as rape if was done before reaching needed value.
+			INPUT
+			CFLAG:(LOCAL:1):体を許す好感度 = RESULT
+			GOTO INPUT_INHABITANT_SETTINGS_3
+		ELSEIF RESULT == 3
+			PRINTFORML Please select %CALLNAME:(LOCAL:1)%'s upper action limit.
+			PRINTL [0] Conversation and Tea　[1] Skinship   　[2] Butt Caress　[3] Hugging　[4] Kiss　[5] Breast Caress
+			PRINTL [6] Anal Caress         　[7] Clit Caress　[8] Fingering  　[9] Sex    　[10] Even more sex stuff
+			PRINTL [11] Input directly
+			$INPUT_INHABITANT_SETTINGS_4
+			INPUT
+			IF RESULT == 0
+				CFLAG:(LOCAL:1):行為の上限 = 49
+			ELSEIF RESULT == 1
+				CFLAG:(LOCAL:1):行為の上限 = 199
+			ELSEIF RESULT == 2
+				CFLAG:(LOCAL:1):行為の上限 = 299
+			ELSEIF RESULT == 3
+				CFLAG:(LOCAL:1):行為の上限 = 499
+			ELSEIF RESULT == 4
+				CFLAG:(LOCAL:1):行為の上限 = 599
+			ELSEIF RESULT == 5
+				CFLAG:(LOCAL:1):行為の上限 = 699
+			ELSEIF RESULT == 6
+				CFLAG:(LOCAL:1):行為の上限 = 799
+			ELSEIF RESULT == 7
+				CFLAG:(LOCAL:1):行為の上限 = 899
+			ELSEIF RESULT == 8
+				CFLAG:(LOCAL:1):行為の上限 = 999
+			ELSEIF RESULT == 9
+				CFLAG:(LOCAL:1):行為の上限 = 1099
+			ELSEIF RESULT == 10
+				CFLAG:(LOCAL:1):行為の上限 = 2000
+			ELSEIF RESULT == 11
+				PRINTFORML Please enter %CALLNAME:(LOCAL:1)%'s upper action limit.
+				PRINTFORML Reference: From 500 characters start kissing, from 600 caress and touch each other, 1000 and more they will start doing sexual stuff.
+				PRINTL The higher the number, the higher is the probability for sex. (Favorability also has to be high as well)
+				INPUT
+				CFLAG:(LOCAL:1):行為の上限 = RESULT
+			ELSE
+				GOTO INPUT_INHABITANT_SETTINGS_4
+			ENDIF
+			GOTO INPUT_INHABITANT_SETTINGS_3
+		ELSEIF RESULT == 1000
+			GOTO INPUT_INHABITANT_SETTINGS_START
+		ELSE
+			GOTO INPUT_INHABITANT_SETTINGS_2
+		ENDIF
+	ELSEIF RESULT == 999
+		CALL INHABITANT_DISPLAY
+		GOTO INPUT_INHABITANT_SETTINGS_START
+	ELSEIF RESULT == 1000
+		RETURN 0
+	ELSE
+		GOTO INPUT_INHABITANT_SETTINGS_0
+	ENDIF
+RETURN 0
+
+@INHABITANT_DISPLAY
+	LOCAL:1 = 0
+	LOCAL:2 = 0
+	IF GETBIT(FLAG:住人同士イベント設定,0)
+		LOCAL:2 = INHABITANT_LOOP_MAX()
+	ENDIF
+	$INPUT_INHABITANT_DISPLAY
+	DRAWLINE
+	PRINTFORML %CALLNAME:(LOCAL:1)%'s popularity among residents.
+	PRINTFORM Favorability needed for consent: {CFLAG:(LOCAL:1):体を許す好感度,4}　
+	PRINTFORML Action limit: {CFLAG:(LOCAL:1):行為の上限,4}
+	DRAWLINE
+	FOR LOCAL:0,0,LOCAL:2
+		IF GETBIT(TALENT:(LOCAL:0):性別,0) || GETBIT(FLAG:住人同士イベント設定,3)
+			SIF LOCAL:0 == LOCAL:1
+				SETCOLOR 色設定_兄弟_自分
+			PRINTFORM [{LOCAL:0,2}]
+			PRINTFORM %CALLNAME:(LOCAL:0),25,LEFT%
+			PRINTFORM To target: {TA:(LOCAL:1):(LOCAL:0):TA_好感度,5}　
+			PRINTFORM From target: {TA:(LOCAL:0):(LOCAL:1):TA_好感度,5}　
+			PRINTFORML %TUDUKIGARA_OUTPUT_ALL(LOCAL:1 ,LOCAL:0)%
+			RESETCOLOR
+		ENDIF
+	NEXT
+	DRAWLINE
+	PRINTFORML [1000] Return
+	$INPUT_INHABITANT_DISPLAY_RETRY
+	INPUT
+	IF 0 <= RESULT && RESULT <= LOCAL:2
+		LOCAL:1 = RESULT
+		GOTO INPUT_INHABITANT_DISPLAY
+	ELSEIF RESULT == 1000
+		RETURN 0
+	ELSE
+		GOTO INPUT_INHABITANT_DISPLAY_RETRY
+	ENDIF
+RETURN 0
+
+@INHABITANT_LOOP_MAX
+	#FUNCTION
+	IF GETBIT(FLAG:住人同士イベント設定,1)
+		RETURNF CHARANUM
+	ELSE
+		RETURNF 人物_アリス+1
+	ENDIF

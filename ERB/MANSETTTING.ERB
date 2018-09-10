@@ -1,0 +1,298 @@
+;-------------------------------------------------------------------------------
+;進入者ステータス設定
+@MAN_SET
+	PRINTL Please select the setting entry.
+	PRINTFORM [ 1] Favorite Character           
+	SETCOLOR 色設定_テキスト_備考
+	PRINT :
+	IF FLAG:1800 == 51
+		SETCOLOR 色設定_設定_無効化
+		PRINTL - None -
+	ELSE
+		SETCOLOR 色設定_設定_肯定的
+		IF FLAG:1820 == 0
+			PRINTFORML  %CALLNAME:(FLAG:1800)%
+		ELSE
+			PRINTFORML  Random
+		ENDIF
+	ENDIF
+	RESETCOLOR
+
+	PRINTFORM [ 2] Hated Character              
+	SETCOLOR 色設定_テキスト_備考
+	PRINT :
+	IF FLAG:1801 == 51
+		SETCOLOR 色設定_設定_無効化
+		PRINTL - None -
+	ELSE
+		SETCOLOR 0xBBAADD
+		IF FLAG:1821 == 0
+			PRINTFORML  %CALLNAME:(FLAG:1801)%
+		ELSE
+			PRINTFORML  Random
+		ENDIF
+	ENDIF
+	RESETCOLOR
+
+	PRINTFORM [ 3] Strike Zone Limit            
+	SETCOLOR 色設定_テキスト_備考
+	PRINT :
+	SETCOLOR 色設定_設定_肯定的
+	SELECTCASE FLAG:1803
+		CASE 1
+			PRINTFORML  Infant
+		CASE 2
+			PRINTFORML  Child
+		CASE 3
+			PRINTFORML  Teen
+		CASE 4
+			PRINTFORML  Adult
+		CASEELSE
+			;デフォルト値
+			FLAG:1803 = 0
+			PRINTFORML  Infant
+	ENDSELECT
+	RESETCOLOR
+
+	PRINTFORM [10] Place Of Interest            
+	SETCOLOR 色設定_テキスト_備考
+	PRINT :
+	IF FLAG:1810 == 0
+		SETCOLOR 色設定_設定_無効化
+		PRINTL - None -
+	ELSE
+		SETCOLOR 色設定_設定_肯定的
+		IF FLAG:1830 == 0
+			PRINTFORML  %GETPLACENAME(FLAG:1810)%
+		ELSE
+			PRINTFORML  Random
+		ENDIF
+	ENDIF
+	RESETCOLOR
+	PRINT [11] Stay in Place Of Interest vicinity (Disabled when going down from the 2nd floor outside) 
+	SETCOLOR 色設定_テキスト_備考
+	PRINT :
+	IF !GETBIT(FLAG:雑多設定, 4)
+		SETCOLOR 色設定_設定_無効化
+		PRINTL - Off -
+	ELSE
+		SETCOLOR 色設定_設定_肯定的
+		PRINTL - On -
+	ENDIF
+	RESETCOLOR
+	
+	PRINTFORM [12] Preferred Place              
+	SETCOLOR 色設定_テキスト_備考
+	PRINT :
+	IF FLAG:1811 == 0
+		SETCOLOR 色設定_設定_無効化
+		PRINTL - None -
+	ELSE
+		SETCOLOR 色設定_設定_肯定的
+		IF FLAG:1831 == 0
+			PRINTFORML  %GETPLACENAME(FLAG:1811)%
+		ELSE
+			PRINTFORML  Random
+		ENDIF
+	ENDIF
+	RESETCOLOR
+
+	PRINT [20] Change Visitor's Appearance  
+	SETCOLOR 色設定_テキスト_備考
+	PRINT :
+
+	IF !GETBIT(FLAG:雑多設定, 3)
+		SETCOLOR 色設定_設定_無効化
+		PRINTL - Off -
+	ELSE
+		SETCOLOR 色設定_設定_肯定的
+		PRINTL - On -
+	ENDIF
+	RESETCOLOR
+
+	IF !GETBIT(FLAG:雑多設定, 3)
+		SETCOLOR 色設定_設定_無効化
+		PRINTL [-] Visitor's Appearance Settings
+	ELSE
+		PRINTL [21] Visitor's Appearance Settings
+	ENDIF
+	RESETCOLOR
+	PRINTL [100] Return
+
+	$INPUT_LOOP
+	INPUT
+	IF RESULT == 1
+		PRINTL Please select the character from below.
+		FOR LOCAL, 0, CHARANUM
+			SIF LOCAL == FLAG:1801
+				SETCOLOR 色設定_テキスト_備考
+			PRINTFORM [{LOCAL, 2}]%CALLNAME:LOCAL, 16, LEFT%
+			SETCOLOR 色設定_テキスト_無効
+			PRINTFORML (Succumbing: {CFLAG:LOCAL:21, 5})
+			RESETCOLOR
+		NEXT
+		;050番は流石に使わないと思うので使わせてもらいます
+		PRINTL [050] Random
+		PRINTL [100] Not Selected
+		$INPUT_LOOP1
+		INPUT
+		IF RESULT >= 0 && RESULT < CHARANUM && RESULT != FLAG:1801
+			FLAG:1800 = RESULT
+			;手動で選んだのでランダム表示もクリア
+			FLAG:1820 = 0
+			PRINTFORMW %CALLNAME:RESULT% was set as %NTR_NAME(0)%'s favorite.
+			PRINTL 
+		ELSEIF RESULT == 050
+			;被ってたらやり直しループの起点
+			$INPUT_LOOP1_1
+			FLAG:1800 = RAND:CHARANUM
+			;嫌いなキャラと被ってないかチェック　被ってたらやり直し
+			IF FLAG:1800 != FLAG:1801
+				;被ってなかったのでランダム表示ON
+				FLAG:1820 = 1
+			ELSE
+				;被ってたのでやり直し
+				GOTO INPUT_LOOP1_1
+			ENDIF
+		ELSEIF RESULT == 100
+			FLAG:1800 = 51
+			;なしにしたのでランダム表示もクリア
+			FLAG:1820 = 0
+		ELSE
+			GOTO INPUT_LOOP1
+		ENDIF
+	ELSEIF RESULT == 2
+		PRINTL Please select the character from below.
+		FOR LOCAL, 0, CHARANUM
+			SIF LOCAL == FLAG:1801
+				SETCOLOR 色設定_テキスト_備考
+			PRINTFORM [{LOCAL, 2}]%CALLNAME:LOCAL, 16, LEFT%
+			SETCOLOR 色設定_テキスト_無効
+			PRINTFORML (Succumbing: {CFLAG:LOCAL:21, 5})
+			RESETCOLOR
+		NEXT
+		;050番は流石に使わないと思うので使わせてもらいます
+		PRINTL [050] Random
+		PRINTL [100] Not Selected
+		$INPUT_LOOP2
+		INPUT
+		IF RESULT >= 0 && RESULT < CHARANUM && RESULT != FLAG:1800
+			FLAG:1801 = RESULT
+			;手動で選んだのでランダム表示もクリア
+			FLAG:1821 = 0
+			SIF FLAG:1801 == FLAG:1800
+				FLAG:1800 = 0
+			PRINTFORMW %CALLNAME:RESULT% was set as %NTR_NAME(0)%'s disliked character.
+			PRINTL 
+		ELSEIF RESULT == 050
+			;被ってたらやり直しループの起点
+			$INPUT_LOOP2_1
+			FLAG:1801 = RAND:CHARANUM
+			;お気に入りキャラと被ってないかチェック　被ってたらやり直し
+			IF FLAG:1801 != FLAG:1800
+				;被ってなかったのでランダム表示ON
+				FLAG:1821 = 1
+			ELSE
+				;被ってたのでやり直し
+				GOTO INPUT_LOOP2_1
+			ENDIF
+		ELSEIF RESULT == 100
+			FLAG:1801 = 51
+			;なしにしたのでランダム表示もクリア
+			FLAG:1821 = 0
+		ELSE
+			GOTO INPUT_LOOP2
+		ENDIF
+	ELSEIF RESULT == 3
+		PRINTL Please select visitor's strike zone limit.
+		PRINTFORML [1] Infant
+		PRINTFORML [2] Child
+		PRINTFORML [3] Teen
+		PRINTFORML [4] Adult
+		$INPUT_LOOP3
+		INPUT
+		IF RESULT >= 1 && RESULT <= 4
+			FLAG:1803 = RESULT
+		ELSE
+			GOTO INPUT_LOOP3
+		ENDIF
+	ELSEIF RESULT == 10
+		PRINTL Please select the Place Of Interest which visitor will tend to visit occasionally.
+		PRINTFORML (Doesn't work if %CALLNAME:MASTER% was selected as a favorite character)
+		FOR LOCAL, 1, MAXROOM()
+			PRINTFORML [{LOCAL, 2}]%GETPLACENAME(LOCAL)%
+		NEXT
+		;050番は流石に使わないと思うので使わせてもらいます
+		PRINTL [050] Random
+		PRINTL [100] Not Selected
+		$INPUT_LOOP10
+		INPUT
+		IF RESULT > 0 && RESULT < MAXROOM()
+			FLAG:1810 = RESULT
+			;手動で選んだのでランダム表示もクリア
+			FLAG:1830 = 0
+			PRINTFORMW %GETPLACENAME(RESULT)% was set as %NTR_NAME(0)%'s Place Of Interest.
+			PRINTL 
+		ELSEIF RESULT == 050
+			FLAG:1810 = RAND:MAXROOM()
+			;ランダム表示ON
+			FLAG:1830 = 1
+		ELSEIF RESULT == 100
+			FLAG:1810 = 0
+			;なしにしたのでランダム表示もクリア
+			FLAG:1830 = 0
+		ELSE
+			GOTO INPUT_LOOP10
+		ENDIF
+	ELSEIF RESULT == 12
+		PRINTL Please select the place where visitor will stay with his target.
+		FOR LOCAL, 1, MAXROOM()
+			PRINTFORML [{LOCAL, 2}]%GETPLACENAME(LOCAL)%
+		NEXT
+		;050番は流石に使わないと思うので使わせてもらいます
+		PRINTL [050] Random
+		PRINTL [100] Not Selected
+		$INPUT_LOOP12
+		INPUT
+		IF RESULT > 0 && RESULT < MAXROOM()
+			FLAG:1811 = RESULT
+			;手動で選んだのでランダム表示もクリア
+			FLAG:1831 = 0
+			PRINTFORMW %GETPLACENAME(RESULT)% has been set as a preferred place.
+			PRINTL 
+		ELSEIF RESULT == 050
+			FLAG:1811 = RAND:MAXROOM()
+			;ランダム表示ON
+			FLAG:1831 = 1
+		ELSEIF RESULT == 100
+			FLAG:1811 = 0
+			;なしにしたのでランダム表示もクリア
+			FLAG:1831 = 0
+		ELSE
+			GOTO INPUT_LOOP12
+		ENDIF
+		
+		;訪問者を気になる場所周辺に留まらせるか
+		ELSEIF RESULT == 11
+		IF !GETBIT(FLAG:雑多設定, 4)
+			SETBIT FLAG:雑多設定, 4
+		ELSE
+			CLEARBIT FLAG:雑多設定, 4
+		ENDIF
+
+	ELSEIF RESULT == 20
+		IF !GETBIT(FLAG:雑多設定, 3)
+			SETBIT FLAG:雑多設定, 3
+		ELSE
+			CLEARBIT FLAG:雑多設定, 3
+		ENDIF
+	ELSEIF RESULT == 21 && GETBIT(FLAG:雑多設定, 3)
+		CALL 体詳細設定訪問者
+	ELSEIF RESULT == 100
+		RETURN
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+
+	RESTART
+

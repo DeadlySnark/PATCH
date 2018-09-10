@@ -1,0 +1,23 @@
+;-------------------------------------------------
+;訪問者と別行動する
+;-------------------------------------------------
+@COM465
+PRINTFORML When you said that you were finished with guiding and decided to leave him here,
+IF FLAG:1800 == 0
+	PRINTFORMW %NTR_NAME(0)% said that he would like to stay with you a little longer.
+	PRINTL [0] Nod　[1] Refuse
+	$INPUT_COM465_0
+	INPUT
+	IF RESULT == 0
+		PRINTFORMW %CALLNAME:MASTER% decided to stay together a bit more.
+		FLAG:訪問者同行フラグ = DATETIME() + 60
+	ELSEIF RESULT == 1
+		PRINTFORMW As %CALLNAME:MASTER% refused, %NTR_NAME(0)% looked a bit disappointed.
+		FLAG:訪問者同行フラグ = 0
+	ELSE
+		GOTO INPUT_COM465_0
+	ENDIF
+ELSE
+	PRINTFORMW %NTR_NAME(0)% agreed and decided to take another action from %CALLNAME:MASTER%.
+	FLAG:訪問者同行フラグ = 0
+ENDIF

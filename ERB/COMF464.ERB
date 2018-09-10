@@ -1,0 +1,24 @@
+;-------------------------------------------------
+;訪問者を案内する
+;-------------------------------------------------
+@COM464
+PRINTFORMW As %CALLNAME:MASTER% found %NTR_NAME(0)%, %CALLNAME:MASTER% told %NTR_NAME(0)% that %HE_SHE(MASTER)% would like to guide him and asked him to follow %CALLNAME:MASTER%.
+; ここから他の住人が居る場合の処理
+LOCAL:1 = 0
+FOR LOCAL,1,CHARANUM
+	IF CFLAG:MASTER:現在位置 == CFLAG:LOCAL:現在位置
+		IF FLAG:1800 == LOCAL
+			PRINTFORMW But he refused, saying that you're currently together in the same room with %CALLNAME:LOCAL%.
+			RETURN 0
+		ENDIF
+	ENDIF
+NEXT
+IF FLAG:1800 == 0
+	PRINTFORMW %NTR_NAME(0)% willingly consented.
+	FLAG:訪問者同行フラグ = DATETIME() + 180
+ELSE
+	PRINTFORMW %NTR_NAME(0)% agreed and started following %CALLNAME:MASTER% closely.
+	FLAG:訪問者同行フラグ = DATETIME() + 60
+ENDIF
+FLAG:訪問者との行為の終了時刻 = 0
+FLAG:訪問者との行為 = NTR_行為_なし
