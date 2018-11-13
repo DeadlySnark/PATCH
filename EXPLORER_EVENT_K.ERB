@@ -1,0 +1,3190 @@
+﻿;-------------------------------------------------
+;探索コマンド口上
+;-------------------------------------------------
+;出現時の挨拶
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A, ARG
+TRYCALLFORM KOJO_MESSAGE_SEXBATTLE_A_{ARG}
+;-------------------------------------------------
+;決着時の台詞
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_B, ARG
+TRYCALLFORM KOJO_MESSAGE_SEXBATTLE_B_{ARG}
+
+;-------------------------------------------------
+;着いてきた時の台詞
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_C, ARG
+TRYCALLFORM KOJO_MESSAGE_SEXBATTLE_C_{ARG}
+
+
+;-------------------------------------------------
+;Buying off the prostitutes from red light district upon defeating them
+;ARG:1 - type, 0 - accept, 1 - decline
+;LOCAL - price
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_D, ARG, ARG:1, LOCAL
+TRYCALLFORM KOJO_MESSAGE_SEXBATTLE_D_{ARG}, ARG:1, LOCAL
+
+;-------------------------------------------------
+;Handjob, paizuri, footjob, blowjob (cunni) can still apply to female explorers without dicks
+;Plan your dialogue accordingly with HAS_PENIS function
+;-------------------------------------------------
+
+;-------------------------------------------------
+;サキュバス
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_1
+IF RAND:2 == 0
+	PRINTFORML 「Fufufu... Good \@ TIME%2 ? evening # day\@, pretty \@ IS_MALE(PLAYER) ? boy # lady\@♪」
+ELSE
+	IF PALAM_EXPLORER("敵キャラ数") > 1
+		IF RAND:2 == 0
+			PRINTFORML 「Please %SPLIT_R("give some attention to:play with")% us♪」
+		ELSE
+			PRINTFORML 「Fufu, %SPLIT_R("this will be a fine orgy:we'll make sure to rape you gently")%♪」
+		ENDIF
+	ELSE
+		PRINTFORML 「Time to play with onee-san♪」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_1
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:5 == 0
+			PRINTFORML 「More, %FSYN("insert")% it %SLUR("deepe")%r♪ ...%MOAN("h")%!!!♪」
+		ELSEIF RAND:4 == 0
+			PRINTFORML 「If you keep %SPLIT_R("fucking:banging")% me like this... I'll go %SLUR(FSYN("insane"))%♪」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「%MOAN()%, %MOAN("m",1)%! %SPLIT_R("This feels too good:So good")%... %SPLIT_R("This is it:I can't take it")%, I'm cummiiing♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%, cumming, I'm cumm%SLUR("i")%ng!」
+		ELSE
+			PRINTFORML 「%MOAN()%, %MOAN("m", 1)%, %STUTTER(SPLIT_R("don't:stop:no:no more"))%! Cumming! I'm cumming!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「%MOAN()%, amaz%SLUR("i")%ng! My %FSYN("anus")%... it's %SPLIT_R("getting molded after:taking")% the shape of your %FSYN("penis")%♪」
+		ELSEIF RAND:2
+			PRINTFORML 「%MOAN("m")%, %SPLIT_R("I'm feeling it:so good")%! This is %SPLIT_R("so :::")%much better than my %FSYN("vagina")%... %MOAN("h", 1)%♪」
+		ELSE
+			PRINTFORML 「%MOAN()%, %MOAN("m", 1)%, %STUTTER(SPLIT_R("don't:stop:no:no more"))%! Cumming! I'm cumming!」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			PRINTFORML 「%MOAN()%, %MOAN("m", 1)%, %MOAN("m", 1)%, w-wait, if you %SPLIT_R("chew:bite:touch")% my clit like that... %MOAN("h", 3)%♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「%MOAN()%... %MOAN("m")%! That's my... weak %SPLIT_R("spot:point")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			PRINTFORML 「%MOAN()%, %MOAN("m", 1)%, %MOAN("h", 3)%♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「%MOAN()%, why is my %FSYN("anus")% so... %MOAN("m")%!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			PRINTFORML 「%MOAN()%, %MOAN("m", 1)%... Don't tease my nipples so much...♪」
+		;胸揉み
+		ELSE
+			PRINTFORML 「I'm losing it, I'm %FSYN("orgasm:ing")% from my %SLUR(FSYN("chest"))%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「%MOAN()%... %MOAN()%, mmph, *%KISS()%*, *%KISS()%*... Puah, %MOAN()%, %MOAN()%, %SPLIT_R("d-e-l-i-s-h:lo-ve-ly")%♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「%MOAN()%, %MOAN("m", 1)%! I-I %SPLIT_R("give up:am done")%, this is too good...♪」
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「%MOAN("m")%... Now I know that you've been saving quite a lot after filling me up to the brim♪ Amazing, isn't it?」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%♪ You've let out so much♪」
+		ELSE
+			PRINTFORML 「Aha, %SPLIT_R("you saved up a lot:such an amazing quantity")%... %SPLIT_R("Did you feel:Was it")% that good?」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「It's hot...! %CAPITALIZE(FSYN("letout:ing"))% inside my %FSYN("anus")%... Pervert♪」
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+		PRINTFORML 「Your and my juices are so squelchy together...♪」
+	ELSEIF PALAM_EXPLORER("キス")
+		IF RAND:2 == 0
+			PRINTFORML 「*%KISS()%*, *%KISS()%*, aha... You're %FSYN("tremble:ing")% already, so cute♪」
+		ELSE
+			PRINTFORML 「*%KISS()%*, *%KISS()%*, *%KISS()%*... Fufu, %FSYN("orgasm:ing")% from just kissing me, not a big surprise... Go ahead, melt in my lips, *%KISS()%*♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:3 == 0
+			PRINTFORML 「Well? My %SPLIT_R(@"%CHECK_PLNOUN(FSYN("chest"), "feel")% good:%CHECK_PLVERB(FSYN("chest"), "is")% amazing, right")%♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Puah, %FSYN("letout:ing")% so much... Aha, it's %FSYN("leak:ing")% down♪」
+		ELSE
+			PRINTFORML 「Whoa, you've been %SPLIT_R("shooting:cumming")% for so long... Ufu, my %CHECK_PLVERB(FSYN("chest"), "is")% all %SPLIT_R("soaked:white:sticky:wet")%♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("アナル責め")
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「I'll make sure to imprint the %SPLIT_R("rich:dense:thick")% %TEXTS("匂い")% of my %FSYN("vagina")% into your mind♪」
+		ELSE
+			PRINTFORML 「Staring at my perverted %FSYN("vagina")% in a daze like that... Must be a great view, right? Fufu♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF RAND:2 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「Aha, my panties are smeared in your %SEMEN(PLAYER,1)%♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Fufu, that feels kinda like a waste if you %FSYN("orgasm")% from just a \@ !HAS_PENIS(PLAYER) ? fingering # handjob\@, don't you think?」
+		ELSE
+			PRINTFORML 「Did my hands really feel that good I wonder♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF MAXBASE:PLAYER:精力 > 30 && RAND:2 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「?! %MOAN("m")%! Uh, *cough*, *gulp*... Fuah, %SPLIT_R("you saved up a lot:such an amazing quantity:delicious:yummy")%♪」
+		ELSE
+			PRINTFORML 「%MOAN()%... *Gulp*, *Gulp*... Puah... Fufu, thank you for the meal♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		PRINTFORML 「Fufu, you're %SPLIT_R("a real pervert:quite perverted:actually quite a pervert, aren't you")%...♪」
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「Your %FSYN("orgasm:ing")% face looks... so %SPLIT_R("cute:lovely:nice:adorable")%♪」
+		ELSE
+			PRINTFORML 「Oh my, are you %SPLIT_R("done:giving up:cumming")% already? Ufufu♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_1
+IF RAND:2 == 0
+	PRINTFORML 「Ufufu... I will be looking forward to it♪」
+ELSE
+	PRINTFORML 「Take care of me from now on, 'kay?♪」
+ENDIF
+
+;-------------------------------------------------
+;インプ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_2
+IF RAND:2 == 0
+	PRINTFORML 「%SPLIT_R("Hooray:Yay:Yippee:Whee")%, I'm gonna squeeze ya～♪」
+ELSE
+	PRINTFORML 「%SPLIT_R("Y'know, I'm dying to:Hey-hey, I wanna:Hey, c'mon, I wanna")% eat something tasty～♪」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_2
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:5 == 0
+			PRINTFORML 「It's %SLUR("comi")%ng, to my baby room, knocking on its doors♪ %SLUR("Fuwa")%h♪」
+		ELSEIF RAND:4 == 0
+			PRINTFORML 「%CNAME("二人称", "cap")%, more, %SPLIT_R("bang:fill")% me %SLUR("more")%!」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「%MOAN("h")%, %CNAME("二人称/your")% thing... %SPLIT_R("So good:Amazing")%♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%SLUR(CNAME("二人称", "cap"))%, your thing... is giving a deep kiss to my womb...!」
+		ELSE
+			PRINTFORML 「%MOAN("m")%! %CNAME("二人称/your", "cap")% thing is ripping me apart... Feels so %SLUR("goo")%d～♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「My %STUTTER(FSYN("anus"))%! It feels s%SLUR("o")% good!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%, %MOAN("h",1)%! My %FSYN("anus")% feels amazing, %SPLIT_R(@"it's making me feel w%SLUR("e")%ird:I'm breaking:this is not what supposed to happen")%!」
+		ELSE
+			PRINTFORML 「%MOAN("m")%! %MOAN()%! My filled %STUTTER(FSYN("anus"))% feels %SLUR("amazi")%ng!」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「%CNAME("二人称", "cap")% is licking me... It feels %SPLIT_R("so good:amazing")%...♪」
+			ELSE
+				PRINTFORML 「%MOAN()%! %MOAN()%! I'm cumming from my %STUTTER(SLUR("cli"))%t, %MOAN("h", 3)%～～!!!」
+			ENDIF
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%SPLIT_R("Don't touch me there!:You can't touch that!")% If you do, I... %MOAN("h",1)%～♪」
+			ELSE
+				PRINTFORML 「%MOAN()%♪ %CNAME("二人称/your", "cap")% fingers feel %SPLIT_R("so good:amazing:great")%...♪」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			PRINTFORML 「%MOAN("m")%! I'm cumming, cumming from my %STUTTER(FSYN("anus"))%...! %MOAN("h",3)%～～!!!」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「I never knew my %STUTTER(FSYN("anus"))%... would feel this good... %MOAN("m")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			PRINTFORML 「%MOAN("m")%! My nipples, %SPLIT_R("so good:amazing:so nice")%♪」
+		;胸揉み
+		ELSE
+			PRINTFORML 「My %CHECK_PLNOUN(FSYN("chest"), "feel")% %SPLIT_R("so good:amazing:so nice")%...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「%MOAN()%... I %FSYN("orgasm:ed")% just from kissing with %CNAME("二人称")%... Amazing♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「This feels %SPLIT_R("so good:amazing:so nice")%～ %SPLIT_R("Gimme m:I wanna m:M")%ore～♪」
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「%MOAN()%... %SPLIT_R("Cumming:Letting it out:Shooting it")% inside my baby room♪ ...%MOAN("m")%♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%♪ %SPLIT_R("This feels so warm:I'm getting filled with hot stuff:It's pouring your hot baby juice all the way inside my cunny")%～♪」
+		ELSE
+			PRINTFORML 「C'mon c'mon, gimme more～～♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「%MOAN("m")%! My %FSYN("anus")% feels so %SPLIT_R("hot:warm")%～!」
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+		IF RAND:2 == 0
+			PRINTFORML 「Fufu, %CNAME("二人称/your")% %FSYN("orgasm:ing")% face is so cute～♪」
+		ELSE
+			PRINTFORML 「Ehehe, feels good, right? Our pussies rubbing together♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("キス")
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		PRINTFORML 「So my %CHECK_PLNOUN(FSYN("chest"), "feel")% that good, huh♪ I'm %SPLIT_R("glad:happy")%%SPLIT_R(", really::")%♪」
+	;ELSEIF PALAM_EXPLORER("アナル責め")
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		PRINTFORML 「Huh, %CNAME("二人称")%... Did my loli %SPLIT_R("pussy:cunny")% get you %SPLIT_R("aroused:excited")% that much?」
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF RAND:2 == 0
+			PRINTFORML 「C'mon c'mon, gimme more～～♪」
+		ELSE
+			PRINTFORML 「%MOAN()%, %CNAME("二人称")%, you're cumming lots♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「%MOAN()%, %SPLIT_R("tasty:delicious:yummy")%～♪ Let me %SPLIT_R("slurp it out:lick it")% more～♪」
+		ELSE
+			PRINTFORML 「%MOAN()%... %CNAME("二人称/your", "cap")% %SEMEN(PLAYER, 1)%...♪ %MOAN()%... *Slurp* %SPLIT_R("Tasty:Delicious:Yummy")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		PRINTFORML 「Ehehe, that feels good right? I'll keep doing it more♪」
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, fufu, %CNAME("二人称")%, I'll %SPLIT_R("make you cum lots:make you taste the heaven:please you lots more")%♪」
+		ELSE
+			PRINTFORML 「*Kiss*, %MOAN(,1)%... %CNAME("二人称", "甘え", "cap")%, I'll make you feel good a lot more...♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_2
+PRINTFORML 「Am I being kidnapped? Fufufu...♪」
+
+;-------------------------------------------------
+;ドライアド
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_3
+IF RAND:2
+	PRINTFORML 「Would you please accept my love...?」
+ELSE
+	IF PALAM_EXPLORER("敵キャラ数") > 1
+		IF RAND:2 == 0
+			PRINTFORML 「Welcome to the feast of everlasting spring...」
+		ELSE
+			PRINTFORML 「Let us copulate together like the flowers blooming in the field.」
+		ENDIF
+	ELSE
+		PRINTFORML 「I will not let you run...」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_3
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("両穴征服")
+		PRINTFORML 「...We could've been connected together for eternity...」
+	ELSEIF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:4 == 0
+			PRINTFORML 「%MOAN()%... %MOAN("m")%! If you keep jamming it in so far inside, I'm... I'm gonna break... %MOAN()%, %MOAN("h", 3)%!」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「More, please %SPLIT_R("give love to me:make love to me:love me")% more, more, more...」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Forgive me... Please, forgive me! I'm going to... I'm %SLUR("cummi")%ng, %MOAN("h")%!」
+		ELSE
+			PRINTFORML 「%MOAN("h", 3)%?! Stop it, please, my ears... %MOAN("m")%?! Please, stop licking them, %SLUR("sto")%p!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「Please, more♪ Have my %FSYN("anus")%, %FSYN("stir")% it some %SLUR("more")%♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Good, my %FSYN("anus")% feels so %SLUR("goo")%d♪ I beg of you, please keep punishing my %SPLIT_R("disgraceful:shameful:vulgar")% %FSYN("anus")% more♪」
+		ELSE
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, %STUTTER("my")% %FSYN("anus")%... Wonderful♪ Even though it's my %STUTTER(FSYN("anus"))%, I...♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			PRINTFORML 「%MOAN()%... %SPLIT_R("Licking:Sucking")%, %SPLIT_R("tasting:swallowing")% my flower honey like that...\n　It's %FSYN("leak:ing")% out like crazy and doesn't %SLUR("sto")%p...」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「%MOAN()%... To %SPLIT_R("violate:molest")% my tender flower bud like that... Oh dear, you're such a %SPLIT_R("bad person:baddie:meanie:prankster")%...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, %SLUR("shto")%p... doing such thing... Please, I beg of you... Let me go, don't lick %SLUR("i")%t...!」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「It's spreading... and in the plain sight... I... My...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN("m")%... If you %SPLIT_R("bite:chew")% on it like that, I... %MOAN()%, don't pull %SLUR("i")%t...!」
+			ELSE
+				PRINTFORML 「Suck them, lick them, but gently... Yes, good... Very good indeed, %MOAN(, 1)%...」
+			ENDIF
+		;胸揉み
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「Splendid... Keep it up, gently... Fufu, I almost feel like it's going to melt %SLUR("awa")%y!」
+			ELSE
+				LOCALS = %SPLIT_R(@"%SLUR("che")%st:%SLUR("ti")%ts:%SLUR("bo")%bs:%SLUR("bre")%asts")%
+				PRINTFORML 「%STUTTER("You're")% %SPLIT_R("teasing:playing with:bullying")% me way too much... You just keep touching my %FSYN("chest")%... just my %LOCALS%...」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「*%KISS()%*, *%KISS()%*, *%KISS()%*... *%KISS()%*, *%KISS()%*... Please more, more of your dew... %MOAN("m")%...」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R("Wonderful:Lovely")%... You are so very %SPLIT_R("wonderful:lovely:talented")%...!」
+		ELSE
+			PRINTFORML 「%MOAN("m")%... %MOAN()%, %MOAN(,1)%... %MOAN("h", 3)%!」
+		ENDIF
+	ENDIF
+
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「Fufu... Not so resistant anymore, are we? Well then, let me give you the love you deserve... until your due withering...」
+		ELSE
+			PRINTFORML 「Your pistil is about to pollinate my pollen, ufufu...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「Ah, that's it, I shall not stop anymore... That's your fault, it's because of you, more... Give me more...!」
+		ELSE
+			PRINTFORML 「...That's your punishment, I will not let you go until my %SPLIT_R("belly:stomach")% is full...\n　So I'm %FSYN("start:ing")% to move, ufufu...」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("キス")
+		IF RAND:2 == 0
+			PRINTFORML 「*%KISS()%*, *%KISS()%*, *%KISS()%*... %MOAN()%... Did %SPLIT_R(@"you %FSYN("orgasm")% from that:that finish you off")%? %SPLIT_R("What a waste:Such a waste")%... *%KISS()%*, *%KISS()%*...」
+		ELSE
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%... *%KISS()%*, *%KISS()%*... %MOAN()%, stop %FSYN("tremble:ing")% so much and kiss me more... *%KISS()%*...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「I'm not really confident in them, but... You end up getting so %SPLIT_R("delighted:pleased")%, fufu, it's like a proof of submission to me...」
+		ELSE
+			PRINTFORML 「My skin shall bloom more from your sap, isn't that right? So please, I will be really glad if you cover me with it more...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル責め")
+		IF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「Are you acquainted with the pleasure from here yet? I'll be glad to initiate you and make your back bud blossom like a flower...」
+		ELSE
+			PRINTFORML 「Twitchy twitch, twitchy twitch, it's so happy... I find it quite %SPLIT_R("cute:lovely:adorable")%. *Kiss*.」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R("How are:Do you like:What do you think about")% my flower petals...?」
+		ELSE
+			PRINTFORML 「Please go ahead and drink my flower honey as much as you want...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「Letting out such a %SPLIT_R("lewd:perverted:obscene")% %TEXTS("匂い")%... The forest fairies will come flying to it in no time, fufu...」
+		ELSE
+			PRINTFORML 「Now please, choose your favorite spot, and... %SPLIT_R("Shoot:Stain it:Drench it:Cover it:Cum on it")% all you want, okay? Ufufu...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:2 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「%SPLIT_R("Oh my, w:My, w:W")%hat a %SPLIT_R("splendid:fine:praiseworthy")% mushroom... Spreading its cap so much too... Nom, %MOAN(,1)%...」
+		ELSE
+			PRINTFORML 「...%SPLIT_R("Puah:Pwah:Fuah")%... %CAPITALIZE(FSYN("letout:ing"))% so much, %MOAN(,1)%, *%KISS()%*... Just the %TEXTS("匂い")% alone makes me intoxicated...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		IF RAND:2 == 0
+			PRINTFORML 「I'm not really used to this kind of thing, but... Fufu. By all means, I'll keep rubbing, I don't really mind.」
+		ELSE
+			PRINTFORML 「...Hm, for some reason I feel some kind of %SPLIT_R("superiority:dominance")%... Amusing, isn't it? Here, here!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("シックスナイン")
+		IF RAND:2 == 0 && !HAS_PENIS(PLAYER)
+			PRINTFORML 「Hey, if you don't try to hold it, you'll be the one who keeps %FSYN("orgasm:ing")% all the time...\n　Or maybe it's already too late for you? Ufufu...」
+		ELSE
+			PRINTFORML 「Your stamen is %FSYN("tremble:ing")% awful lot... How does my pistil feel? ...Fufu...」
+		ENDIF
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「Your sap is so %SPLIT_R("thick:dense:strong")% and %SPLIT_R("mellow:rich:juicy")%... Almost enough to %SPLIT_R("entrance me:make me ecstatic")%...」
+		ELSE
+			PRINTFORML 「You don't have to endure it... Let us have fun and enjoy each other, as the feast of spring is only about to begin...」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_3
+PRINTFORML 「The world outside the forest... I want to see it too...」
+
+;-------------------------------------------------
+;ピクシー
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_4
+IF RAND:2
+	PRINTFORML 「%SPLIT_R(@"Hey you:You there:%CALLNAME:PLAYER%")%, how about we dance together?」
+ELSE
+	IF PALAM_EXPLORER("敵キャラ数") > 1
+		IF RAND:2 == 0
+			PRINTFORML 「Let's all dance together♪」
+		ELSE
+			PRINTFORML 「Have fun being fairy's plaything♪」
+		ENDIF
+	ELSE
+		PRINTFORML 「I will show you the summer night's dream♪」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_4
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN("m")%! If you keep licking me so much, it'll make me %STUTTER("feel")% %SPLIT_R("weird:strange:funny")%♪」
+			ELSE
+				PRINTFORML 「I'm gonna get eaten, I'm gonna get eaten %SLUR("whole")%♪」
+			ENDIF
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「Here... %SPLIT_R("that's the spot:touch me here:do it here:I like it here")% where it feels the best♪」
+			ELSE
+				PRINTFORML 「Yes, %SLUR("here")%! Oh yeah, keep %FSYN("stir:ing")% it♪」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「%SPLIT_R(@"That feels %SPLIT_R("odd:strange:weird")%:You're a weirdo")%... Even though it's my %FSYN("anus")%♪」
+			ELSE
+				PRINTFORML 「%MOAN("m")%?! %STUTTER(CALLNAME:PLAYER)%, where do you think you're %STUTTER("licking")%?!」
+			ENDIF
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%SPLIT_R("That:It's")%-... %SPLIT_R(@"%SLUR("No")%:%SLUR("Sto")%p:%SLUR("Do")%n't")%...!」
+			ELSE
+				PRINTFORML 「%SPLIT_R("Don't spread:Stop spreading")% it so much... %SPLIT_R(@"It's %SPLIT_R("really ::")%embarrassing:I'm almost dying from shame:This is too shameful")%♪」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「I'll %SPLIT_R("break:faint:die")% if you keep licking so much♪」
+			ELSE
+				PRINTFORML 「...%MOAN()%, %MOAN(,1)%... I guess you already found out... my heart's %SPLIT_R("beating:pounding:throbbing:racing")%%SPLIT_R(" so fast::")%♪」
+			ENDIF
+		;胸揉み
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %STUTTER("Gentler")%, be gentle... %MOAN("m")%♪」
+			ELSE
+				PRINTFORML 「%SPLIT_R(@"Giving so much love to:Being so %SPLIT_R("obsessed with:crazy about")%:Being pleased with")% my tiny %FSYN("chest")%, I'm %SPLIT_R("so ::")%%SPLIT_R("happy:glad")%♪」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「*%KISS()%*, *%KISS()%*... %MOAN()%, *%KISS()%*, *%KISS()%*... Mfufu, your mouth is so big,\n　it's like I'm about to get eaten any moment now♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「Hyah! %STUTTER("Stop:Don't:No:No more")%, that place's... %MOAN("m")%♪」
+	ENDIF
+
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("キス")
+		IF RAND:2 == 0
+			PRINTFORML 「*%KISS()%*, %MOAN(,1)%, *%KISS()%*... Aha♪ You're already like this from just kissing♪」
+		ELSE
+			PRINTFORML 「...%MOAN()%, %MOAN(,1)%, %MOAN(,1)%... So cute, there, there, I'll pet you all you want...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「Your thing grew so big, so warm... It's %FSYN("tremble:ing")% so much, too cute♪」
+		ELSE
+			PRINTFORML 「Here, a much more pleasant bodyjob～♪ That's the only thing we fairies can do if I'm to please you with my %FSYN("chest")% after all～♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル責め")
+		IF RAND:2 == 0
+			PRINTFORML 「I'll make e-v-e-r-y nook and corner sparking clean♪ So it's okay if you feel a little bit too good♪」
+		ELSE
+			PRINTFORML 「Hm, my hands seem to go in... Hey, how about I touch your most pleasant place there?♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%... You're getting too excited, I'm about to spring out♪」
+		ELSE
+			PRINTFORML 「Here, h-e-r-e, this is your favorite fairy %SPLIT_R("cunny:pussy")% rubbing against your face～♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF RAND:2 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「The opening on the tip is %FSYN("twitch:ing")% so much when I tease it with my fingers...♪」
+		ELSE
+			PRINTFORML 「Yes, just like this♪ You're so cute when you're honest about your desires♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, *%KISS()%*... *%KISS()%*... *%KISS()%*, your broth is so %SPLIT_R("tasty:delicious:yummy")%... *Sluuuurp*」
+		ELSE
+			PRINTFORML 「You're going to treat with lots of your honey, right? Because I'll do my best...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		IF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「You're so %SPLIT_R("amusing:funny:interesting")%～, %SPLIT_R("letting out such cute moans:moaning so sweetly")% when I step on you with my feet♪」
+		ELSE
+			PRINTFORML 「I'll squeeeze you out with my feet～ Heeeere, you're about to erupt already♪」
+		ENDIF
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%... You're %SPLIT_R("impressive:amazing")%, I'm completely %SPLIT_R("soaked:drenched")% wet♪」
+		ELSE
+			PRINTFORML 「Fairy's %SPLIT_R("teasings:pranks")% feel insanely good, right? Let us play together foreeever～♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_4
+IF RAND:2 == 0
+	PRINTFORML 「%CNAME("二人称", "cap")%, let us dance together forever from now on♪」
+ELSE
+	PRINTFORML 「%SPLIT_R("Yaa～y:Hooray")%, I wonder if you have some sweet snacks too♪」
+ENDIF
+
+;-------------------------------------------------
+;シルフ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_5
+IF RAND:2
+	PRINTFORML 「Fufufu... I've been waiting%SPLIT_R(" for this: for you::")%♪」
+ELSE
+	IF PALAM_EXPLORER("敵キャラ数") > 1
+		IF RAND:2 == 0
+			PRINTFORML 「Huh, would this be a%SPLIT_R(" so called::")% love triangular?」
+		ELSE
+			PRINTFORML 「Let's see who is the most suitable lover for %HIM_HER(PLAYER)%, everyone♪」
+		ENDIF
+	ELSE
+		PRINTFORML 「%SPLIT_R("I'll be your friend:Let us be friends:Let's start our companionship")%♪」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_5
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("両穴征服")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%... %STUTTER(SPLIT_R("don't:stop:no:no more"))%, please, %SLUR(SPLIT_R("let me go:forgive me"))%♪ %SLUR(SPLIT_R(@"My head's turning into a mush:I'm going %FSYN("insane")%:My head feels weird:I don't feel my legs:My reason... it's melting away"))%...!」
+		ELSE
+			PRINTFORML 「...So that's what it means to %STUTTER("make")% love...! Amazing, please go on and %FSYN("stir")% me up %SLUR("more")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%STUTTER("No")%, %MOAN()%... I'm cumming already, so... %SPLIT_R("grab:squeeze:hold")% my hands... %SLUR("tightly")%♪」
+		ELSE
+			PRINTFORML 「Not yet, don't go yet. %SPLIT_R("Be more, more affectionate with me:More, make more love with me:Give me more, more of your love")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%, it's pouring into my %SLUR(FSYN("anus"))%...!」
+		ELSE
+			PRINTFORML 「%STUTTER("This")% is not what lovers do, but perverts, %MOAN(,1)%...」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN("m")%! Don't kiss my precious place like that, it's making me go %SLUR(FSYN("insane"))%♪」
+			ELSE
+				PRINTFORML 「%MOAN("h")%♪ So %SLUR("goo")%d, yet so %SPLIT_R("embarrassing:shameful")%... it's becoming so %SLUR("sensitive")%...!」
+			ENDIF
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, your fingers... So good, it feels %SPLIT_R("great:amazing")%♪」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN(,1)%... Yeah, that's the spot, keep shoving it in♪」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%... %SPLIT_R(@"I can't believe it:%SLUR("No way")%")%, that's my %FSYN("anus")%, and yet %SPLIT_R("it feels:it's")%... so %SLUR("goo")%d...?!」
+			ELSE
+				PRINTFORML 「%STUTTER(SPLIT_R("Don't:Stop:No:No more"))%, if you keep shoving your tongue like that, it's gonna turn me %SLUR("we")%ird...!」
+			ENDIF
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「You %SPLIT_R(@"meanie, meani%SLUR("e")%:bully, bull%SLUR("y")%:jerk, j%SLUR("e")%rk")%! %STUTTER(SPLIT_R("Don't:Stop:No:No more"))%, not my %FSYN("anus")%, %SLUR("no")%!」
+			ELSE
+				PRINTFORML 「Stop it alread%SLUR("y")%! I %SPLIT_R("don't want it:hate it")%, cumming from my %FSYN("anus")%... %MOAN()%, %MOAN("m", 1)%, %SLUR("nooo")%!!!」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%... It's %SPLIT_R("making me blush:embarrassing")% when you suck so much... %SPLIT_R("But I don't mind:You're like a baby:Keep at it")%♪」
+			ELSE
+				PRINTFORML 「%MOAN("m")%, %SPLIT_R(@"not the teeth:be gentle:%STUTTER("don't")% chew at them")%! And stop sucking them too♪」
+			ENDIF
+		;胸揉み
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %SPLIT_R("I can't believe it:no way")%... You're %SPLIT_R("groping:touching:handling")% me so roughly, and yet it %SPLIT_R("sends shivers down my spine:only turns me on more:strikes me like an electric current")%♪」
+			ELSE
+				PRINTFORML 「%MOAN()%, gentle, be more gentle♪ %MOAN("m")%, I'm cumming, cumming from my %FSYN("chest")%, %MOAN("m", 3)%♪」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「%MOAN()%... More, give me more, don't stop kissing...」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「%STUTTER("Stop")% it alread%SLUR("y")%! I'm cumm%SLUR("i")%ng!!!」
+	ENDIF
+
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%, %SPLIT_R("nice:great:amazing:so warm")%♪ Cumming inside me like that, we're totally like lovers♪」
+		ELSE
+			PRINTFORML 「Ufufu, we're really lovey-dovey right now, aren't we?」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「Aww, are you %SPLIT_R("letting it:cumming")% inside my %FSYN("anus")%? %SPLIT_R("What a waste:Such a waste")%...」
+		ELSE
+			PRINTFORML 「Do you actually prefer this? Jeez, what a pervert♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+		IF RAND:2 == 0
+			PRINTFORML 「Even though we're both girls, it might not be bad at all♪」
+		ELSE
+			PRINTFORML 「What %ARTICLE(SPLIT_R("cute:lovely:adorable"))% face... Hey, how about you try\n　calling me Onee-sama? ...Fufu, let us be more lovey-dovey this time♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		IF RAND:2 == 0
+			PRINTFORML 「...Puah. Ah, look, saliva string♪」
+		ELSE
+			PRINTFORML 「*%KISS()%*, %MOAN()%, *%KISS()%*, *%KISS()%*... Let's kiss more♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「Aha, it flew all the way up to my face, you sure are %SPLIT_R("full of energy:vigorous")%♪」
+		ELSE
+			PRINTFORML 「Whoa...! Ah jeez, %TEXTR(@"at least warn me %SPLIT_R("when you're about to cum:before you let it out")%", "if you're going to cum then you have to say so")%... I wanted to drink it, you know...%SPLIT_R(" Now I'll have to lick it all over, fufu♪::")%」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル責め")
+		IF RAND:2 == 0
+			PRINTFORML 「...So you like this kind of thing... Huuuh, hmmm...」
+		ELSE
+			PRINTFORML 「Are you telling me lovers do such things too? ...The world of love is sure full of wonders...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, don't get so excited♪ Your breathing %SPLIT_R("feels too ticklish:is tickling me")%♪」
+		ELSE
+			PRINTFORML 「You want me to rub it against your face? %SPLIT_R("Are you glad:Do you like it")%?」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「Ah... %SPLIT_R("Wow:Whoa:Wowee")%, it's so thick and %SPLIT_R("slimy:sticky")%♪」
+		ELSE
+			PRINTFORML 「Okaay, so you can cum just from that... Hey, you're going to properly %FSYN("letout")% it all inside me next, got it?♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:2 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「Mpphhh?! *Cough* *Cough*, ah jeez, are you letting it out already? I spilled it...」
+		ELSE
+			PRINTFORML 「*%KISS()%*... %MOAN()%... I see you're quite fond of me kissing you here too... *%KISS()%*...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「I have a feeling that this is not what lovers do... Aww man, how long it's going to keep twitching like this?」
+		ELSE
+			PRINTFORML 「C'mon, c'mooon. To cum from being stepped on, you're hopeless.\n　If you don't let it inside like you should, %SPLIT_R("no woman would want to sleep with you:you'll be a failure of a lover:no one would want to have a partner like you")%, you know?」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("シックスナイン")
+		IF RAND:2 == 0
+			PRINTFORML 「Aha, that's unfair if only you gonna feel good... C'mon, %SPLIT_R("stick out your tongue:lick me too:put that mouth to work")%♪」
+		ELSE
+			PRINTFORML 「...Fuah... Are you feeling good already? Your mouth is slacking off♪」
+		ENDIF
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0 || IS_FEMALE(PLAYER)
+			PRINTFORML 「Perhaps this might be good too... More practice for me...」
+		ELSE
+			PRINTFORML 「Ufufu... Boys should %SPLIT_R("learn how to hold it in longer:have more backbone in them:endure and be strong")%, or they'll never satisfy a girl, you know?」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_5
+IF RAND:2 == 0
+	PRINTFORML 「I wonder if this is fate...?」
+ELSE
+	PRINTFORML 「From being friends to becoming lovers... Would you like to try?」
+ENDIF
+
+;-------------------------------------------------
+;ネコマタ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_6
+IF SAVESTR:15 == "キアズマの遊郭"
+	IF MONEY < 1000
+		PRINTFORML 「Nyahaha, %SPLIT_R("you spent all of your money just to have some company:did you use all of your money just to play around here")% nya? Nfufu, I'll give you some pity nya♪」
+	ELSEIF FIND_COND("相思相愛") > 0 && PLAYER == MASTER && RAND:4 == 0
+		PRINTFORML 「Are you %SPLIT_R("having an affair:cheating:fooling around")% in a place such as this nya? Nyufufu, naughty kids shall be punished nya～♪」
+	ELSEIF TALENT:PLAYER:童貞 && RAND:2
+		PRINTFORML 「Nyahaha, what's the matter nya? I sniff the smell of virgin off of ya... If that's what I think it is, then I shall be your first nya♪」
+	ELSEIF RAND:5 == 0
+		PRINTFORML 「Nya? Are you a customer nya? Nyufufu, I'll serve you lots nyan♪」
+	ELSEIF RAND:4 == 0
+		PRINTFORML 「Nyahaha, let's have lots of fun nya♪」
+	ELSEIF RAND:3 == 0
+		PRINTFORML 「Nyaon♪　I'll %SPLIT_R("give you lots of love:be your lover")% nya♪」
+	ELSEIF RAND:2 == 0
+		PRINTFORML 「Nyan♪　I'll give you some affection nyan♪」
+	ELSE
+		PRINTFORML 「Nyufufu, I'll make you feel good nya♪」
+	ENDIF
+ELSE
+	IF RAND:2 == 0
+		PRINTFORML 「Nyahaha, I'll eat ya nya～」
+	ELSE
+		PRINTFORML 「Nyufufu... %SPLIT_R("I'm looking forward to this:This looks like lots of fun")% nya♪」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_6
+IF SAVESTR:15 == "キアズマの遊郭"
+	;夢魔がイかされた
+	IF BASE:精力 <= 0
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「%MOAN()%, nya%MOAN(,1)%, it's so %SPLIT_R("warm:hot")% inside, nya... I, I'm, %MOAN()%, nya%MOAN("h",1)%!」
+			ELSEIF RAND:2
+				PRINTFORML 「%MOAN()%, nya%MOAN("m",1)%?! %MOAN("m")%, ny%SLUR("a")%n!」
+			ELSE
+				PRINTFORML 「%MOAN()%, nya%MOAN(,1)%, %MOAN(,1)%♪ ...?! Nyu...fufu... %MOAN()%... %MOAN("m")%!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			IF RAND:2
+				PRINTFORML 「Nya... My %FSYN("anus")% is so %SPLIT_R("warm:hot:heavy")%... Nyauu, %MOAN(,1)%, %MOAN(,1)%, nya%MOAN("h",1)%!」
+			ELSE
+				PRINTFORML 「%MOAN()%... %MOAN()%... Nyaa... I came... from my %FSYN("anus")%... nya...」
+			ENDIF
+		;ELSEIF PALAM_EXPLORER("エースオブスペード")
+		ELSEIF PALAM_EXPLORER("ヴァッジ")
+			;クンニ
+			IF R == 2
+				PRINTFORML 「Nya... %MOAN()%, I'm cumming from my clit nyaaa! %MOAN()%... %MOAN()%, %MOAN(,1)%, nya%MOAN("h",1)%!」
+			;指で愛撫
+			ELSE
+				PRINTFORML 「Nya, nya%MOAN("m",1)%! My %FSYN("vagina")% is getting %FSYN("stir:ed")%, nya%MOAN("m",1)%!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル")
+			PRINTFORML 「%MOAN()%... %MOAN()%... Nyaa... I came... from my %FSYN("anus")%... nya...」
+		ELSEIF PALAM_EXPLORER("バスト")
+			PRINTFORML 「Nya, %MOAN(,1)%, my %FSYN("chest")%, %MOAN(,1)%, nyaa! %MOAN("h")%!」
+		ELSEIF PALAM_EXPLORER("キス")
+			PRINTFORML 「%MOAN()%... %MOAN()%, mph, *%KISS()%*, *%KISS()%*... Puah, haa, haa, you're good at this, nya...♪」
+		;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %MOAN(,1)%! Nya, ny%SLUR("a")%n... %STUTTER("That's")% it, I'm done nya...♪」
+			ELSE
+				PRINTFORML 「Nya, nyaa, nyan...♪ I lost it myself instead nya...♪」
+			ENDIF
+		ENDIF
+	;探索側をイかせた
+	ELSE
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「Nya... Ha, it's %SPLIT_R("spurting:shooting")% inside me nya♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Nyufufu, at this point I'm gonna %SPLIT_R("squeeze:wring")% %SPLIT_R(@"every %SPLIT_R("single ::")%drop outta ya:everything from ya:ya %SPLIT_R("completely ::")%dry")% nya♪」
+			ELSE
+				PRINTFORML 「Nyaha... You came nya～ It felt good, didn't it nya?」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「Nya, it's %SPLIT_R("spurting:shooting")% inside my %FSYN("anus")%♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Nyaa... Are you trying to %SPLIT_R(@"knock my %FSYN("anus")% up:impregnate my %FSYN("anus")%:fertilize my %FSYN("anus")%")% nya...?♪」
+			ELSE
+				PRINTFORML 「Nyaha... You came %SPLIT_R("inside:in")% my %FSYN("anus")% nya～ Did it feel good nya?」
+			ENDIF
+		;ELSEIF PALAM_EXPLORER("エースオブスペード")
+		ELSEIF PALAM_EXPLORER("キス")
+			IF RAND:3 == 0
+				PRINTFORML 「*%KISS()%*... Fufu, was that your first time kissing%SPLIT_R(" like this nya?: nya?:? This is what a real kiss is nya")%♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Nya～♪　%SPLIT_R(@"Drown in pleasure with my kisses:I'll make you lose yourself with my kisses:Let the pleasure consume you, *%KISS()%*")% nya♪」
+			ELSE
+				PRINTFORML 「Nyaha♪　%SPLIT_R(@"You got completely melted from just a kiss:My lips are amazing, aren't they nya? I'll let you lick them more")%♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+			IF RAND:3 == 0
+				PRINTFORML 「Ny%SLUR("a")%n♪ My %CHECK_PLVERB(FSYN("chest"), "is")% completely %SPLIT_R("drenched:wet:soaked:slimy")% nya～♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Nyan♪ %SPLIT_R("You drenched them wet:They're so sticky:So wet and warm")% nya♪」
+			ELSE
+				PRINTFORML 「Nyufufu, you really like my %FSYN("chest")%, aren't ya nya? I'll %SPLIT_R("squeeze:wring:indulge")% you some more nya♪」
+			ENDIF
+		;ELSEIF PALAM_EXPLORER("アナル責め")
+		ELSEIF PALAM_EXPLORER("顔面騎乗")
+			IF RAND:3 == 0
+				PRINTFORML 「Nyufu... %SPLIT_R(@"Did you get that %SPLIT_R("aroused:excited")% from %SPLIT_R("girl's:a female")% %TEXTS("匂い")%:Did my %TEXTS("匂い")% get you that hard:Does my pussy %TEXTS("匂い")% driving you that %FSYN("insane")%")% nyaa～?」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Nyahaha♪　Your %SPLIT_R("nose:breathing")% %SPLIT_R("feels too ticklish:is tickling me")% nya♪」
+			ELSE
+				PRINTFORML 「Nya～♪ I'll make sure to %SPLIT_R("grind:ride:rub")% it some more nya♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("手コキ")
+			IF RAND:3 == 0 && HAS_PENIS(PLAYER)
+				PRINTFORML 「Nyan♪　Did it feel that good when I beat your meat nya～?♪」
+			ELSEIF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+				PRINTFORML 「Nyaha, my hands are completely %SPLIT_R("drenched:wet:soaked")% nya... %SPLIT_R("I have no choice but to:I'll keep")% going nya♪」
+			ELSE
+				PRINTFORML 「Nya, %SPLIT_R("you're spurting all over me, so cute nya:was it that good nya～?")%♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("フェラチオ") && HAS_PENIS(PLAYER)
+			IF RAND:3 == 0
+				PRINTFORML 「Nyaa♪ %SPLIT_R("You quick shot:That was over quickly:Accidental discharge")%... %SPLIT_R("Was the stimulation too strong for you nya?:I wonder if my cat tongue too intense for you nya")%♪」
+			ELSEIF RAND:2
+				PRINTFORML 「%MOAN()%! Mp%SLUR("h")%, %MOAN(,1)%, fuah, male's %TEXTS("匂い")%... %SPLIT_R("I can't get enough:So irresistible:It's making me so horny:I feel like I'm in heat")% nya... %SPLIT_R("Don't stop cumming:Keep letting it out:Don't you even stop:Let it out more")% nya♪」
+			ELSE
+				PRINTFORML 「%MOAN()%... Nyu?! Mph... %MOAN()%... %SPLIT_R(@"Your %SEMEN(PLAYER, 1)% is so tasty... I want to slurp it until nothing is left:it's so %SPLIT_R("muddy:sticky:slimy")% and %SPLIT_R("thick:strong")%")% nya...♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("足コキ")
+			IF RAND:2 && HAS_PENIS(PLAYER)
+				PRINTFORML 「Nyaha, you came from my feet nya～♪ Fufu, %SPLIT_R(@"I'll keep treading on your pervert %FSYN("penis")%:perverts like should be stepped on more")% nya♪」
+			ELSE
+				PRINTFORML 「Fufu～ My soft cat soles must've felt really irresistible nya～♪」
+			ENDIF
+		;ELSEIF PALAM_EXPLORER("シックスナイン")
+		;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「Nyaha, %SPLIT_R("are you already done:did I finish you off:is it over already:this is not over yet, you do realize that, right")% nya～? Nyahaha, %SPLIT_R("we'll go over it one more time:I'll squeeze every single drop outta ya")% nya♪」
+			ELSE
+				PRINTFORML 「I'll make you feel good... Even more nya♪」
+			ENDIF
+		ENDIF
+	ENDIF
+ELSE
+	;夢魔がイかされた
+	IF BASE:精力 <= 0
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「%MOAN()%, nya%MOAN(,1)%, it's so %SPLIT_R("warm:hot")% inside, nya... I, I'm, %MOAN()%, nya%MOAN("h",1)%!」
+			ELSEIF RAND:2
+				PRINTFORML 「%MOAN()%, unya%MOAN("m",1)%?! %MOAN("m")%, nyaaan!」
+			ELSE
+				PRINTFORML 「%MOAN()%, nya%MOAN(,1)%, %MOAN(,1)%♪ ...?! Nyu...fufu... %MOAN()%... %MOAN("m")%!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			IF RAND:2
+				PRINTFORML 「Nya... My %FSYN("anus")% is so %SPLIT_R("warm:hot:heavy")%... Nyauu, %MOAN(,1)%, %MOAN(,1)%, nya%MOAN("h",1)%!」
+			ELSE
+				PRINTFORML 「%MOAN()%... %MOAN()%... Nyaa... I came... from my %FSYN("anus")%... nya...」
+			ENDIF
+		;ELSEIF PALAM_EXPLORER("エースオブスペード")
+		ELSEIF PALAM_EXPLORER("ヴァッジ")
+			;クンニ
+			IF R == 2
+				PRINTFORML 「Nya... %MOAN()%, I'm cumming from my clit nyaaa! %MOAN()%... %MOAN()%, %MOAN(,1)%, nya%MOAN("h",1)%!」
+			;指で愛撫
+			ELSE
+				PRINTFORML 「Nya, nya%MOAN("m",1)%! My %FSYN("vagina")% is getting %FSYN("stir:ed")%, nya%MOAN("m",1)%!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル")
+			PRINTFORML 「%MOAN()%... %MOAN()%... Nyaa... I came... from my %FSYN("anus")%... nya...」
+		ELSEIF PALAM_EXPLORER("バスト")
+			PRINTFORML 「Nya, %MOAN(,1)%, my %FSYN("chest")%, %MOAN(,1)%, nyaa! %MOAN("h")%!」
+		ELSEIF PALAM_EXPLORER("キス")
+			PRINTFORML 「%MOAN()%... %MOAN()%, mph, *%KISS()%*, *%KISS()%*... Puah, haa, haa, %SPLIT_R("de... lish:love... ly")%...♪」
+		;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%! %STUTTER("That's")% it, I'm done...♪」
+		ENDIF
+	;探索側をイかせた
+	ELSE
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「Nya... Ha, we're %SPLIT_R("mating:breeding")% nya～...♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Ah%SLUR("a")%! It's %SPLIT_R("coming ::")%inside me ny%SLUR("a")%, your %STUTTER(SEMEN())%... %SPLIT_R("it's not stopping:you keep spurting it")%... nyaa...」
+			ELSE
+				PRINTFORML 「Nyaha... You came nya～ Did it feel good nya?」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「Nyaaa... it's %SPLIT_R("spurting:shooting")% inside my %FSYN("anus")%...」
+		;ELSEIF PALAM_EXPLORER("エースオブスペード")
+		;ELSEIF PALAM_EXPLORER("キス")
+		ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+			PRINTFORML 「Nya! Fuah... Nyafufu, my %CHECK_PLVERB(FSYN("chest"), "is")% completely %SPLIT_R("drenched:wet:soaked:slimy")% nya～♪」
+		;ELSEIF PALAM_EXPLORER("アナル責め")
+		ELSEIF PALAM_EXPLORER("顔面騎乗")
+			PRINTFORML 「Nyufu... %SPLIT_R(@"Did you get that %SPLIT_R("aroused:excited")% from %SPLIT_R("girl's:a female")% %TEXTS("匂い")%:Did my %TEXTS("匂い")% get you that hard:Does my pussy %TEXTS("匂い")% driving you that %FSYN("insane")%")% nyaa～?」
+		ELSEIF PALAM_EXPLORER("手コキ")
+			IF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+				PRINTFORML 「Nyaha, my hands are completely %SPLIT_R("drenched:wet:soaked")% nya...」
+			ELSE
+				PRINTFORML 「Nya, %SPLIT_R("you're spurting all over me, so cute nya:was it that good nya～?")%～♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("フェラチオ") && HAS_PENIS(PLAYER)
+			IF RAND:2
+				PRINTFORML 「%MOAN()%! Mp%SLUR("h")%, %MOAN(,1)%, fuah, male's %TEXTS("匂い")%... %SPLIT_R("I can't get enough:So irresistible:It's making me so horny:I feel like I'm in heat")% nya...」
+			ELSE
+				PRINTFORML 「%MOAN()%... Nyu?! Mph... %MOAN()%... %SPLIT_R(@"Your %SEMEN(PLAYER, 1)% feels intoxicating...:it's so %SPLIT_R("thick:strong")%")% nya... Fuah... Nyuu...」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("足コキ")
+			IF RAND:2
+				PRINTFORML 「Nyaha, you came from my feet nya～」
+			ELSE
+				PRINTFORML 「Fufu～ How does it feel, being stepped on by girl's feet nya?」
+			ENDIF
+		;ELSEIF PALAM_EXPLORER("シックスナイン")
+		;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「Nyaha, %SPLIT_R("are you already done:did I finish you off:is it over already:this is not over yet, you do realize that, right")% nya～?」
+			ELSE
+				PRINTFORML 「It'll feel even more... good nya～」
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_6
+PRINTFORML 「Three meals a day after each nap please and I'm yours nya♪」
+
+@KOJO_MESSAGE_SEXBATTLE_D_6, ARG:1, LOCAL
+SELECTCASE ARG:1
+	CASE 0
+		PRINTFORML 「Nya%MOAN("m", 1)%♪... Nyufufu, this felt incredible nya, better than any other customer so far nya～\n　I might even consider joining you, nyan♪」
+		PRINTFORML 「But first you must cough up %MONEY_C(LOCAL)% just to be sure you can afford having me around nya.」
+		IF MONEY < 3000
+			PRINTFORML 「Oh that's right, you can't afford it, nyahahaha!」
+		ELSE
+			PRINTFORML 「Well? Do you want to have your own personal cat servant, nya?%SPLIT_R("♪:♥")%」
+		ENDIF
+	CASE 1
+		PRINTFORML 「Nyaon... It's okay nya, I'm not disappointed or anything nya...」
+ENDSELECT
+
+;-------------------------------------------------
+;ラミア
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_10
+IF RAND:10 == 0
+	PRINTFORML 「A rattling snake is coming out to play♪ It's gonna make its stomach full♪」
+ELSE
+	PRINTFORML 「Well, let's have fun♪」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_10
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:4 == 0
+			PRINTFORML 「%MOAN("h", 3)%...♪ %MOAN()%, so good, fuck me mor%SLUR("e")%!!!」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「Your %FSYN("penis")% is getting bigger... It's rubbing against all of my weak %SPLIT_R("spots:points")%, %MOAN("m")%!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%STUTTER(SPLIT_R("Don't:Stop:No:No more"))%, %SPLIT_R("do it gentler:slower please")%... It's too good, I'm %SPLIT_R(@"losing consciousn%SLUR("e")%ss:faint%SLUR("i")%ng")%, %MOAN("m")%!」
+		ELSE
+			PRINTFORML 「%MOAN()%! %MOAN()%! Amazing... I'm cumming, I'm gonna cum so hard, it's gonna ruin m%SLUR("e")%... %MOAN("h", 3)%!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, ahaa♪ %SPLIT_R("It's fine:It's okay:I don't mind")%, it feels good doing in my %FSYN("anus")% too...」
+		ELSE
+			PRINTFORML 「%SPLIT_R("Eh:Wha--")%, ah, %SPLIT_R("no way:can't believe it")%♪ My %STUTTER(FSYN("anus"))%?!」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			PRINTFORML 「%SPLIT_R("It's melting me:I'm about to melt:It's too good")%... %MOAN("h")%, %MOAN("m", 1)%, %MOAN(,1)%♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「Aha, it's coming♪ %MOAN()%, I'm cumm%SLUR("i")%ng♪♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		;IF R == 2
+		;指で愛撫
+		;ELSE
+			PRINTFORML 「%SPLIT_R("Eh:Wha--")%, ah, %SPLIT_R("no way:can't believe it")%♪ My %STUTTER(FSYN("anus"))%?!」
+		;ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「My nipples... %STUTTER(SPLIT_R(@"dh%SLUR("o")%n't:sht%SLUR("o")%p:nh%SLUR("o")%"))%...♪」
+			ELSE
+				PRINTFORML 「If you just keep teasing them... %SPLIT_R("Don't:Stop:No:No good:No more")%... %MOAN("m")%...♪」
+			ENDIF
+		;胸揉み
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%SPLIT_R("It's over:No good")%, my %FSYN("chest")%... I'm %STUTTER(@"cum%SLUR("i")%ng")%!!!」
+			ELSE
+				PRINTFORML 「It feels too intense... I'm scared... %MOAN()%, %MOAN("h", 1)%!」
+			ENDIF
+		ENDIF
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%... %MOAN()%, %MOAN(,1)%... %MOAN("m")%...♪」
+		ELSE
+			PRINTFORML 「%MOAN()%, %SPLIT_R("feels good:amazing")%...♪」
+		ENDIF
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:4 == 0
+			PRINTFORML 「Ufufu...♪ What does one think of my snake vagina...?」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「Moving your hips in a %SPLIT_R("daze:trance")% like that... Does it really feels that good to have sex with my pussy...?」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Fufu♪ You did come after all... Your %SPLIT_R("miserable:pathetic:shameful")% face looked very cute\n　when you frantically tried to impregnate my vagina...」
+		ELSE
+			PRINTFORML 「%MOAN()%... %MOAN()%... %MOAN()%, %MOAN(,1)%... Hehe, %SPLIT_R("you came a lot:you've let out lots")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「Ejaculating inside my dirty hole...♪ Fufu, you're %SPLIT_R("very naughty:quite perverted")%, aren't you?」
+		ELSE
+			PRINTFORML 「%MOAN()%... %MOAN()%, don't be too violent, okay? You're going to tear me...」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	;ELSEIF PALAM_EXPLORER("キス")
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:4 == 0
+			PRINTFORML 「Here you go, one portion of titjob as requested♪」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「...The age of big tits isn't over yet... As for brats... Well... Ufufu♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Oh dear... Even my cleavage can't hold so much♪」
+		ELSE
+			PRINTFORML 「My soft, warm and sticky breasts... I wonder if you have been pleased by them.」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("アナル責め")
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, your breathing is so hot... %SPLIT_R("Stop gasping:Don't pant")% so much♪」
+		ELSE
+			PRINTFORML 「Here, this thick and heavy feeling might become a new habit... Fufu...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%♪ ...Fufu, %SPLIT_R("it got out, it got out:here it is, here it is")%♪」
+		ELSE
+			PRINTFORML 「Here... See? It flew a～ll the way here... Fufu♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:3 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「%MOAN()%... *%KISS()%*, *%KISS()%*, *%KISS()%*♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「*Gulp*... %MOAN()%, fuah♪ Your vigorous %SEMEN()%... It's getting stuck in my throat, %SPLIT_R("oh my:so thick:fufu")%...」
+		ELSE
+			PRINTFORML 「Fufu, %SPLIT_R("tasty:delish:yummy")%... Hey, c'mon, get hard again or I'll leave you♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF HAS_PENIS(PLAYER) && RAND:3 == 0
+			PRINTFORML 「%CAPITALIZE(FSYN("letout:ing"))% so much... Fufu, I thank the gods for I'm a Nightmare♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Aha... You came♪」
+		ELSE
+			PRINTFORML 「...%SPLIT_R("You were careless:You got sloppy:You failed:You're weak:I caught you off guard")%, against my technique... Ufufufu♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_10
+PRINTFORML 「...A training, huh... Ufufu, it's making me thrilled somehow♪」
+
+;-------------------------------------------------
+;ハーピー
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_11
+IF RAND:2
+	PRINTFORML 「Ahahaha! You shall be another victim of my unrivaled technique♪」
+ELSE
+	PRINTFORML 「Alright, it's feasting time!♪」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_11
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:5 == 0
+			PRINTFORML 「You are indeed very good! I can't hold it, it's not stopping!!!」
+		ELSEIF RAND:4 == 0
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, it's %FSYN("throb:ing")% so hard and is so hot, %MOAN("h", 1)%!」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, %FSYN("insert")% it deeper♪ Yes, that's it, %MOAN("m",1)%!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「It's reaching my deepest %STUTTER("parts")%... %MOAN()%, %MOAN("m",1)%?! %MOAN("h")%, %MOAN(,1)%♪」
+		ELSE
+			PRINTFORML 「%MOAN()%, %SPLIT_R("wonderful:lovely")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%... %MOAN()%... Uuh, %STUTTER(@"cumm%SLUR("i")%ng")%...」
+		ELSE
+			PRINTFORML 「Anal! More, %SPLIT_R("jam it deeper:stick it deeper:fuck me more")%!」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			PRINTFORML 「%MOAN()%, my clit feels amazing... Cumming, I'm cumm%SLUR("i")%ng!」
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %MOAN(,1)%, stop %FSYN("stir:ing")% it so %FSYN("intense:ly")%!!!」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN(,1)%, that's my weak %SPLIT_R("spot:point")%, %MOAN(,1)%, %MOAN(,1)%, %MOAN("h", 1)%...!」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			PRINTFORML 「%MOAN("m")%, it's really getting sucked, I'm cumming from having my %FSYN("anus")% suck%SLUR("e")%d!!!」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, %SPLIT_R("guh:kuh:gh:kh")%, %MOAN("h", 1)%!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, fuah, %MOAN("m")%～～♪」
+		;胸揉み
+		ELSE
+			PRINTFORML 「%MOAN()%, %CHECK_PLVERB(FSYN("chest"), "is")% getting n%SLUR("u")%mb!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「%MOAN()%, *%KISS()%*, *%KISS()%*, *%KISS()%*... Puah♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%♪ %STUTTER(@"Cumming")%! %MOAN()%, %MOAN(,1)%, %MOAN("h", 1)%!!!」
+		ELSE
+			PRINTFORML 「%MOAN()%, %SPLIT_R("wonderful:lovely")%♪」
+		ENDIF
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:4 == 0
+			PRINTFORML 「Ahaha, what a %SPLIT_R("pitiful:weak:pathetic:miserable")% %FSYN("penis")%! If you can't last longer, at least be sure to satisfy me lots♪」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「%MOAN()%! %SPLIT_R("We just started:It was just the tip:It was so fast")%, aren't you a bit too undisciplined?」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, %MOAN(,1)%♪ That's right, push your hips more♪」
+		ELSE
+			PRINTFORML 「%MOAN()%... I feel it %SPLIT_R("filling:pouring into")% my deepest parts♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「I'll %SPLIT_R("squeeze:wring")% out all of your %SEMEN(PLAYER,1)% with this hole♪」
+		ELSE
+			PRINTFORML 「To think you would %SPLIT_R("cum:ejaculate:pour:let out")% so much into my %FSYN("anus")%...♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	;ELSEIF PALAM_EXPLORER("キス")
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		PRINTFORML 「%MOAN()%! It even reached my face, you're quite %SPLIT_R("energetic:lively")%♪」
+	;ELSEIF PALAM_EXPLORER("アナル責め")
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:3 == 0
+			PRINTFORML 「Oh my, getting ecstatic aren't we...?♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「C'mon, %SPLIT_R("stop slacking off:put your tongue to work")%, lick me more... %MOAN("m")%♪」
+		ELSE
+			PRINTFORML 「Ahahaha, licking me so %SPLIT_R("frantically:desperately")% as if your life depends on it... You poor little thing♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("手コキ")
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:3 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「Mphh... *Gulp* *Gulp*, your %SEMEN(,1)% %SPLIT_R(@"has a %SPLIT_R("decent:passable:okay:nice")% taste:tastes quite %SPLIT_R("okay:decent:alright")%")%... *%KISS()%*, *%KISS()%*♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, *%KISS()%*, *%KISS()%*... Well well, aren't you %SPLIT_R("quick:fast")%, ahahaha♪」
+		ELSE
+			PRINTFORML 「Fufufu, %SPLIT_R("my tongue technique is sure unrivaled:I'm sure you loved my tongue technique")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		IF (!HAS_PENIS(PLAYER) && RAND:2) || RAND:4 == 0
+			PRINTFORML 「%CAPITALIZE(FSYN("orgasm:ing"))% from my feet, you're a natural masochist, aren't you? Ahahaha♪」
+		ELSEIF !HAS_PENIS(PLAYER) || RAND:3 == 0
+			PRINTFORML 「C'mon, %SPLIT_R(@"how about you lick it clean?:I expect you to clean it up.:don't leave it dirty.:clean it up properly after yourself.:lick off your \@ HAS_PENIS(PLAYER) ? juices # %SEMEN(PLAYER,1)%\@ off my feet.")% Ahahaha♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Your %SEMEN()% is so incredibly %SPLIT_R("thick:sticky")%... Looks like your %TEXTS("匂い")% won't be coming off my feet for a while♪」
+		ELSE
+			PRINTFORML 「C'mon, %SPLIT_R("you're going to ejaculate more, right?:don't tell me you're done already.:you still have some juice in there, right?")% I'll make you rock hard again♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:3 == 0
+			PRINTFORML 「Ahaha, %SPLIT_R("that's quite a nice expression there:you're making a funny face:your face is just begging me to continue")%♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Ahaha♪ It's like %SPLIT_R("you've become a slave of:you fell madly in love with")% my technique♪」
+		ELSE
+			PRINTFORML 「%SPLIT_R("You came here exactly for this, right?:Aren't you a bit too sensitive?")% Ahahaha♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_11
+PRINTFORML 「I hope you've got some big rooms in there.」
+
+;-------------------------------------------------
+;リザードマン
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_12
+IF RAND:2
+	PRINTFORML 「Just let me do it and it will be over soon...」
+ELSE
+	PRINTFORML 「Keep still and no one will get hurt...」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_12
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:5 == 0
+			PRINTFORML 「To think I would lose... to %SPLIT_R(@"such weakling:such \@ IS_FEMALE(PLAYER) ? woman # man \@:you")%... %MOAN()%! %MOAN("h", 3)%!」
+		ELSEIF RAND:4 == 0
+			PRINTFORML 「%SPLIT_R("No, I'm not:There's no way I'm:Of course I'm not")% %STUTTER("cumming")%%SPLIT_R(" I swear::")%...♪」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「%MOAN("m")%! %SPLIT_R("Amazing:Wow:Whoa")%... %SPLIT_R("Such quantity:So much")%! %MOAN("m")%!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN()%)! It's %FSYN("stir:ing")% me... Something... is com%SLUR("i")%ng! %MOAN("h", 3)%!」
+		ELSE
+			PRINTFORML 「%MOAN("h")%! %STUTTER(SPLIT_R("That's enough:Stop:Forgive me:Don't:No:No more"))%, %MOAN("h", 1)%!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%?! There's no way in hell... I'd %FSYN("orgasm")% from my %STUTTER(FSYN("anus"))%... %MOAN("h")%!」
+		ELSE
+			PRINTFORML 「It's wrong, this is%SPLIT_R(" so:::")% wrong, and yet...♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, cumming, %MOAN("m", 1)%...!」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「Losing to %SPLIT_R(@"such weakling:such \@ IS_FEMALE(PLAYER) ? woman # man \@:you")%... %MOAN()%! %MOAN("h")%!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		;IF R == 2
+		;指で愛撫
+		;ELSE
+			PRINTFORML 「Why...! Why does my %FSYN("anus")%... %MOAN()%! %MOAN("h", 3)%!」
+		;ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		;IF R == 2
+		;胸揉み
+		;ELSE
+			PRINTFORML 「%MOAN("m")%! %MOAN()%... It feels like an electric current... %SPLIT_R("No more:That's enough")%... %MOAN("h")%!」
+		;ENDIF
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R("No, I'm not:There's no way I'm:Of course I'm not")% %STUTTER("cumming")%%SPLIT_R(" I swear::")%...♪」
+		ELSE
+			PRINTFORML 「...%SPLIT_R("Are you done:Are you over:Over already:Is this enough:Can you let me go now")%?」
+		ENDIF
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「Wha--?! %SPLIT_R("Wait:Hold on")%! %SPLIT_R("I didn't give my permission to:I didn't say you could:Who said you can:I didn't allow you to")% cum inside!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Fuah... My %SPLIT_R("stomach:belly")% feels %SPLIT_R("hot:warm")%...」
+		ELSE
+			PRINTFORML 「%MOAN()%... It's %STUTTER("coming")%... so much... inside my belly...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%... %MOAN()%... If you're done... Hurry up and %SPLIT_R("take it out:pull it out:go away:leave me be")%...」
+		ELSE
+			PRINTFORML 「%SPLIT_R("Guh:Kuh:Gh:Kh:Uhh")%... %MOAN()%... It feels disgusting...」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	;ELSEIF PALAM_EXPLORER("キス")
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「Ah... Jeez, %SPLIT_R("my face is all sticky now:you soiled my entire face:it got all over my face")%...」
+		ELSE
+			PRINTFORML 「Whoa... It's coming out...」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("アナル責め")
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「Humph, lying like that down below %SPLIT_R("suits you very well:is where you belong")%.」
+		ELSE
+			PRINTFORML 「I'm gonna %SPLIT_R("press:rub")% it even %STUTTER("more")%, you'll see!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		PRINTFORML 「Whoa... My hands are %SPLIT_R("all wet:sticky and smelly:completely drenched:soiled")%...」
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:3 == 0
+			PRINTFORML 「...Mph... *Gulp*」
+		ELSEIF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「Mmmphh! Bueeh...! *Spit*... *Cough*」
+		ELSE
+			PRINTFORML 「You %SPLIT_R("idiot:fool:moron:buffoon")%! Warn me %SPLIT_R("when you're about to cum:before you start letting it out")%!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		IF RAND:3 == 0
+			PRINTFORML 「%STUTTER("No way")%... Feeling so good... just from my feet...」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R("Huh:Wha--:Eh")%...? You %SPLIT_R("pervert:creep:weirdo")%... %SPLIT_R("pervert:creep:weirdo")%! %SPLIT_R("Pervert:Creep:Weirdo")%!」
+		ELSE
+			PRINTFORML 「Did you... feel that good from this? %SPLIT_R("You're so foolish:That's ridiculous:No way in hell that just happened:You must be some kind of unbelievable weirdo")%...」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R("Hey:No way:Wait:Hold on")%, %SPLIT_R("the hell:why")% are you cumming without my permission?」
+		ELSE
+			PRINTFORML 「Hmph. %SPLIT_R("So this is sex? Quite boring:It wasn't such a big deal after all:You must be really weak")%.」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_12
+PRINTFORML 「Oh no, don't you think I'm submitting to you. I'm merely making my life easier.」
+
+;-------------------------------------------------
+;マーメイド
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_13
+IF RAND:2 == 0
+	PRINTFORML 「Did you %SPLIT_R("hear:come for")%... my song?」
+ELSE
+	PRINTFORML 「Come over here...」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_13
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, your thing is rubbing deep inside me... %MOAN()%, %MOAN("h",1)%♪」
+		ELSE
+			PRINTFORML 「Good... More, make more love to m%SLUR("e")%!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「To think I'd %FSYN("orgasm")% from my %FSYN("anus")%... %MOAN()%♪」
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			PRINTFORML 「Your tongue %SPLIT_R("is:feels")% %SPLIT_R("amazing:good:great")%... Please %SPLIT_R("don't stop:keep")% licking my fish %FSYN("vagina")%♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「%STUTTER("Please")%... Give me more of your wondrous fingering... %MOAN("m")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			PRINTFORML 「%SPLIT_R("Licking:If you lick")% %STUTTER("that")% place... N%SLUR("o")%♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「Not my %STUTTER(FSYN("anus"))%... It feels way too good...!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			PRINTFORML 「%MOAN()%♪ When you suck on them like that... it feels like my nipples going to melt any moment n%SLUR("o")%w!」
+		;胸揉み
+		ELSE
+			PRINTFORML 「My %CHECK_PLVERB(FSYN("chest"), "is")% sensitive, so... %MOAN()%♪ %SPLIT_R(@"That's en%SLUR("o")%ugh:St%SLUR("o")%p:D%SLUR("o")%n't:N%SLUR("o")%")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		IF RAND:2 == 0
+			PRINTFORML 「It's my first time... having such %SPLIT_R("a fun:an enjoyable:a pleasant")% kiss♪」
+		ELSE
+			PRINTFORML 「Mph! Fuah... %MOAN()%... %STUTTER(MOAN("h"))%♪」
+		ENDIF
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「I... got completely infatuated with you...♪」
+		ELSE
+			PRINTFORML 「%SPLIT_R("Don't:Stop:No:No good:No more")%... %SPLIT_R("I can't take it:I can't hold in:That's it:I'm done for")%... %STUTTER(MOAN("h"))%!!!」
+		ENDIF
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「Your thing is %FSYN("letout:ing")% so much... My belly feels really %SPLIT_R("hot:warm:heavy")%♪」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「You actually ended up cumming in here... You're a failure of a person♪」
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「%SPLIT_R("That's hardly:It's not")% enough... %SPLIT_R("Let's kiss, let's kiss:Kiss me, kiss me")% more...!」
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「Fufu... It's spurting so much in my %FSYN("chest")%...♪」
+		ELSE
+			PRINTFORML 「It felt %SPLIT_R("amazing:good")%, didn't it? I'll do it again if you want♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル責め")
+		PRINTFORML 「%SPLIT_R("Well:How is it")%? You do love it when I caress your %FSYN("anus")%, right?♪」
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「C'mon, stick your tongue deeper insid%SLUR("e")%...」
+		ELSE
+			PRINTFORML 「I%SPLIT_R("'ll keep letting:'m going to make")% you drown in my %JUICE()%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+	    	PRINTFORML 「Did my hand feel that good? Fufu♪」
+		ELSE
+			PRINTFORML 「Such %ARTICLE(SPLIT_R("cute:lovely:adorable"))% %FSYN("penis")%♪ I'll make it leak a lot more♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「%MOAN()%... Delicious♪ Hey, it's alright if I drink some more, right?」
+		ELSE
+			PRINTFORML 「...Puah. Your %SEMEN(PLAYER,1)% is so thick it actually almost made me choke♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		PRINTFORML 「Fufu♪ I wonder if it's your first time being serviced with a fish tail like that...」
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:4 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「%SPLIT_R("I'm not satisfied yet:That's not enough:I didn't have enough:I want more")%... More, %SPLIT_R("fill me up:let us copulate")% some more!」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「C'mon... %SPLIT_R("Get infatuated with me:Get drowned in my pleasure:Fall in love with me:Fall head over heels for me")% more...」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Let us sink deeper and deeper... Together...」
+		ELSE
+			PRINTFORML 「%SPLIT_R("My songs are yours... But your love will be mine only...:Listen to my songs only... Love me only...")%」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_13
+PRINTFORML 「I may be loud, but... Please bear with me♪」
+
+;-------------------------------------------------
+;アプサラス
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_14
+IF RAND:2 == 0
+	PRINTFORML 「%SPLIT_R("Can you stand my test?:I wonder if you can endure my trial")%♪」
+ELSE
+	PRINTFORML 「%SPLIT_R("You like what you see? Come and get it:A delicious looking cutie has been found")%～♪」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_14
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R(@"Amaz%SLUR("i")%ng:Oh my:So g%SLUR("o")%d")%... If you keep ramming it so deep inside, I'll... %MOAN("m")%♪」
+		ELSE
+			PRINTFORML 「This is my first time having someone so str%SLUR("o")%ng♪ More, fuck me mor%SLUR("e")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「I'm cumm%SLUR("i")%ng♪ I'm cumming from having my %FSYN("anus")% fucked♪」
+		ELSE
+			PRINTFORML 「%SPLIT_R("More:Keep going")%! Keep %FVERB("n")% my %FSYN("anus")%! I absolutely adore anal sex♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			PRINTFORML 「This is the first time when someone does this to me! %SPLIT_R("More, more:Please continue:Keep going")%～♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「You figured out my %STUTTER("weak")% %SPLIT_R("spot:point")%... %MOAN("m")%♪ %MOAN()%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			PRINTFORML 「If you keep %STUTTER("licking")% that %SPLIT_R("spot:place")%, I... %MOAN()%, %MOAN("h",1)%♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「%SPLIT_R("More:Keep going")%! Keep %FSYN("stir:ing")% my %FSYN("anus")%!!!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			PRINTFORML 「If you keep chewing on my nipples so much... %MOAN()%, %MOAN(,1)%, %MOAN("h", 1)%♪」
+		;胸揉み
+		ELSE
+			PRINTFORML 「Aha♪ It's fine, %FSYN("rub")% them some more and make me %FSYN("orgasm")% lots♪」
+		ENDIF
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「To think such youngling would make me %FSYN("orgasm")%...♪」
+		ELSE
+			PRINTFORML 「It's been a while since someone made me %FSYN("orgasm")%...♪」
+		ENDIF
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「%MOAN()%... That was %SPLIT_R("good:great")%♪ Now let's start the second round♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R("What:Such")% %SPLIT_R("a lively:an energetic")% %FSYN("penis")%... %SPLIT_R("It's pouring deep inside my womb:It's reaching the deepest parts of my womb")%♪」
+		ELSE
+			PRINTFORML 「%SPLIT_R("My belly's full:I'm so stuffed")%... %SPLIT_R("You've fed me well:Thank you for the meal")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「Mfufu... Did you enjoy my %FSYN("anus")%?」
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("キス")
+		IF RAND:2 == 0
+			PRINTFORML 「Was that your first time %SPLIT_R("kissing like an adult:having an adult kiss")%? Teehee♪」
+		ELSE
+			PRINTFORML 「%SPLIT_R("I'm not going to:I'll not")% let you %SPLIT_R("get away:go")% until your %SPLIT_R("tongue:mouth")% melts from pleasure♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「You painted my %FSYN("chest")% pure white... It must've felt good alright♪」
+		ELSE
+			PRINTFORML 「It's %SPLIT_R("bursting through:spurting out of")% my cleavage... %SPLIT_R("Looks:Feels")% like a %SPLIT_R("geyser:fountain")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル責め")
+		PRINTFORML 「%CAPITALIZE(FSYN("orgasm:ed"))% from having this %SPLIT_R("hole:spot")% teased... Were you always that perverted? Teehee♪」
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		PRINTFORML 「C'mon～ If you don't hurry up and make me cum, %SPLIT_R("you'll suffocate:I'll choke ya")%♪」
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF !HAS_PENIS(PLAYER)
+			PRINTFORML 「Do you really like it when I stick it inside like that? What a perverted %FSYN("vagina")% you have♪」
+		ELSEIF RAND:2 == 0
+	    	PRINTFORML 「Fufu... Let me see you spurt out your white stuff again♪」
+		ELSE
+			PRINTFORML 「You've let out lots... Now let me try to squeeze out some more♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:3 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「Your %SEMEN()% is really thick... Should I go for another?♪」
+		ELSEIF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「...! ...*Gulp*... Fufu, thank you for the meal♪」
+		ELSE
+			PRINTFORML 「Such a tasty %SEMEN(PLAYER,1)%... %SPLIT_R("I can't stop drinking it:It never gets boring")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		IF RAND:2 == 0
+			PRINTFORML 「Cumming so much just from getting rubbed with my feet... You \@ IS_FEMALE(PLAYER) ? girl # lad \@ are sure a perverted one♪」
+		ELSE
+			PRINTFORML 「Fufu... I'll be rougher next time♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:4 == 0
+			PRINTFORML 「It looks like you just %FSYN("orgasm:ed")%, but... I'll make you cum 3 more times♪」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「You gotta build up some stamina if you wish to %SPLIT_R("be my dancing partner:dance with me")%♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Making such a pleased face... %SPLIT_R("Lovely:Cute:Adorable")%♪」
+		ELSE
+			PRINTFORML 「You can't just %FSYN("orgasm")% on your own, you know? %SPLIT_R("I'm not going to:I'll not")% let you %SPLIT_R("get away:go")%\n　until you make me cum too♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_14
+PRINTFORML 「My dances are truly hypnotizing and my hip technique is unmatched♪」
+
+;-------------------------------------------------
+;スキュラ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_15
+
+;if both scylla and charybdis
+IF PALAM_EXPLORER("敵キャラ数") >= 2 && NO:PALAM_EXPLORER("二人目") == 15
+	PRINTFORML 「Are you ready, neesan?!」「Always ready...」「Let's drown %HIM_HER(PLAYER)% in our pleasure!♪」
+;長編スキュラの場合
+ELSEIF CFLAG:209 == 1
+	IF RAND:2 == 0
+		PRINTFORML 「Oh my, what a delicious looking prey...」
+	ELSE
+		PRINTFORML 「You will not escape...♪」
+	ENDIF
+;短編スキュラの場合
+ELSE
+	;探索者が男の場合
+	IF TALENT:PLAYER:オトコ
+		PRINTFORML 「Yahoo! What a handsome man you are, come and play with me♪」
+	;探索者が男じゃない（＝女）の場合
+	ELSE
+		;インプとかエンジェルの場合違和感バリバリ
+		PRINTFORML 「Yahoo! What a beautiful lady you are, come and play with me♪」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_15
+;長編スキュラの場合
+IF CFLAG:209 == 1
+	;夢魔がイかされた
+	IF BASE:精力 <= 0
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「This is the first time I've ever seen such a splendid thing...♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「%MOAN("m")%♪ I'm going to %STUTTER("cum")%, I'm cumming～♪」
+			ELSE
+				PRINTFORML 「That's it, %FSYN("insert")% it deeper... %MOAN("m")%♪ Nice, so very nice indeed♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			IF RAND:2 == 0
+				PRINTFORML 「To think I'd %FSYN("orgasm")% from my %FSYN("anus")%, what foolishness... %MOAN()%! %MOAN("h")%♪」
+			ELSE
+				PRINTFORML 「%STUTTER("That's")% my first time doing it in there, please proceed gentl--――――!!!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("ヴァッジ")
+			;クンニ
+			IF R == 2
+				PRINTFORML 「I %STUTTER("beg")% of you... Please grant me more of your tongue... %MOAN()%, %MOAN("h",1)%!」
+			;指で愛撫
+			ELSE
+				PRINTFORML 「You're even better at this than %STUTTER("I")% am... %MOAN("m")%!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル")
+			;アナル舐め
+			IF R == 2
+				PRINTFORML 「To think I'd feel good from having such place licked... %MOAN("m")%♪」
+			;指で愛撫
+			ELSE
+				PRINTFORML 「%MOAN("h")%♪ I ask you to not %FSYN("stir")% it so m%SLUR("u")%ch♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("バスト")
+			;乳首舐め
+			IF R == 2
+				PRINTFORML 「My nipples...! They are melt%SLUR("i")%ng♪」
+			;胸揉み
+			ELSE
+				PRINTFORML 「I've never been pleased so well before♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("キス")
+			IF RAND:2 == 0
+				PRINTFORML 「To think I'd be kissed like this... %MOAN()%! %MOAN("h")%～♪」
+			ELSE
+				PRINTFORML 「I never thought kisses can feel this good... Mphh!――――――――っ♪」
+			ENDIF
+		;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「%SPLIT_R("Don't:Stop:No:No good:No more")%... %MOAN("m")%, %MOAN("h", 3)%♪」
+			ELSE
+				PRINTFORML 「%MOAN("m")%... I never knew this body can be satisfied...」
+			ENDIF
+		ENDIF
+	;探索側をイかせた
+	ELSE
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「Yeah, %SPLIT_R("thank you very much for the meal:this was quite a treat")%...♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Fufufu... Your thing is really trying hard to fill my belly...♪」
+			ELSE
+				PRINTFORML 「%MOAN()%♪ Your thing is spurting directly into my womb, that feels so good♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「%MOAN()%... Actually finishing in here, what a dishonorable person you are...♪」
+		ELSEIF PALAM_EXPLORER("キス")
+			IF RAND:2 == 0
+				PRINTFORML 「*%KISS()%*... Oh well, I guess this is to be expected...」
+			ELSE
+				PRINTFORML 「%MOAN()%... *%KISS()%* ...I'm not letting you go yet...」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+			IF RAND:2 == 0
+				PRINTFORML 「It felt %SPLIT_R("amazing:good")%, right? These breasts is a pride of mine♪」
+			ELSE
+				PRINTFORML 「My %CHECK_PLVERB(FSYN("chest"), "is")% so sticky with your stuff♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル責め")
+			PRINTFORML 「Did my tentacles feel that %SPLIT_R("amazing:good")% I wonder? Fufu♪」
+		ELSEIF PALAM_EXPLORER("顔面騎乗")
+			IF RAND:2 == 0
+				PRINTFORML 「Go ahead and keep drowning in my %FSYN("vagina")%♪」
+			ELSE
+				PRINTFORML 「Sniff more of my %FSYN("vagina")% %TEXTS("匂い")%, do it...」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("手コキ")
+			IF RAND:2 == 0 || !HAS_PENIS(PLAYER)
+				PRINTFORML 「Should I try using my tentacle next? Teehee♪」
+			ELSE
+				PRINTFORML 「Please be sure to let it out here next time...♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("フェラチオ") && HAS_PENIS(PLAYER)
+			IF RAND:2 == 0
+				PRINTFORML 「Your %SEMEN(PLAYER,1)%... It was so %SPLIT_R("tasty:delicious:yummy")%♪」
+			ELSE
+				PRINTFORML 「...! *Cough* *Cough*... It's %SPLIT_R("so:too")% thick♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("足コキ")
+			IF RAND:2 == 0
+				PRINTFORML 「I see you took a liking to my tentacles♪」
+			ELSE
+				PRINTFORML 「Cumming from a tentacle... What a disgraceful \@ IS_MALE(PLAYER) ? gentleman # lady \@ you are♪」
+			ENDIF
+		;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「I'm not satisfied yet, do you realize that? I shall keep squeezing you more...」
+			ELSE
+				PRINTFORML 「Well then, how should I screw you up next?♪」
+			ENDIF
+		ENDIF
+	ENDIF
+;短編スキュラの場合
+ELSE
+	;夢魔がイかされた
+	IF BASE:精力 <= 0
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:2 == 0
+				PRINTFORML 「%CNAME("二人称/your", "どもり", "cap")% thing, it's %SPLIT_R(@"growing bigger:s%SLUR("o")% big")%, %MOAN("m")%♪」
+			ELSE
+				PRINTFORML 「I've never had such a splendid %FSYN("penis")% before... %MOAN()%! %MOAN("h")%♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「I'm a %SPLIT_R("weirdo:freak:pervert:creep")%! A %SPLIT_R("weirdo:freak:pervert:creep")% who %FSYN("orgasm:s")% from having her %FSYN("anus")% f%SLUR("u")%cked!♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「I never thought my %FSYN("anus")% could feel this g%SLUR("o")%d...♪」
+			ELSE
+				PRINTFORML 「%SLUR(SPLIT_R("Don't:Stop:No:No good:No more"))%... I'm getting add%SLUR("i")%cted♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("ヴァッジ")
+			;クンニ
+			IF R == 2
+				PRINTFORML 「%CNAME("二人称/your", "どもり", "cap")% tongue is amaz%SLUR("i")%ng♪」
+			;指で愛撫
+			ELSE
+				PRINTFORML 「%MOAN("h")%♪ You're unbelievably good at this %CNAME("二人称")%, %MOAN("m")%, %MOAN("h", 1)%♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル")
+			;アナル舐め
+			IF R == 2
+				PRINTFORML 「I never thought some would lick %STUTTER("such")% place... %MOAN()%! %MOAN("h")%～♪」
+			;指で愛撫
+			ELSE
+				PRINTFORML 「If you keep pushing it so deep, I'll... %MOAN("m")%♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("バスト")
+			;乳首舐め
+			IF R == 2
+				PRINTFORML 「Cumm%SLUR("i")%ng! I'm cumming from having my nipples teas%SLUR("e")%d♪」
+			;胸揉み
+			ELSE
+				PRINTFORML 「%STUTTER(SPLIT_R("Don't:Stop:No:No good:No more"))%... My %CHECK_PLVERB(FSYN("chest"), "is")% too sensitive♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("キス")
+			PRINTFORML 「%MOAN()%... I %FSYN("orgasm:ed")% from kissing...♪」
+		;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:3 == 0
+				PRINTFORML 「You made love with me, %CNAME("二人称")%...」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「%SPLIT_R(@"I've never felt like this before:This is my %STUTTER("first")% time feeling like th%SLUR("i")%")%～♪」
+			ELSE
+				PRINTFORML 「%STUTTER(SPLIT_R("That's it:I can't take it:I'm done:No more:I'm done for"))%♪ Cumming, I'm cumm%SLUR("i")%ng♪」
+			ENDIF
+		ENDIF
+	;探索側をイかせた
+	ELSE
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「My belly became all flabby from your %SEMEN(PLAYER,1)%♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Fufu♪ Hey, did my %FSYN("vagina")% feel that good?」
+			ELSE
+				PRINTFORML 「%CNAME("二人称/your", "cap")% thing is bursting it out... You got me completely filled...♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「Coming in here, you are no less perverted than I am, right %CNAME("二人称")%?♪」
+		ELSEIF PALAM_EXPLORER("キス")
+			PRINTFORML 「%CNAME("二人称/your", "cap")% mouth is so %SPLIT_R("yummy:tasty:delicious")%... I can keep eating it out, right?♪」
+		ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+			IF RAND:2 == 0
+				PRINTFORML 「My %CHECK_PLVERB(FSYN("chest"), "is")% so wet♪」
+			ELSE
+				PRINTFORML 「Yay, sticky-sticky～♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル責め")
+			PRINTFORML 「Fufu, I'll keep %FSYN("stir:ing")% you more～♪」
+		ELSEIF PALAM_EXPLORER("顔面騎乗")
+			PRINTFORML 「Mfufu～♪ It's still a lo～oong way to go until you make me cum as well♪」
+		ELSEIF PALAM_EXPLORER("手コキ")
+			IF RAND:2 == 0
+		  	  	PRINTFORML 「Aha♪ Such an ecstatic face♪ I'll keep pleasuring you then, okay?～」
+			ELSE
+				PRINTFORML 「\@ HAS_PENIS(PLAYER) ? %CAPITALIZE(FSYN("letout:ing"))% so much # So much juices\@... %CNAME("二人称", "cap")%, you are amazing♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("フェラチオ")
+			IF RAND:3 == 0 && HAS_PENIS(PLAYER)
+				PRINTFORML 「%CNAME("二人称/your", "cap")% %SEMEN(PLAYER,1)% is so %SPLIT_R("yummy:tasty:delicious")%～! I wanna drink some more♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Mph... Puha... So much of %CNAME("二人称/your")% milk...♪」
+			ELSE
+				PRINTFORML 「%MOAN()%... Thank you very much for the meal♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("足コキ")
+			IF RAND:2 == 0
+		    	PRINTFORML 「Ehehe... %SPLIT_R(@"%CNAME("二人称", "cap")% came from my feet:I made someone cum with my feet")%♪」
+			ELSE
+				PRINTFORML 「Well? It feels better than ordinary feet, right?♪」
+			ENDIF
+		;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2 == 0 && HAS_PENIS(PLAYER)
+		    	PRINTFORML 「Fufu... %CNAME("二人称/your")% thing... I'll make it %SPLIT_R("spurt:cum")% %SPLIT_R("some more:lots")%♪」
+			ELSE
+				PRINTFORML 「Yay, %CNAME("二人称/your")% %FSYN("orgasm:ing")% face is so cute! Let's play again♪」
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_15
+PRINTFORML 「Are you sure you want someone like me around...? Oh, that really makes me happy♪」
+
+;-------------------------------------------------
+;クズノハ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_16
+IF SAVESTR:15 == "キアズマの遊郭"
+	IF MONEY < 1000
+		PRINTFORML 「Didst thee scrape up all the dram wage thee hadst just to cometh and see me?\n　What a sweet dram fellow thee are♪ I shalt giveth thee a special comforting session for a such befitting occasion♪」
+	ELSEIF FIND_COND("相思相愛") > 0 && PLAYER == MASTER && RAND:4 == 0
+		PRINTFORML 「Fufu, thee've did get someone thee love and yet thee hunt for passion in a lodging such as this...\n　Naughty, naughty \@ TALENT:PLAYER:オトコ ? Master # Princess \@ you are♪」
+		PRINTFORML 「Well then... Let us leaveth the exsufflicate talk... and indulge in the affair thee've long'd to has't♪」
+	ELSEIF TALENT:PLAYER:童貞 && RAND:2
+		PRINTFORML 「Didst thee cometh hither to taste the female fellowship?\n　Fufu, I shalt becometh thy guide in the domain of adult pleasure♪」
+	ELSEIF RAND:5 == 0
+		PRINTFORML 「Thee shouldn't haste as much as I have nay intentions to run... Fufu, prithee, relax and taketh a relish in the body of mine♪」
+	ELSEIF RAND:4 == 0
+		PRINTFORML 「Fufufu... I yield. Let me taketh care of thy thing... Afraid not, use me to satisfy all of thy desires♪」
+	ELSEIF RAND:3 == 0
+		PRINTFORML 「Well now, I shalt be thy mistress... Prithee, giveth me all of thy love♪」
+	ELSEIF RAND:2 == 0
+		PRINTFORML 「So it wast thee whom I shouldst keepeth a company? Fufu, let us indulge in the delight♪」
+	ELSE
+		PRINTFORML 「%SPLIT_R("So thee wishes to be mine partner:Art thee worthy to be mine partner")%...? Fufufu, I'm looking forward to this♪」
+		
+	ENDIF
+ELSE
+	IF RAND:2 == 0
+		PRINTFORML 「Fufu, this one looks delicious♪ I'd like to taste thee for a little bit...」
+	ELSE
+		PRINTFORML 「Let us see... What doest thine sperm taste like? Let me taketh a sample... Fufufu♪」
+	ENDIF
+	
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_16
+IF SAVESTR:15 == "キアズマの遊郭"
+	;夢魔がイかされた
+	IF BASE:精力 <= 0
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「%MOAN("m")%...♪ So %STUTTER(FSYN("intense"))%... %MOAN()%, %MOAN("h",1)%♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「%MOAN("m")%, %MOAN(,1)%, %MOAN("m",1)%♪ %MOAN()%, %MOAN(,1)%... So stout...♪」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%♪ More... Giveth me more of thine %FSYN("penis")%...♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%♪ %STUTTER(SPLIT_R("Cease:Halt:No more"))%... Doing me like this... Such humiliation♪ I can't cease mine own moaning♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %MOAN(,1)%, %MOAN("m", 1)%♪ This will... make me go %FSYN("insane")%...♪」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%♪ Mine %SPLIT_R("foul:pooping")% hole... It's going to taketh the shape of thy thing♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("エースオブスペード")
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%, very good...♪ %MOAN("m")%, I can't taketh it any longer...♪」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%♪ Your baby hole is rubbing... %MOAN("m")%, it's over, it's all over for me... %MOAN("h")%♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("ヴァッジ")
+			IF RAND:2 == 0
+				PRINTFORML 「%STUTTER(MOAN("m"))%, %STUTTER("don't")% %FSYN("stir")% it so h%SLUR("a")%rd...♪ %STUTTER(SPLIT_R("Cease:Halt:No more"))%... I mean it♪」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%♪ %MOAN()%, %MOAN("h", 1)%...」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル")
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, %MOAN(,1)%♪ That %STUTTER("place")% is... %MOAN("m")%, %STUTTER(SPLIT_R("cease:halt:no more"))%... %MOAN()%, %MOAN("h", 1)%♪」
+		ELSEIF PALAM_EXPLORER("バスト")
+			PRINTFORML 「%MOAN("m")%, squeezing me like that... %MOAN()%, %MOAN(,1)%, %MOAN(,1)%...♪ It's unbearable...♪」
+		;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			PRINTFORML 「%MOAN("m")%, valiant, so valiant... Cease not, I beg of thee... %MOAN()%, %MOAN("h",1)%!!!」
+		ENDIF
+	;探索側をイかせた
+	ELSE
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%...♪ Thine thing is hitting mine insides...♪ Lovely...\n　Entrust thyself to desire and let out all thee can... Fufufu♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Fufufu, and thus this is thy end...♪ Thy visage is utterly charmed...♪\n　Didst mine vagina feeleth that pleasant?♪」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN(,1)%, %MOAN(, 1)%...♪ The feast is still young... I shalt maketh thee taste the Elysium♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「%MOAN()%, %MOAN(,1)%... It's still gushing out...♪ Doth thee has't the guts to keep on? Fufu, what shalt be thine answer?」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %MOAN(,1)%, %MOAN(, 1)%...♪ Fufu, mine %FSYN("anus")% is being seeded♪」
+			ELSE
+				PRINTFORML 「Fufu... Did mine %FSYN("anus")% finish thy off...?♪ Mayhap I did squeeze too tightly, fufufu♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("エースオブスペード")
+			IF RAND:3 == 0
+				PRINTFORML 「Come on, come on... Savor the lust we've spilled♪ Alloweth me heareth more of %SPLIT_R("thine adorable:thy lovely")% squeals♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Fufu, is it so unbearable that thee cameth in such haste? In scarlet to the ears... Such %SPLIT_R("an adorable:a lovely")% sight it is♪」
+			ELSE
+				PRINTFORML 「There is still a long way to wend♪ For wenches matters art tad different, thee see...\n　Fufu, I'm going to pleasure thee until thee loseth thy mind♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("キス")
+			IF RAND:3 == 0
+				PRINTFORML 「*%KISS()%*, *%KISS()%*... I shall maketh love to thee as we join our lips together...♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「*%KISS()%*, *%KISS()%*...♪ Thy charmed visage... Thou art naught more than a slave to kissing right now♪」
+			ELSE
+				PRINTFORML 「*%KISS()%*, *%KISS()%*... Fufu♪ Art thee enjoying the sweet flavor of mine kisses～?」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+			IF RAND:2 == 0
+				PRINTFORML 「Look forth and witness how thine sperm stains me♪ Marking me with thine sap it doth feel indeed, fufufu♪」
+			ELSE
+				PRINTFORML 「I am dyed in thy white♪ Fufu, I wonder if thy purpose is to stain all of mine body with it...♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル責め")
+			IF RAND:2 == 0
+				PRINTFORML 「Hither? Art thee sure? Now now, alloweth me try to tease thee♪」
+			ELSE
+				PRINTFORML 「Thine %FSYN("anus")% is %FSYN("twitch:ing")% from mine playing...♪ Fufu, I shalt have it %FSYN("stir:ed")% gently♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("顔面騎乗")
+			IF RAND:2 == 0
+				PRINTFORML 「Fufu, thy breathing is so rough... It seemeth like thee can cum lots just from me doing this♪」
+			ELSE
+				PRINTFORML 「Here, here, I'm going to straddle thee some more... Fufufu♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("手コキ") && HAS_PENIS(PLAYER)
+			IF RAND:3 == 0
+				PRINTFORML 「Well now, cumming as I did start playing with it...♪ Here here, I'm going to squeeze it until thou art done♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Fufu, %FSYN("letout:ing")% such a high quantity♪ Mine hands art soaking♪」
+			ELSE
+				PRINTFORML 「Art thou ecstatic from hands of mine?♪ Let me see, thee can\n　afford %FSYN("letout:ing")% more, correct? Thee needeth not to hold it♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("フェラチオ")
+			IF RAND:3 == 0 && HAS_PENIS(PLAYER)
+				PRINTFORML 「*%KISS()%*, *%KISS()%*... *%KISS()%*, *%KISS()%*...♪ Letting forth so much... Quite troubling to drinketh it all♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「*%KISS()%*♪ Fuah... Didst thee enjoy the pleasure of mine mouth?♪」
+			ELSE
+				PRINTFORML 「*%KISS()%*... *%KISS()%*♪ Looks like thither's still some more to cometh♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("足コキ") && HAS_PENIS(PLAYER)
+			IF RAND:3 == 0
+				PRINTFORML 「Fufu... It's %FSYN("throb:ing")% on mine soles so happily♪ Here, here... Let me squeeze all of it♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Dear lord, it's all over and so sticky... Such a lively thing thee have attached there♪」
+			ELSE
+				PRINTFORML 「Here here... Spill out your seed as much as desired♪ Soothe thyself as I shalt keepeth rubbing until thou art satisfied♪」
+			ENDIF
+		;ELSEIF PALAM_EXPLORER("シックスナイン")
+		;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「Thou art moaning, as a maiden thee sound...♪ Let us join together in the passion of charm♪」
+			ELSE
+				PRINTFORML 「'Twill not be enough from just once... May thee useth the body of mine to quench thy thirst♪」
+			ENDIF
+		ENDIF
+	ENDIF
+ELSE
+	;夢魔がイかされた
+	IF BASE:精力 <= 0
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%♪ Good, so good... %CAPITALIZE(FSYN("insert"))% deeper... %MOAN("h")%♪」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%♪ More... Giveth me more of thine %FSYN("penis")%...♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「%MOAN()%, %MOAN("m", 1)%♪ Doing me like this... Prithee, spare m%SLUR("e")%...♪」
+		ELSEIF PALAM_EXPLORER("エースオブスペード")
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%, very good...♪ %MOAN("m")%, I can't taketh it any longer...♪」
+		ELSEIF PALAM_EXPLORER("ヴァッジ")
+			PRINTFORML 「%MOAN()%, %STUTTER(MOAN("m", 1))%♪ Making me squeal like a wench... I'm going to perish from such shameful act...」
+		ELSEIF PALAM_EXPLORER("アナル")
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%♪ %STUTTER(SPLIT_R("Cease:Halt:No more"))%... I lack the desire to doth it in there... %MOAN()%, %MOAN("h"), 1%!」
+		ELSEIF PALAM_EXPLORER("バスト")
+			PRINTFORML 「%MOAN("m")%, squeezing me like that... %MOAN()%, %MOAN(,1)%, %MOAN(,1)%...♪ It's unbearable...♪」
+		;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			PRINTFORML 「%MOAN("m")%, valiant, so valiant... Cease not, I beg of thee... %MOAN()%, %MOAN("h",1)%!!!」
+		ENDIF
+	;探索側をイかせた
+	ELSE
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3 == 0
+				PRINTFORML 「It's spurting out with such fervor... Go ahead and cum until thou art spent... Fufufu♪」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「Fufufu, and thus this is thy end...♪ Thou art utterly spellbound, art thou not? What a lovely fellow♪」
+			ELSE
+				PRINTFORML 「Hm? Is it over for thee already? That's quite astonishing...」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「Fufu... Finishing it hither... What a trifling fellow♪」
+		ELSEIF PALAM_EXPLORER("エースオブスペード")
+			PRINTFORML 「Come on, come on... Drown in thy desire some more♪ Alloweth me heareth more of thy %SPLIT_R("adorable:lovely")% squeals♪」
+		ELSEIF PALAM_EXPLORER("キス")
+			PRINTFORML 「*%KISS()%*, *%KISS()%*... Shalt I maketh thee mine own prisoner I wonder♪」
+		ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+			IF RAND:2 == 0
+				PRINTFORML 「Fufu, thee ended up dirtying me like this♪\n　Here, this is certes not the end, thee can afford letting forth more♪」
+			ELSE
+				PRINTFORML 「Well now, I am dyed in thy white♪ Fufu, it's all sticky♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("アナル責め")
+			PRINTFORML 「Hither? Art thee sure? Now now, alloweth me try to tease thee♪」
+		ELSEIF PALAM_EXPLORER("顔面騎乗")
+			IF RAND:2 == 0
+				PRINTFORML 「I prithee thee, cease inhaling mine %TEXTS("匂い")% so much, it's humiliating to even think about...」
+			ELSE
+				PRINTFORML 「Art thee taking a liking of this? Thou art a pervert indeed, worth of disdain...」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("手コキ")
+			PRINTFORML 「Here, here... I'm not letting thee wend yet♪」
+		ELSEIF PALAM_EXPLORER("フェラチオ")
+			IF RAND:2 == 0 && HAS_PENIS(PLAYER)
+				PRINTFORML 「Such a stout and sticky stench indeed... It assaults mine senses♪」
+			ELSE
+				PRINTFORML 「*%KISS()%*, *%KISS()%*... *%KISS()%*, *%KISS()%*...♪ Thee've let out lots... Quite troubling to drinketh it all♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("足コキ") && HAS_PENIS(PLAYER)
+			PRINTFORML 「Oh my... Doest this thrill thee as well? It's throbbing on mine soles so stoutly♪」
+		;ELSEIF PALAM_EXPLORER("シックスナイン")
+		;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「Fufu, what an easy fellow... Wast that just mere words?」
+			ELSE
+				PRINTFORML 「Art thou too weak to stand already? Thine lack of discipline is upsetting...」
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_16
+PRINTFORML 「Thou art a great \@ TALENT:PLAYER:オトコ ? sir # mistress \@ indeed... Hmm, very well, I shalt resign mine self under thy care for a while... Fufufu♪」
+
+@KOJO_MESSAGE_SEXBATTLE_D_16, ARG:1, LOCAL
+SELECTCASE ARG:1
+	CASE 0
+		PRINTFORML 「%MOAN("m")%♪... Ufufu, thou art indeed very valorous at this... I wast not disappointed.」
+		PRINTFORML 「I'm hesitant to leaveth mine own lodging, but for %MONEY_C(LOCAL)% I'm ready to joineth mine path with thine.」
+		PRINTFORML 「Well, what doest one bethink? Can thee afford to taketh a valorous careth of me?%SPLIT_R("♪:♥")%」
+	CASE 1
+		PRINTFORML 「Too bad... I shall be seeing thee later then. Thee shall surely cometh back, I'm sure?%SPLIT_R("♪:♥")%」
+ENDSELECT
+
+;-------------------------------------------------
+;ウィッチ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_19
+IF RAND:2 == 0
+	PRINTFORML 「Don't fly too close to the sun... Or so they say. Sorry, but I%SPLIT_R(" won't:'m not going to")% let you %SPLIT_R("escape:go")%.」
+ELSE
+	PRINTFORML 「Oh, %SPLIT_R("there you are:hey you there")%. I'll let you do whatever you want with me, but you must help me with... an experiment.」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_19
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, cumming, you%SPLIT_R(" actually::")% made me c%SLUR("u")%m!!!」
+		ELSE
+			PRINTFORML 「Ky%SLUR("a")%! %STUTTER("Hold")% on, please... %SPLIT_R("Be gentle:This is too intense:You're too rough")%, but... %MOAN("h")%...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「%SPLIT_R(@"E%SLUR("e")%h:Wh%SLUR("a")%--")%... %SPLIT_R("Lies, lies, lies:It cannot be:No, no, no:No way, no way, no way")%! %MOAN("m")%... %MOAN()%... %MOAN("m")%!」
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		PRINTFORML 「%SPLIT_R("Guh:Kuh:Gh:Kh")%... %MOAN()%, %SPLIT_R("fine:okay:alright")%, %SPLIT_R("you pass:you beat me:you're good")%... Now do it more, pleasure me more... %MOAN("m")%!」
+	ELSEIF PALAM_EXPLORER("アナル")
+		PRINTFORML 「You %STUTTER(SPLIT_R("weirdo:freak:pervert:creep"))%... %MOAN()%... If you keep doing this, I... %SPLIT_R("Don't:Stop:No:No good:It's over:No more")%...」
+	ELSEIF PALAM_EXPLORER("バスト")
+		PRINTFORML 「%MOAN()%... My %CHECK_PLNOUN(FSYN("chest"), "feel")%... %SPLIT_R("so good:amazing:great")%... %MOAN("m")%♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「%MOAN()%, cumming! I'm cumm%SLUR("i")%ng!!!」
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:2
+			PRINTFORML 「%MOAN()%♪ Oh, %SPLIT_R(@"you came so much:you've let out a lot:so much %SEMEN()%:my womb's totally bursting:my %FSYN("vagina")% feels so hot")%...?!\n　%SPLIT_R("Crap:Darn:Oh god:Whoops")%... What am I gonna do if %SPLIT_R("this will get me:I get")% %SPLIT_R("knocked up:pregnant")%...?」
+		ELSE
+			PRINTFORML 「So %SPLIT_R("warm:hot")%... %SPLIT_R("You came lots:Such an amazing quantity:There's so much")%, and yet... %SPLIT_R(@"It looks like you're not done yet:You wanna get acquainted with my %FSYN("vagina")% even more, right?:You can still go on:It seems you're ready for another round")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「%SPLIT_R("Guh:Kuh:Gh:Kh:Uhh")%... You came in my %FSYN("anus")%... %SPLIT_R("It feels disgusting:Eww:Now I can't sit for a while")%...」
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	;ELSEIF PALAM_EXPLORER("キス")
+	;ELSEIF PALAM_EXPLORER("パイズリ")
+	;ELSEIF PALAM_EXPLORER("アナル責め")
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF !RAND:2
+			PRINTFORML 「Did my %TEXTS("匂い")% really got you that %SPLIT_R("aroused:excited")%? To be honest I skip the bath quite often...\n　Aggghh, this is embarrassing...!」
+		ELSE
+			PRINTFORML 「%SPLIT_R(@"E%SLUR("e")%h:H%SLUR("u")%h")%～... So you are a pervert?」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R("Wow:Whoa:Oh my")%... It's like a %SPLIT_R("geyser:fountain")%...」
+		ELSE
+			PRINTFORML 「Here-here, you've let out lots... I'm gonna %SPLIT_R("take some samples:collect some")%%SPLIT_R(" okay?: if you don't mind.::")%」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:2
+			PRINTFORML 「...Don't you think it would be better if it was a little more delicious\n　as the course of evolution? It's%SPLIT_R(" kinda::")% %SPLIT_R("icky:nasty:yucky")%...」
+		ELSE
+			PRINTFORML 「?! Hold on, at least warn me %SPLIT_R("when you're about to cum:before letting it out")%... %SPLIT_R("Guh:Kuh:Gh:Kh:Uhh")%～ It's so %SPLIT_R("ick:nast:yuck")%%SLUR("y")%...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		PRINTFORML 「Just let me tell you something. You stare at my panties way too much!」
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「Kyah! ...Ah, you%SPLIT_R("'ve let out lots: came a lot")%...」
+		ELSE
+			PRINTFORML 「Ah... %SPLIT_R("Amazing:Oh my:Wow:I should say")%... You can cum that much?♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_19
+PRINTFORML 「You own a big house, right? I need you to setup a proper lab facility in my room.」
+
+
+;-------------------------------------------------
+;クノイチ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_22
+IF SAVESTR:15 == "キアズマの遊郭"
+	IF MONEY < 1000
+		PRINTFORML 「Wow, have you spent every single penny just to meet with us? Fufu, you poor sod, let me comfort you...」
+	ELSEIF FIND_COND("相思相愛") > 0 && PLAYER == MASTER && RAND:4 == 0
+		PRINTFORML 「Fufu, having an affair, betraying your loved one, aren't we...?\n　But there was a saying that great men have great fondness for the sensual pleasure... Fufufu.」
+	ELSEIF TALENT:PLAYER:童貞 && RAND:2
+		PRINTFORML 「%SPLIT_R(@"What the hell a virgin like you is doing in here? I'm surprised you still haven't lost it yet...:You came here to dip your brush, right? Let me %SPLIT_R("help you then:lend you a hand... Or should I say hole? Fufu")%...")%」
+	;マスターがサド
+	ELSEIF TALENT:MASTER:サド && RAND:3 == 0
+		PRINTFORML 「What? You wish to capture a spy to interrogate...? Fufu, I'll let you try...」
+	ELSEIF RAND:3 == 0
+		PRINTFORML 「Well well, did you come here to taste the arts of our domain...? Kuku, we won't go easy on you even if you plead...」
+	ELSEIF RAND:2 == 0
+		PRINTFORML 「Fufufu... Alright, I give up. Now let me drown you in pleasure that no other Nightmare can even dream to give!」
+	ELSE
+		PRINTFORML 「Spending your money just to get squeezed out by other Nightmares, what a weirdo...\n　Very well, I'll have you completely wrung dry just as you desire...!」
+	ENDIF
+ELSE
+	IF RAND:2 == 0
+		PRINTFORML 「Prepare yourself... Your punishment is due!」
+	ELSE
+		PRINTFORML 「Well well, you dare to challenge me... Very well, I shall become your partner!」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_22
+IF SAVESTR:15 == "キアズマの遊郭"
+	;夢魔がイかされた
+	IF BASE:精力 <= 0
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%! %STUTTER(SPLIT_R("No way:Impossible:It cannot be"))%, I will be the first who... %MOAN()%, %MOAN("h",1)%!」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%! %STUTTER("Stop")%, I give--... %MOAN()%, %MOAN("h",1)%!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「%SPLIT_R("Guh:Kuh:Gh:Kh:Uuh")%... I didn't expect you would do my %STUTTER("dirty")% hole... %MOAN()%, %MOAN("h",1)%!」
+		ELSEIF PALAM_EXPLORER("エースオブスペード")
+			PRINTFORML 「%MOAN("h")%, %STUTTER(SPLIT_R("wait:hold on:give me a second"))%, plea... %MOAN()%, %MOAN("h",1)%!」
+		ELSEIF PALAM_EXPLORER("ヴァッジ")
+			PRINTFORML 「%MOAN()%... %MOAN("m", 1)%! You are pretty good, aren't you... %MOAN()%, %MOAN("m",1)%...!」
+		ELSEIF PALAM_EXPLORER("アナル")
+			PRINTFORML 「%STUTTER("That")% place is... %STUTTER(SPLIT_R("Don't:Stop:No:No more"))%... %MOAN()%, %MOAN("h",1)%!」
+		ELSEIF PALAM_EXPLORER("バスト")
+			PRINTFORML 「%MOAN("m")%, %MOAN(,1)%... You just keep kneading my %FSYN("chest")%, you... you bastard♪」
+		;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			PRINTFORML 「%MOAN("m")%, I can't take it, stop it, please sto--... %MOAN()%, %MOAN("h",1)%!!!」
+		ENDIF
+	;探索側をイかせた
+	ELSE
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3
+				PRINTFORML 「Fufufu... Make sure to give me lots... Cuz we're not done yet.」
+				PRINTFORML 「Now, let us join again... Use my body to satisfy all of your needs...」
+			ELSEIF RAND:2
+				PRINTFORML 「There it goes... This is the day when I didn't lose to the cock.」
+			ELSE
+				PRINTFORML 「Fufu, are you done already? I feel your %FSYN("penis")% %FSYN("throb:ing")% hard in me...」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「%MOAN()%... Pouring so much, it's even spilling over... Do you actually prefer my backdoor...?」
+		ELSEIF PALAM_EXPLORER("エースオブスペード")
+			IF RAND:2
+				PRINTFORML 「Fufu, how does my cushion technique feels? Let me demonstrate you what a real paradise means...!」
+			ELSE
+				PRINTFORML 「Kuku, I'm well versed in the art of female pleasure as well... I know where to strike as I'm a girl too.」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("キス")
+			PRINTFORML 「*%KISS()%*... Fufu, did you get finished off just from my kiss? You poor sod.」
+		ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+			PRINTFORML 「My %CHECK_PLVERB(FSYN("chest"), "is")% so slimy... Fufu, it's fine, enjoy it while it lasts.」
+		ELSEIF PALAM_EXPLORER("アナル責め")
+			PRINTFORML 「No need to keep your voice down, moan all you want... Cuz I'm gonna to tease you lots, okay?」
+		ELSEIF PALAM_EXPLORER("顔面騎乗")
+			PRINTFORML 「Getting pinned down finished you off at once, huh... Hey, this is not over yet, y'know?」
+		ELSEIF PALAM_EXPLORER("手コキ")
+			IF RAND:2 == 0
+				PRINTFORML 「Whoa, my hands have become all sticky...♪」
+			ELSE
+				PRINTFORML 「We're just starting... I'm gonna squeeze ya dry, just like that.」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("フェラチオ")
+			IF RAND:2
+				PRINTFORML 「How is it, my killer tongue technique? ...I don't even need to ask, you're leaking out like crazy.」
+			ELSE
+				PRINTFORML 「What's the matter, feeling weak already? Look, I'm gonna suck everything out...!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("足コキ")
+			PRINTFORML 「Cumming from being stepped on... Kuku, I must say, this suits the likes of you pretty well.」
+		;ELSEIF PALAM_EXPLORER("シックスナイン")
+		;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2
+				PRINTFORML 「I'm gonna squeeze ya dry, just like that...♪」
+			ELSE
+				PRINTFORML 「You can cum more, right? C'mon, let's do another...♪」
+			ENDIF
+		ENDIF
+	ENDIF
+ELSE
+	;夢魔がイかされた
+	IF BASE:精力 <= 0
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:2 == 0
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%! I %STUTTER("failed")%... %SPLIT_R("No way:Impossible:It cannot be")%, to think you'd turn tables on me... Uh...」
+			ELSE
+				PRINTFORML 「%MOAN()%, %MOAN("m", 1)%! %STUTTER("Stop")%, I give--... %MOAN()%, %MOAN("h",1)%!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「What... the... hell... Doing this to ME, with my %SPLIT_R("shit:dirty")% hole... %MOAN()%, %MOAN("h",1)%!」
+		ELSEIF PALAM_EXPLORER("エースオブスペード")
+			PRINTFORML 「%MOAN("h")%, %SPLIT_R("no way:impossible:it cannot be")%, to think I, would lose to this damned lass... %MOAN("h",3)%!」
+		ELSEIF PALAM_EXPLORER("ヴァッジ")
+			PRINTFORML 「%MOAN()%... %MOAN("m", 1)%! You are pretty good, aren't you... %MOAN()%, %MOAN("m",1)%...!」
+		ELSEIF PALAM_EXPLORER("アナル")
+			PRINTFORML 「%STUTTER("That")% place is... %STUTTER(SPLIT_R("Don't:Stop:No:No more"))%... %MOAN()%, %MOAN("h",1)%!」
+		ELSEIF PALAM_EXPLORER("バスト")
+			PRINTFORML 「%MOAN("m")%, %MOAN()%... You just keep kneading my %FSYN("chest")%, you... you bastard♪」
+		;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			PRINTFORML 「%MOAN("m")%, I can't take it, stop it, please sto--... %MOAN()%, %MOAN("h",1)%!!!」
+		ENDIF
+	;探索側をイかせた
+	ELSE
+		IF PALAM_EXPLORER("Ｖインサート")
+			IF RAND:3
+				PRINTFORML 「Fufufu, %SPLIT_R("letting out so much, do you really wish to impregnate my trained pussy so much?:giving up already? Pathetic... I'm just gonna keep squeezing you to death...")%」
+			ELSEIF RAND:2
+				PRINTFORML 「%MOAN()%... Is that it? Kuku... It's twitching inside me so desperately, so unsightly...」
+			ELSE
+				PRINTFORML 「What's the matter? My womb isn't filled yet. The least you could do is let it out 10 more times.\n　What? You'd die? ...Well, you might just as well♪」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("Ａインサート")
+			PRINTFORML 「%MOAN()%... For a trash like you this hole is more than enough...」
+		ELSEIF PALAM_EXPLORER("エースオブスペード")
+			IF RAND:2
+				PRINTFORML 「Fufu, as we can see, a simple girl such as this easily falls against my cushion technique...」
+			ELSE
+				PRINTFORML 「Obviously I can easily please a girl such as you... I'm not called a ninja for nothing.」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("キス")
+			PRINTFORML 「*%KISS()%*... Fufu, did you get finished off just from my kiss? You poor sod.」
+		ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+			PRINTFORML 「Whoa, spurting it out so vigorously... Did you like my %FSYN("chest")% that much?」
+		ELSEIF PALAM_EXPLORER("アナル責め")
+			PRINTFORML 「Kukuku... Does it feel that good from having your %SPLIT_R("shit:dirty")% hole played with? You lowly pervert...」
+		ELSEIF PALAM_EXPLORER("顔面騎乗")
+			IF RAND:2
+				PRINTFORML 「Kukuku, that's right, this is what pathetic weaklings such as you deserve...\n　Inhale it, inhale the pungent %TEXTS("匂い")% of my genitals deeper♪」
+			ELSE
+				PRINTFORML 「Cumming just from having my butt on your face... What a pathetic son of a bitch.」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("手コキ")
+			IF RAND:2 == 0
+				PRINTFORML 「Is that it? That was easier than taking a candy from a baby.」
+			ELSE
+				PRINTFORML 「We're just starting... I'm gonna squeeze ya dry, just like that.」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("フェラチオ")
+			IF RAND:2
+				PRINTFORML 「How is it, my killer tongue technique? ...I don't even need to ask, you're leaking out like crazy.」
+			ELSE
+				PRINTFORML 「What's the matter, feeling weak already? Look, I'm gonna suck everything out...!」
+			ENDIF
+		ELSEIF PALAM_EXPLORER("足コキ")
+			PRINTFORML 「Cumming from being stepped on... Kuku, I must say, this suits the likes of you pretty well.」
+		;ELSEIF PALAM_EXPLORER("シックスナイン")
+		;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+		ELSE
+			IF RAND:2
+				PRINTFORML 「Pathetic... Are you %FSYN("orgasm:ing")% already?」
+			ELSE
+				PRINTFORML 「Is that all you can do? All bark and no bite...」
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+@KOJO_MESSAGE_SEXBATTLE_C_22
+PRINTFORML 「You seem promising enough for me to follow... C'mon now, hurry up and guide me to your dwelling.」
+
+@KOJO_MESSAGE_SEXBATTLE_D_22, ARG:1, LOCAL
+SELECTCASE ARG:1
+	CASE 0
+		PRINTFORML 「%MOAN("m")%... Heh, this was honestly amazing. I feel like I should have this kind of thing every day.」
+		PRINTFORML 「You enjoyed it too, right? Gimme %MONEY_C(LOCAL)% to bribe the guards and I'm yours... Forever.」
+		PRINTFORML 「Imagine the possibilities... We have a great affinity too. C'mon, let us go!%SPLIT_R("♪:♥")%」
+	CASE 1
+		PRINTFORML 「Damn... This might've been one in a lifetime opportunity...\n　I'm not sad, no...! It's just... Ah well. Goodbye.」
+ENDSELECT
+
+;-------------------------------------------------
+;ゴブリン
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_31
+IF RAND:2
+	PRINTFORML 「%CNAME("二人称", "cap")%, found ya!」
+ELSE
+	IF PALAM_EXPLORER("敵キャラ数") > 1
+		IF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R(@"We're gonna rape ya:Get %HIM_HER(PLAYER)%")%～!」
+		ELSE
+			PRINTFORML 「Everyone is gonna get their share, get it～?」
+		ENDIF
+	ELSE
+		PRINTFORML 「%CNAME("二人称", "cap")%, say, are ya a %SPLIT_R("lolicon:pedo")% perchance? Mfufu.」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_31
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("両穴征服")
+		IF RAND:2 == 0
+			PRINTFORML 「%CNAME("二人称", "甘え", "cap")% this is %SPLIT_R("wrong:weird:not right")%, so %SPLIT_R("wrong:weird:not right")%!\n　Raping both of my cunny and %FSYN("anus")%, my head's spinning...!」
+		ELSE
+			PRINTFORML 「%SPLIT_R("That's enough:No:No more:I can't take it anymore")%... Mfufu...\n　My front yard and my backdoor, they turned into %CNAME("二人称/your")% %SEMEN()% urinal...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:4 == 0
+			PRINTFORML 「Aha, goblin's %SPLIT_R("child:childish")% %SPLIT_R("cunny:pussy")% is %SPLIT_R("spreading apart from:making such lewd noises from getting fucked by:squeezing so hard around")%\n　%CNAME("二人称/your")% %FSYN("penis")%, %MOAN(,1)%, %FSYN("insert")% it deeper!」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「No no, you can't %FSYN("insert")% it so deep, that's not allowed, it's totally %FSYN("stir:ing")% my baby room, %MOAN("m")%!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「S%SLUR("o")% good, %CNAME("二人称/your")% %FSYN("penis")% feels so g%SLUR("o")%d! More, mess this goblin up some more!」
+		ELSE
+			PRINTFORML 「Keep banging me from behind, rape me until I can't stand!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「Kyaa, having sex with my %FSYN("anus")% feels amazing! You're going to turn this goblin into a total pervert!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Don't be so rough, it's leak%SLUR("i")%ng, I'm gonna %SLUR("pee")%!」
+		ELSE
+			PRINTFORML 「...Jeez～ How many times have you made this goblin cum, I've lost count... Kuhu, kuhuhu...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, %MOAN(,1)%! %CNAME("二人称/your", "cap")% clit is hitting mine, sloshing so good, %MOAN("m")%!」
+		ELSE
+			PRINTFORML 「%STUTTER("No")%, don't schlick it so %SLUR(FSYN("intense:ly"))%! %SLUR(SPLIT_R("No:No more:Somebody help"))%, I'm getting raped by a wom%SLUR("a")%n!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「C'mon... Look over here, %CNAME("二人称")%... Because of you being so naughty, goblin's clit became like this...」
+			ELSE
+				PRINTFORML 「%MOAN("m")%! %MOAN()%, %MOAN(,1)%... No, you meanie... Licking me so gently... %MOAN()%, %MOAN("m")%!」
+			ENDIF
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「Mfufu... Attacking goblin's %SPLIT_R("child:childish")% %SPLIT_R("cunny:pussy")% like that, it's sopping wet... C'mon, finish me off %SLUR("already")%...」
+			ELSE
+				PRINTFORML 「%SPLIT_R("More:Keep going")%! Make me feel it aga%SLUR("i")%n! %MOAN()%, %MOAN("h",3)%!」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「%HE_SHE(PLAYER,1)%'s licking, licking me... Making goblin's %FSYN("anus")% squeaky cle%SLUR("a")%n!」
+			ELSE
+				PRINTFORML 「%STUTTER(SLUR("No way"))%, it's not making me feel good! It's not contracting like crazy,\n　waiting for the release, you're lying! Lie, lie lie li%SLUR("e")%!」
+			ENDIF
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「This feels %STUTTER("weird")%... %MOAN("m")%! Making it so itchy, I feel like peeing...」
+			ELSE
+				PRINTFORML 「...%MOAN()%, no, no more! %STUTTER("Don't")% wriggle with your finger, %TEXTR("it will never close again", @"you're spreading %SLUR("i")%t")%!」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			IF RAND:2 == 0
+				PRINTFORML 「So even such a tiny chest can bring pleasure... Goblin's %CHECK_PLVERB(FSYN("chest"), "is")% too pervert%SLUR("e")%d...」
+			ELSE
+				PRINTFORML 「More, keep sucking on them m%SLUR("o")%re! Look, the tip is %FSYN("throb:ing")% so hard...!」
+			ENDIF
+		;胸揉み
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「...Massaging my %FSYN("chest")% so gently... My head's all light... Ah, this feels like happiness...」
+			ELSE
+				PRINTFORML 「%STUTTER("No")%, don't be so rough... My %CHECK_PLVERB(FSYN("chest"), "is")% all tingly! Like an electric current, %MOAN("m", 1)%!」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「*%KISS()%*... *%KISS()%*... *%KISS()%*, mmphh, mmm?! %MOAN()%, %MOAN("m", 1)%...! Fuah...! %MOAN()%! %MOAN("h")%!!!」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「%SLUR(SPLIT_R("That's it:I'm done:No more:I'm done for"))%... I can't think of anything other than horny things now thanks to %CNAME("二人称")%...」
+	ENDIF
+
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:4 == 0
+			PRINTFORML 「Mfufu～ ...You're %SPLIT_R("a bad person:a criminal")%, %CNAME("二人称")%...」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「Here, look, there's so much... No matter how much I scrape it out, it keeps coming...」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Kyah, %CNAME("二人称")% raped an innocent child like me... Mfufu.」
+		ELSE
+			PRINTFORML 「You surely don't think it's the end just because you've let it out once?\n　You gotta keep at it until my milk tank is filled up～」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2 == 0
+			PRINTFORML 「Wow, it's trying to impregnate my %FSYN("anus")%... Mfufu.」
+		ELSE
+			PRINTFORML 「%CAPITALIZE(FSYN("letout:ing"))% in here instead of my %SPLIT_R("cunny:pussy")%, you're a failure of a %SPLIT_R("pedo:lolicon")%, %CNAME("二人称")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+		IF RAND:2 == 0
+			PRINTFORML 「I wish I had a mirror to show you how you look like～ You're making such a nice face～ Mfu, mfufufu...」
+		ELSE
+			PRINTFORML 「You hear? You hear it, right? He～ere, this le～eewd～ sound your pussy is making～?」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		IF RAND:2 == 0
+			PRINTFORML 「Did it really feel that good that you came right away from kissing with\n　a tiny little girl? You're a %SPLIT_R("pervert:creep")%, you know that %CNAME("二人称")%?」
+		ELSE
+			PRINTFORML 「*%KISS()%*, *%KISS()%*... %MOAN()%～ *%KISS()%*, *%KISS()%*... Mfufu, he～ere.\n　You're already like that just from kissing. %SPLIT_R("Isn't it embarrassing:Aren't you ashamed:Shouldn't you be ashamed of yourself")%?」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「%SPLIT_R("Pedo:Lolicon")% like you should be really pleased by this, am I right %CNAME("二人称")%～?\n　You don't have to hide it, goblins like perverted %FSYN("penis:s")%♪」
+		ELSE
+			PRINTFORML 「Rubbing it so vigorously against my flat chest and then spurting it out so happily...\n　There's no cure for the likes of you, you damn %SPLIT_R("pedo:lolicon")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル責め")
+		IF RAND:2 == 0
+			PRINTFORML 「Are you cumming from having your %FSYN("anus")% licked? Teehee. *%KISS()%*... Mph... *%KISS()%*...」
+		ELSE
+			PRINTFORML 「If you confess that this feels good, I'll send you straight to heaven～ C'mon, c'm%SLUR("o")%n...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「Heee～re, this is your so long awaited and so loved loli %SPLIT_R("cunny:pussy")%, %CNAME("二人称")%. Make sure to savor it looots～♪」
+		ELSE
+			PRINTFORML 「I feel like giving you a bonus and s-p-r-e-a-d it wide♪\n　You might even see my womb if you do your best, you know～? Mfufu～」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF RAND:2 == 0
+			PRINTFORML 「Whoa, my face and belly are all drenched wet... If you're so full of energy, this won't be over\n　from just once for sure! You hear me, %CNAME("二人称")%?」
+		ELSE
+			PRINTFORML 「Did these tiny kid's hands feel that good? Good for you～ Lo～ok, it's like a jelly, all sticky and wet...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「Fuah... Such an amazingly thick %SPLIT_R("pedo:lolicon")% %SEMEN()%, just drinking it makes me feel like I'm getting pregnant...♪」
+		ELSE
+			PRINTFORML 「No matter how much you let it out inside my mouth, it's not going to get pregnant, you know?\n　I wonder how many times it would take for you to keep pointlessly shooting before you get satisfied～♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		IF RAND:2 == 0
+			PRINTFORML 「Whoa～ Cumming from being stepped on, you really are a pervert, aren't you %CNAME("二人称")%?♪」
+		ELSE
+			PRINTFORML 「Mfufu～ Even for a pervert who cums from being stepped on,\n　goblin is still willing to give its proper love. %CNAME("二人称", "-", "cap")%♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("シックスナイン")
+		IF RAND:2 == 0
+			PRINTFORML 「C'mo～on, if you're not gonna put your mouth to good use,\n　I'm gonna gulp and tease your squishy ejaculated %FSYN("penis")%～」
+		ELSE
+			PRINTFORML 「Mfufu～ Well done for a treat well served～ As a reward,\n　I'm gonna rub your beloved %SPLIT_R("cunny:pussy")% on your face lo～ots, %CNAME("二人称")%♪」
+		ENDIF
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:3 == 0
+			PRINTFORML 「Mfufu～ Perverted %SPLIT_R("pedo:lolicon")% %CNAME("二人称")%, score～!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「It's hard to believe that this unsexy child body made you cum so much... You're a weirdo～!」
+		ELSE
+			PRINTFORML 「Goblin absolutely lo～oves the juice of perverts who get aroused from tiny child bodies～♪\n　You're gonna keep %FSYN("letout:ing")% a lo～ot more, right?」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_31
+IF RAND:2 == 0
+	PRINTFORML 「Hehe... %SPLIT_R(@"%CNAME("二人称")% is kidnapping me:I'm getting kidnapped by %CNAME("二人称")%")%... Mfufu...」
+ELSE
+	PRINTFORML 「You want to use this goblin as your sexual outlet after making out with it? Kyaa, %CNAME("二人称")%, you're so naughty～...♪」
+ENDIF
+
+
+;-------------------------------------------------
+;ストゥーナ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_34
+;ストメロ戦
+IF PALAM_EXPLORER("敵キャラ数") >= 2 && NO:PALAM_EXPLORER("二人目") == 35
+	PRINTFORML 「I'm gonna wring ya out dry!」「I'll make you drown in melting pleasure～♪」
+ELSE
+	PRINTFORML 「I'm gonna wring ya out dry!」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_34
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:5 == 0
+			PRINTFORML 「%SPLIT_R("Guh:Kuh:Gh:Kh:Uuh")%, %SPLIT_R("dammit:damn:shit:fuck:damn it")%～」
+		ELSEIF RAND:4 == 0
+			PRINTFORML 「%SPLIT_R(@"Holy %SPLIT_R("crap:shit")%:Wh%SLUR("a")%t:You %STUTTER(SPLIT_R("motherfucker:son of a bitch:bastard:fucker"))%")%?! To think... you'd best me...♪」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「%MOAN("m")%?! %MOAN()%♪ %MOAN("m")%...♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%?! Ramming it so deep... I'm cumming...♪」
+		ELSE
+			PRINTFORML 「Your %FSYN("penis")% is hitting against my womb...! No one's ever been able to do that before, %MOAN("m")%...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「From %STUTTER("behind")%?! I'm gonna... %FSYN("orgasm")% from my %FSYN("anus")%...!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Kuku, do your worst weakling, I'll never... Gah! %MOAN("m")%?! %STUTTER("Wai--")%, %STUTTER("no")%, not that hole, n%SLUR("o")%...!!!」
+		ELSE
+			PRINTFORML 「N%SLUR("o")%!!! Don't stick it in my pooper, you bastard...! I will never forgive you, I... %MOAN("h")%...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		IF R == 2
+			PRINTFORML 「%MOAN("m")%?! %STUTTER(SPLIT_R("Wait up:Hold on:Gimme a moment"))%...♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「%STUTTER(MOAN("m"))%...! %MOAN("h", 3)%?!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			PRINTFORML 「%MOAN("m")%?! Shoving your %STUTTER("tongue")%... inside...♪」
+		;指で愛撫
+		ELSE
+			PRINTFORML 「%SPLIT_R("No way:What the fuck:Holy shit")%...! I'm cumming... from this...?!」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			PRINTFORML 「You just keep hitting my weak %SPLIT_R("spots:points")%... Don't play with me... %MOAN()%...♪」
+		;胸揉み
+		ELSE
+			PRINTFORML 「%STUTTER(MOAN("m"))%, %MOAN("m",1)%! %MOAN()%, %MOAN(,1)%... %MOAN("h")%♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("キス")
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%... %SPLIT_R(@"Damn it:Shit:You %STUTTER(SPLIT_R("motherfucker:son of a bitch:bastard:fucker"))%")%, to think this would... %MOAN("m")%♪」
+		ELSE
+			PRINTFORML 「%SPLIT_R("Guh:Kuh:Gh:Kh:Uuh")%, %SPLIT_R("dammit:damn:shit:fuck:damn it")%～」
+		ENDIF
+	ENDIF
+
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTDATA
+			DATAFORM 「Haha... Couldn't %SPLIT_R("bear:endure")% it any longer?」
+			DATAFORM 「This is not over yet, I'm just starting squeezing ya... to death♪」
+			DATAFORM 「Haha! %SPLIT_R("Serves you right:That's what you get:You got too cocky:You were in the wrong time in the wrong place:You were no match for me:Weaklings like you are my prey")%...♪」
+			DATAFORM 「%MOAN()%, I feel it, your %SEMEN(PLAYER, 1)% is gushing into me... This never gets old...♪」
+			DATAFORM 「Cumming so desperately, haha... But I'll never conceive from some loser's %SEMEN()%, you know?」
+			DATAFORM 「%SPLIT_R(@"Who said you can stain my womb with your pathetic %SEMEN()%...?:You went ahead and just came inside, didncha...?:Coming inside as if I allowed you to...")% %SPLIT_R("But it feels good:Ah, whatever")%... This might become a habit♪」
+		ENDDATA
+	;Ａ中出し
+	;ELSEIF F:3 == 2
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("キス")
+		PRINTFORML 「Hm? Hmmm? Phahaha!!! So that's why you are %FSYN("tremble:ing")%, I see...\n　Actually cumming from my kiss, what a loser, man!」
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER) && RAND:2
+		IF RAND:2 == 0
+			PRINTFORML 「%MOAN()%... Just look at this quantity... It still keeps leaking outta my %FSYN("chest")%, you know?」
+		ELSE
+			PRINTFORML 「Hehe, getting so %SPLIT_R("excited:aroused")%... Lemme taste some, *%KISS()%*, *%KISS()%*, *%KISS()%*...」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル責め")
+		IF RAND:2 == 0
+			PRINTFORML 「Swallowing my finger so happily deep inside your %FSYN("anus")%, you fucking pervert...♪」
+		ELSE
+			PRINTFORML 「It gulped my finger so easily... Thas' a lewd hole you're having there, hey♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2 == 0
+			PRINTFORML 「Hey, don't get too relaxed and lick me some more... That's right, nice and deep... %MOAN()%, %MOAN("m",1)%♪」
+		ELSE
+			PRINTFORML 「Hehe, that's right... Your mouth belongs to me now, weakling!\n　Lick my dirty %FSYN("vagina")%, make it squeaky clean...\n　Then I might consider letting you go♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		IF RAND:3 == 0 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「Hehe... It's %SPLIT_R("so ::")%sticky♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Ahaha! %SPLIT_R("That's an amazing:Such")% %SPLIT_R("energy:vigor")%... Holy shit, it's still coming...」
+		ELSE
+			PRINTFORML 「That's a ridiculous amount, holy shit. Jeez, just how much did you %SPLIT_R("save up:have in there")%...?♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「Keep %SPLIT_R("spurting:shooting:letting")% it out all you want, I'm gonna drink it all...♪」
+		ELSE
+			PRINTFORML 「I can't drink it all... That's an amazing quantity...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		IF RAND:4 == 0
+			PRINTFORML 「A%SLUR("w")% man, my feet have become all sticky... I'll let ya lick 'em, so make 'em clean, alright? ...Haha♪」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「Did you seriously cum from this... What a pervert, kuku...」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「To think you'd feel good from my feet... You %SPLIT_R("fucking ::")%%SPLIT_R("pervert:weirdo:creep")%♪」
+		ELSE
+			PRINTFORML 「Oh man... They're all drenched wet to the bone, damn♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:4 == 0
+			IF !HAS_PENIS(PLAYER)
+				PRINTFORML 「No no no, you can't just keep %FSYN("stare:ing")% at me like that with a such cute face♪ No way in hell I'm gonna stop now...♪」
+			ELSE
+				PRINTFORML 「Hehe...♪ Lemme drink some more...」
+			ENDIF
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「Haha! %SPLIT_R("Serves you right:That's what you get:You got too cocky:You were in the wrong time in the wrong place:You were no match for me:Weaklings like you are my prey")%...♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Oh man, drooling like that, what an undisciplined \@ IS_FEMALE(PLAYER) ? bitch # loser \@ you are...♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Hehe, thank you for the meal well served♪」
+		ELSE
+			PRINTFORML 「Hehe, that's a nice face you're making there♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_34
+IF PALAM_EXPLORER("敵キャラ数") >= 2 && NO:PALAM_EXPLORER("二人目") == 35
+	PRINTFORML 「Can't believe I lost to this weakling!」「But %HE_SHE(PLAYER)% made us feel good... %HE_SHE(PLAYER,1)% can't be a bad person～♪」
+	PRINTFORML 「You're making a grave mistake... I'll have my revenge, hehe...」
+ELSE
+	PRINTFORML 「Hmph... You got me interested though... Just a bit.」
+ENDIF
+;-------------------------------------------------
+;メローナ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_35
+PRINTFORML 「I'll make you drown in melting pleasure♪」
+
+@KOJO_MESSAGE_SEXBATTLE_B_35
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:4 == 0
+			PRINTFORML 「...! ...Uh! ～～%MOAN()%! ...%STUTTER(MOAN("m"))%... That was amazing～...♪」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「%MOAN("m")%, %MOAN(,1)%, %MOAN(,1)%! %STUTTER("So")% g%SLUR("o")%d♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN("m")%... %MOAN()%! Aha, you're amazing, I'm completely ecstatic♪」
+		ELSE
+			PRINTFORML 「%MOAN()%, going rough so suddenly♪ Your %FSYN("penis")% will tear me apart～♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「So good... %MOAN("m")%♪ More, deeper, stronger♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN("h", 3)%～♪ My %FSYN("anus")% will never close up anymore!」
+		ELSE
+			PRINTFORML 「%MOAN()%～ %MOAN("m")%～♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	ELSEIF PALAM_EXPLORER("ヴァッジ")
+		;クンニ
+		;IF R == 2
+			PRINTFORML 「%STUTTER("That's")% %SLUR("i")%t♪ I'm %STUTTER("cumm")%%SLUR("i")%nhhgg♪」
+		;指で愛撫
+		;ELSE
+		;ENDIF
+	ELSEIF PALAM_EXPLORER("アナル")
+		;アナル舐め
+		IF R == 2
+			PRINTFORML 「%MOAN("m")%♪ %MOAN("m")%, %MOAN("m", 1)%...♪」
+		;指で愛撫
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「No, don't %FSYN("stir")% my %STUTTER(FSYN("anus"))% like that～! %MOAN()%, %MOAN("h",1)%～!」
+			ELSE
+				PRINTFORML 「My %SLUR(FSYN("anus"))%～ ...My %FSYN("anus")% feels amazing... %MOAN("m")%♪」
+			ENDIF
+		ENDIF
+	ELSEIF PALAM_EXPLORER("バスト")
+		;乳首舐め
+		IF R == 2
+			PRINTFORML 「%MOAN("h")%～～!」
+		;胸揉み
+		ELSE
+			PRINTFORML 「Ah, no, don't be so rough... You're going to... ruin them♪」
+		ENDIF
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:3 == 0
+			PRINTFORML 「%MOAN("m")%, so good, %MOAN(,1)%! This is too good～!」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「%MOAN()%, %MOAN("m", 1)%, %MOAN("m",1)%～...」
+		ELSE
+			PRINTFORML 「%MOAN("m")%～～～～」
+		ENDIF
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:3 == 0
+			PRINTFORML 「Fufu... Thank you for your patronage～♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Aha, my belly feels so scorching hot～♪」
+		ELSE
+			PRINTFORML 「Making such a pleased face... Fufu, %SPLIT_R("cute:lovely:adorable")%～♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「Ufu... It's coming out, deep inside me... My %FSYN("anus")% is getting filled to the brim with you... %MOAN()%... I'm so happy♪」
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+		IF RAND:2 == 0
+			PRINTFORML 「Ahaha, I win♪ Fufu, it's so soaked wet as if you've just peed yourself...」
+		ELSE
+			PRINTFORML 「Ufufu, you're flooding everything～ So sensitive, my cutie pie～♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("キス")
+		IF RAND:2 == 0
+			PRINTFORML 「How does my Melty Kiss feel? Ufufu, it's making you all hot inside, right～?」
+		ELSE
+			PRINTFORML 「Fufu, are you melting in ecstasy already? ...%MOAN()%, *%KISS()%*...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+			PRINTFORML 「Aha... It's %SPLIT_R("bursting:spurting out")% through my cleavage♪」
+		ELSE
+			PRINTFORML 「Did my %FSYN("chest")% feel that good? Mfufu, I'm quite confident in my little babies♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("アナル責め")
+		PRINTFORML 「More... Let me hear more of your cute moans♪」 
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		PRINTFORML 「Did you %FSYN("orgasm")% already? Mfu, so cute～♪ C'mon, now make me feel good too...♪」
+	ELSEIF PALAM_EXPLORER("手コキ") && HAS_PENIS(PLAYER)
+		IF RAND:2 == 0
+	    	PRINTFORML 「Ahn, it's on my face... My hand's soaked too, I can't wipe it off～♪」
+		ELSE
+			PRINTFORML 「Wow, %SPLIT_R("I think I got some of it on my hair:it flew all over to my hair:it's sticking to my hair")%...♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF RAND:3 == 0
+			PRINTFORML 「%MOAN()%, *Gulp* *Gulp*... *%KISS()%*♪ %MOAN()%... I'm full～♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「*%KISS()%*, *%KISS()%*, *%KISS()%*, *%KISS()%*... %MOAN()%, thank you for the meal♪」
+		ELSE
+			PRINTFORML 「%MOAN()%, it's so nutritious～...♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:5 == 0
+			PRINTFORML 「Fufu, you're so cute when you tremble like that～♪ Here here... Ahaha, you can't stop cumming, what a naughty child♪」
+		ELSEIF RAND:4 == 0 && HAS_PENIS(PLAYER)
+			PRINTFORML 「Mfufu... I should try to put it inside my %FSYN("vagina")% next time. I'm looking forward to the sensation it would give me...」
+		ELSEIF RAND:3 == 0
+			PRINTFORML 「So %SPLIT_R("cute:lovely:adorable")%～♪」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「Fufu, you're getting completely infatuated～ ...%MOAN()%, *%KISS()%*...」
+		ELSE
+			PRINTFORML 「Making such a pleased face... Fufu, %SPLIT_R("cute:lovely:adorable")%～♪」
+		ENDIF
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_35
+PRINTFORML 「This was so sweet and so good♪ You can do that again, right?～♪」
+
+;-------------------------------------------------
+;エスプラーナ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_38
+;三姉妹戦
+IF PALAM_EXPLORER("敵キャラ数") >= 2
+	IF PALAM_EXPLORER("敵キャラ数") >= 3
+		PRINTFORML 「Riz-Raz! Rocco-Barocco! Let's go, all at once!」「Leave it to me, neesan!」「I got your back～♪」
+		PRINTFORML Esplana cheers up her sisters!
+		PRINTFORML Riz-Raz's abilities have been boosted!
+		PRINTFORML Rocco-Barocco's abilities have been boosted!
+	ELSEIF NO:PALAM_EXPLORER("二人目") == 39
+		PRINTFORML 「Riz-Raz! Are you ready?! Let's finish %HIM_HER(PLAYER)% off!」「Leave it to me, neesan!」
+		PRINTFORML Esplana cheers up her sister!
+		PRINTFORML Riz-Raz's abilities have been boosted!
+	ELSE
+		PRINTFORML 「Rocco-Barocco! Let's do the usual! Finish %HIM_HER(PLAYER)% off!」「I got your back～♪」
+		PRINTFORML Esplana cheers up her sister!
+		PRINTFORML Rocco-Barocco's abilities have been boosted!
+	ENDIF
+ELSE
+	PRINTFORML 「Oh my... Am I all alone...? %STUTTER("It's")% fine! Here I come!」
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_38
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「%MOAN()%... %STUTTER(SPLIT_R("Don't:Stop:No"))%, making me feel this good... My %STUTTER("hips")% are moving on their own... %MOAN("m")%!」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「%MOAN()%... %STUTTER(SPLIT_R("Don't:Stop:No"))%, making me feel this good... My %STUTTER("hips")% are moving on their own... %MOAN("m")%!」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「%MOAN()%... %STUTTER(SPLIT_R("Don't:Stop:No"))%, making me feel this good... %MOAN()%, %MOAN("m", 1)%!」
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「...I wonder if I'm about to level up... Hehe, take this and that♪」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「...I wonder if I'm about to level up... Hehe, take this and that♪」
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「Hohohoho! %SPLIT_R("What a shameful face:Your face is twisting in pleasure:You were no match for me")%! Don't worry, I'll make you let all of it out♪」
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;リズ・ラズ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_B_39
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「...%MOAN("m")%... %MOAN()%, %SPLIT_R("hurry up and:just")% cum already... If you don't, I... I-- %MOAN()%! %MOAN("h",3)%...!!!」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「...%MOAN("m")%... %MOAN()%, %SPLIT_R("hurry up and:just")% cum already... If you don't, I... I-- %MOAN()%! %MOAN("h",3)%...!!!」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「%MOAN("h", 3)%♪　I'm %STUTTER("sorry")%, neesan! I'm already... done♪」
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「Fufu, another weakling bites the dust♪」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「Fufu, another weakling bites the dust♪」
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「Fufu, another weakling bites the dust♪」
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;ロッコ・バロッコ
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_B_40
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「%MOAN("m")%～～♪ %HE_SHE(PLAYER, 1)% made me c%SLUR("u")%m～♪」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「%MOAN("m")%～～♪ %HE_SHE(PLAYER, 1)% made me c%SLUR("u")%m～♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「%MOAN("m")%～～♪ %HE_SHE(PLAYER, 1)% made me c%SLUR("u")%m～♪」
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		IF RAND:2
+			PRINTFORML 「C'mon, I'm gonna start moving more so cum already♪ Please gimme lots of XP♪」
+		ELSE
+			PRINTFORML 「About to cum～? ...Maybe this'll make me level up... Take this!♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		IF RAND:2
+			PRINTFORML 「C'mon, I'm gonna start moving more so cum already♪ Please gimme lots of XP♪」
+		ELSE
+			PRINTFORML 「About to cum～? ...Maybe this'll make me level up... Take this!♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("エースオブスペード")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		;エスプラーナが代表して喋る
+		PRINTFORML 「Hoho, it always ends up like this when you mess with us♪」
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;リン
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_44
+PRINTFORM 「Oh my, so the customer was you? 
+IF TALENT:PLAYER:童貞 && RAND:2
+	PRINTFORML Did you make your way all the way here\n　just to lose your virginity with me? Fufu, I'm honored♪」
+ELSEIF RAND:2
+	PRINTFORML Well then, let's have fun♪」
+ELSE
+	PRINTFORML Well then, %SPLIT_R("let's start with undressing:let me serve you lots:it's time for me to make up for the money you've spent:let me show you the high class prostitute action")%...」
+ENDIF
+@KOJO_MESSAGE_SEXBATTLE_B_44
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「%MOAN("m")%...♪ To think someone would make me cum from my pussy♪」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「%MOAN("m")%...♪ I'm cumming from my %FSYN("anus")%...♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「%MOAN("m")%...♪ I lost it, you made me cum♪」
+	ENDIF
+	IF PALAM_EXPLORER("キアズマの遊郭：ボス撃破") == 0
+		PRINTFORML 「There's no way I could've lost to the customer～」
+		PRINTFORML 「You sure are amazing. I'll give you this as a reward♪」
+		PRINTFORML Frankincense has been obtained!
+		I:49 += 1
+	ENDIF
+;探索側をイかせた
+ELSE
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「%MOAN("m")%, %SPLIT_R("was it good for you:did it feel good")%? My v-a-g-i-n-a♪」
+		PRINTFORML 「Puhu, %SPLIT_R("well done:thank you very much")%♪ %SPLIT_R("Well then, see you later:Let us meet again:Please come back again")%♪」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「%MOAN()%, did you let it out in my %FSYN("anus")%? Mfufu, %SPLIT_R("well done:thank you very much")%♪」
+	;ELSEIF PALAM_EXPLORER("エースオブスペード")
+	;ELSEIF PALAM_EXPLORER("キス")
+	ELSEIF PALAM_EXPLORER("パイズリ") && HAS_PENIS(PLAYER)
+		PRINTFORML 「%MOAN()%, %SPLIT_R("well done:thank you very much")%♪ %SPLIT_R("Was it good for you:Did it feel good")%, I wonder? %SPLIT_R("Well then, see you later:Let us meet again:Please come back again")%♪」
+	;ELSEIF PALAM_EXPLORER("アナル責め")
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		PRINTFORML 「Do you enjoy the feel of my pussy on your face? This might be one in a lifetime opportunity, so make sure to remember it♪」
+	ELSEIF PALAM_EXPLORER("手コキ")
+		PRINTFORML 「%MOAN()%, %SPLIT_R("well done:thank you very much")%♪ %SPLIT_R("Was it good for you:Did it feel good")%, I wonder? %SPLIT_R("Well then, see you later:Let us meet again:Please come back again")%♪」
+	ELSEIF PALAM_EXPLORER("フェラチオ") && HAS_PENIS(PLAYER)
+		PRINTFORML 「%MOAN()%, *Gulp*... I wonder if you were saving up for me? It was really thick and %SPLIT_R("yummy:tasty")%♪」
+	ELSEIF PALAM_EXPLORER("足コキ")
+		PRINTFORML 「Oh my, do you really like my socks that much? Mfufu, %SPLIT_R("well done:thank you very much")%♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「Puhu, %SPLIT_R("well done:thank you very much")%♪ %SPLIT_R("Well then, see you later:Let us meet again:Please come back again")%♪」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_44
+PRINTFORML 「Ah... This certainly goes against every rule, but...\n　These are the things that appear in history books, right?♪」
+
+@KOJO_MESSAGE_SEXBATTLE_D_44, ARG:1, LOCAL
+SELECTCASE ARG:1
+	CASE 0
+		PRINTFORML 「%MOAN("m")%♪... Fufu, as a better reward I propose my body to you, my customer♥」
+		PRINTFORML 「Just for the generous offering of %MONEY_C(LOCAL)% I will leave with you at once.」
+		PRINTFORML 「Well, how about it? Having your own high-class prostitute servant\n　should feel like dream coming true, right?%SPLIT_R("♪:♥")%」
+	CASE 1
+		PRINTFORML 「I %STUTTER("see")%... I spoke too soon perhaps then.\n　Well, thank you very much, %SPLIT_R("I will see you later:let us meet again:please come back again")%...」
+ENDSELECT
+;-------------------------------------------------
+;ベルナドット
+;-------------------------------------------------
+@KOJO_MESSAGE_SEXBATTLE_A_47
+IF PALAM_EXPLORER("ベルナドットの大迷路：ボス撃破")
+	PRINTFORML 「My my, did you come again?」
+	PRINTFORML 「Well now, let me enjoy your generous offer once again♪」
+ELSE
+	PRINTFORML 「My my, now that's rare. A guest, huh.」
+	PRINTFORML 「Whatcha standing there? You came here for me, didn't ya?」
+	
+	CALL ASK_YN
+	IF RESULT == 0
+		PRINTFORML 「Then come over here.」
+		PRINTFORML 「...So young. And so honest.」
+		PRINTFORMW 「Well then... I shall take a good feel of you♪」
+	ELSE
+		PRINTFORML 「Oh my, so you got lost here then. What a poor child.」
+		PRINTFORML 「I'm sorry, but I'm not gonna let such a tasty looking \@ TALENT:PLAYER:オトコ ? boy # prey \@ escape♪」
+		PRINTFORMW 「Well now, I shall thank you for the meal♪」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_B_47
+;夢魔がイかされた
+IF BASE:精力 <= 0
+	IF PALAM_EXPLORER("Ｖインサート")
+		PRINTFORML 「...%MOAN()%♪ I knew it, young \@ TALENT:PLAYER:オトコ ? boys # partners \@ like you are the best♪」
+	ELSEIF PALAM_EXPLORER("Ａインサート")
+		PRINTFORML 「%MOAN("m")%...! %STUTTER("No")% way, you're gonna stick it in there... %MOAN()%, %MOAN("m", 1)%♪」
+	;ここは上が全部書かれていると喋らないが、分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		IF RAND:2 || !HAS_PENIS(PLAYER)
+			PRINTFORML 「%MOAN()%! %SPLIT_R("Oh god...! It's been so long since I've felt so good:Good...! This feels amazing!")%♪」
+		ELSEIF HAS_PENIS(PLAYER)
+			PRINTFORML 「Oh dear... I haven't had... such a lively cock in ages♪」
+		ENDIF
+	ENDIF
+	LOCAL = RAND:6 + RAND:6 + 3
+	LOCAL:1 = RAND:3000 + 1000
+	PRINTFORML After being satisfied, %CALLNAME:TARGET% leaves %CALLNAME:PLAYER% {LOCAL} Demon Drops and hands over %MONEY_C(LOCAL:1)% as a present.
+	I:78 += LOCAL
+	MONEY:6 += LOCAL:1
+;探索側をイかせた
+ELSE
+	IF RAND:2
+		PRINTFORML 「Hoho, this is the secret of everlasting beauty... Now treat me more, supplement♪」
+	ELSEIF PALAM_EXPLORER("Ｖインサート") || PALAM_EXPLORER("Ａインサート")
+		IF RAND:2
+			PRINTFORML 「You can cum inside all you want, so keep entertaining me more... Kukuku♪」
+		ELSE
+			PRINTFORML 「%MOAN("m")%♪ So good... I'm feeling young again♪」
+		ENDIF
+	;ELSEIF PALAM_EXPLORER("パイズリ")
+	;ELSEIF PALAM_EXPLORER("アナル責め")
+	ELSEIF PALAM_EXPLORER("顔面騎乗")
+		IF RAND:2
+			PRINTFORML 「Oh my? Did you prefer this kind of play too?」
+		ELSE
+			PRINTFORML 「%MOAN("m")%♪ How does my matured pussy taste? Amazing, right?♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("手コキ")
+		PRINTFORML 「Kuku, %SPLIT_R("you lost, you lost:it's coming, coming")%♪」
+	ELSEIF PALAM_EXPLORER("フェラチオ")
+		IF HAS_PENIS(PLAYER)
+			PRINTFORML 「%MOAN()%...♪ %MOAN()%... Your bitter taste is getting stuck in my throat... %SPLIT_R("I can't get enough of it♪:It's irresistible, isn't it?")%」
+		ELSE
+			PRINTFORML 「Even wenches like you are no match for me... Still, your juices are delicious♪」
+		ENDIF
+	ELSEIF PALAM_EXPLORER("足コキ")
+		PRINTFORML 「To think %SPLIT_R("you would be satisfied with this:this would satisfy you")%... Kukuku♪」
+	;ELSEIF PALAM_EXPLORER("シックスナイン")
+	;ここは上が全部書かれていると喋らないが、他の分岐のどれかをコメントアウトさせた時などに使用する
+	ELSE
+		PRINTFORML 「Aww, %SPLIT_R("what a waste:such a waste")%... %SPLIT_R("If you're going to cum then you have to say so:You should've said that you're letting it out, I'd drink it at least")%, you know?」
+	ENDIF
+ENDIF
+
+@KOJO_MESSAGE_SEXBATTLE_C_47
+PRINTFORML 「Kuku, this is not an act of pity, I hope.」
+PRINTFORML 「It's true that I was alone for a long time, and I won't mind a company of a stout supplement such as you...」
+PRINTFORML 「It's just that, the convenience. Or mayhap... you like them older? That's fine with me too.」
+
+

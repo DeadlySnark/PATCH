@@ -1,0 +1,494 @@
+@GET_TREASURE_EXPLORER
+#DIM LCOUNT
+VARSET LOCAL
+;アイテムを持てるかチェック
+FOR LCOUNT, 0, 50
+	;SIF LCOUNT <= 29 && ITEM:LCOUNT
+	;	CONTINUE
+	SIF ITEM:LCOUNT + I:LCOUNT < 99
+		LOCAL:LCOUNT = 1
+NEXT
+FOR LCOUNT, 96, 100
+	SIF ITEM:LCOUNT + I:LCOUNT < 99
+		LOCAL:LCOUNT = 1
+NEXT
+FOR LCOUNT, 300, 330
+	SIF ITEM:LCOUNT + I:LCOUNT < 99
+		LOCAL:LCOUNT = 1
+NEXT
+
+SIF ITEM:淫魔の雫 + I:78 < 999
+	LOCAL:78 = 1
+
+
+CALL SET_PALAM_EXPLORER, "財宝期待値", RAND:100
+SELECTCASE PALAM_EXPLORER("アイテムレベル")
+CASE 1
+	IF PALAM_EXPLORER("財宝期待値") >= 61 && PALAM_EXPLORER("財宝期待値") <= 70 && LOCAL:40
+		PRINT Found 
+		CALL PRINT_COLORTEXT, "Jasmin", DEF_COLOR("黄色")
+		PRINTFORML .
+		I:40 += 1
+	ELSEIF PALAM_EXPLORER("財宝期待値") >= 71 && PALAM_EXPLORER("財宝期待値") <= 80 && LOCAL:41
+		PRINT Found 
+		CALL PRINT_COLORTEXT, "Lavender", DEF_COLOR("黄色")
+		PRINTFORML .
+		I:41 += 1
+	ELSEIF PALAM_EXPLORER("財宝期待値") >= 81 && PALAM_EXPLORER("財宝期待値") <= 85 && LOCAL:43
+		PRINT Found 
+		CALL PRINT_COLORTEXT, "Sandalwood", DEF_COLOR("黄色")
+		PRINTFORML .
+		I:43 += 1
+	ELSEIF PALAM_EXPLORER("財宝期待値") >= 86 && PALAM_EXPLORER("財宝期待値") <= 90 && LOCAL:44
+		PRINT Found 
+		CALL PRINT_COLORTEXT, "Rosemary", DEF_COLOR("黄色")
+		PRINTFORML .
+		I:44 += 1
+	ELSEIF PALAM_EXPLORER("財宝期待値") <= 90
+		MONEY:5 = PALAM_EXPLORER("財宝期待値")
+		CALL PRINT_COLORTEXT, MONEY_C(MONEY:5), DEF_COLOR("黄色")
+		PRINTFORML  acquired.
+		MONEY:6 += MONEY:5
+	ELSE
+		CALL TREASURE_BOX_EXPLORER
+	ENDIF
+CASEELSE
+	IF PALAM_EXPLORER("財宝期待値") >= 11 && PALAM_EXPLORER("財宝期待値") <= 90
+		CALL TREASURE_BOX_EXPLORER
+	ELSEIF PALAM_EXPLORER("財宝期待値") >= 91 && PALAM_EXPLORER("財宝期待値") <= 92 && LOCAL:40
+		PRINT Found 
+		CALL PRINT_COLORTEXT, "Jasmin", DEF_COLOR("黄色")
+		PRINTFORML .
+		I:40 += 1
+	ELSEIF PALAM_EXPLORER("財宝期待値") >= 93 && PALAM_EXPLORER("財宝期待値") <= 94 && LOCAL:41
+		PRINT Found 
+		CALL PRINT_COLORTEXT, "Lavender", DEF_COLOR("黄色")
+		PRINTFORML .
+		I:41 += 1
+	ELSEIF PALAM_EXPLORER("財宝期待値") >= 95 && PALAM_EXPLORER("財宝期待値") <= 96 && LOCAL:43
+		PRINT Found 
+		CALL PRINT_COLORTEXT, "Sandalwood", DEF_COLOR("黄色")
+		PRINTFORML .
+		I:43 += 1
+	ELSEIF PALAM_EXPLORER("財宝期待値") >= 97 && LOCAL:44
+		PRINT Found 
+		CALL PRINT_COLORTEXT, "Rosemary", DEF_COLOR("黄色")
+		PRINTFORML .
+		I:44 += 1
+	ELSE
+		MONEY:5 = PALAM_EXPLORER("財宝期待値") + 100
+		CALL PRINT_COLORTEXT, MONEY_C(MONEY:5), DEF_COLOR("黄色")
+		PRINTFORML  acquired.
+		MONEY:6 += MONEY:5
+	ENDIF
+ENDSELECT
+WAIT
+
+;宝箱
+@TREASURE_BOX_EXPLORER
+
+;歌声のトラップ
+IF TEXTS("探索先") == "アンショス海" && RAND:5 == 0
+	PRINTL A strange singing is coming from somewhere. That sounds like...
+
+	SELECTCASE RAND:5
+	CASE 3, 4
+		PRINT A Temptation Song!
+		IF RAND:100 < 80
+			IF RAND:2
+				PRINTFORM ...The fascinating voice drains %CALLNAME:PLAYER%'s VIG away... VIG:
+				LOCALS = {BASE:PLAYER:精力}
+				BASE:PLAYER:精力 -= MAX(9, DICE(4,12))
+				PRINTFORML {BASE:PLAYER:精力}/%LOCALS%
+			ELSE
+				PRINTFORM ...%CALLNAME:PLAYER% couldn't resist the temptation... VIG:
+				LOCALS = {BASE:PLAYER:精力}
+				BASE:PLAYER:精力 -= MAX(5, DICE(5,5))
+				PRINTFORML {BASE:PLAYER:精力}/%LOCALS%
+			ENDIF
+		ELSE
+			PRINTFORML ...However %CALLNAME:PLAYER% shakes the temptation away!
+		ENDIF
+	CASE 1, 2
+		IF RAND:10 == 0 && PALAM_EXPLORER("フロア") < PALAM_EXPLORER("最深フロア")
+			PRINTFORML An Alluring Song! ...The beautiful voice guides %CALLNAME:PLAYER% deeper...
+			CALL SET_PALAM_EXPLORER, "フロア", 1
+			PRINTFORM Commencing the exploration of the {PALAM_EXPLORER("フロア")}Ｆ...
+		ELSE
+			PRINT A Confusion Song!
+			IF RAND:5 >= 2 && PALAM_EXPLORER("フロア") > 1
+				PRINTFORML ...%CALLNAME:PLAYER% gets distracted by the song and has to walk the same path twice!
+				CALL SET_PALAM_EXPLORER, "フロア", -1
+				PRINTFORM Commencing the exploration of the {PALAM_EXPLORER("フロア")}Ｆ once again...
+			ELSEIF RAND:4 == 0 && PALAM_EXPLORER("フロア") > 4
+				PRINTFORML 
+				PRINTFORML ...
+				PRINTFORML ......
+				PRINTFORML %CALLNAME:PLAYER% finds %HIM_HER(PLAYER)%self in front of the Mansion...
+				COUNT:99 = 100
+			ELSE
+				PRINTFORML ...However %CALLNAME:PLAYER% doesn't let %HIM_HER(PLAYER)%self get distracted and continues on...
+			ENDIF
+		ENDIF
+	CASEELSE
+		PRINT A Tranquil Song!
+		IF RAND:2
+			PRINTFORM ...The beautiful voice brings a peace of mind to %CALLNAME:PLAYER%... VIG:
+			LOCALS = {BASE:PLAYER:精力}
+			BASE:PLAYER:精力 = MIN(BASE:PLAYER:精力 + 4, MAXBASE:PLAYER:精力)
+			PRINTFORML {BASE:PLAYER:精力}/%LOCALS%
+		ELSE
+			PRINTFORM ...Magically enchanted song restores some of %CALLNAME:PLAYER%'s VIG... VIG:
+			LOCALS = {BASE:PLAYER:精力}
+			BASE:PLAYER:精力 = MIN(BASE:PLAYER:精力 + 2, MAXBASE:PLAYER:精力)
+			PRINTFORML {BASE:PLAYER:精力}/%LOCALS%
+		ENDIF
+	ENDSELECT
+	RETURN 1
+ENDIF
+
+
+PRINTFORM Treasure Chest has been found. 
+;トラップ発動。通常は20％。罠解除持ちだと５％。誘発持ちだと50％
+IF (ASSI <= 0 && RAND:5 == 0) || (ASSI && RAND:(5 + COND("探索：罠解除", ASSI) - COND("探索：罠誘発", ASSI) ) == 0)
+	PRINT Trapped...
+	IF RAND:5 == 0
+		PRINTFORML ?\nIt's a Leanan Sidhe trap! %CALLNAME:PLAYER% is blessed with a good luck!
+		CALL SET_PALAM_EXPLORER, "幸運", RAND:3 + 2
+		CALL SET_PALAM_EXPLORER, "アイテム発見率", 50
+		CALL SET_PALAM_EXPLORER, "アイテムレベル", 3
+	ELSEIF PALAM_EXPLORER("アイテムレベル") >= 5 && RAND:6 == 0
+		PRINTFORM !\nIt's a Lilith trap! %CALLNAME:PLAYER% feels... absolutely ecstatic right now. VIG:
+		LOCALS = {BASE:PLAYER:精力}
+		BASE:PLAYER:精力 -= MAX(6, DICE(6,10))
+		PRINTFORML {BASE:PLAYER:精力}/%LOCALS%
+	ELSEIF PALAM_EXPLORER("アイテムレベル") >= 3 && RAND:5 == 0
+		PRINTFORML !\nIt's an Escape trap! %CALLNAME:PLAYER% gets transported back a little!
+		COUNT:99 += RAND:5 + 1
+	ELSEIF RAND:4 == 0
+		PRINTFORML !\nIt's a Poison trap! %CALLNAME:PLAYER% becomes really sensitive!
+		IF COND("探索：状態異常無効持ちが居る")
+			PRINTFORML ...But it gets treated right away.
+		ELSE
+			CALL SET_PALAM_EXPLORER, "センシブ", RAND:4 + 3
+		ENDIF
+	ELSEIF RAND:3 == 0
+		PRINTFORML !\nIt's an Arcana trap! %CALLNAME:PLAYER% becomes awfully clumsy!
+		IF COND("探索：状態異常無効持ちが居る")
+			PRINTFORML ...But it gets treated right away.
+		ELSE
+			CALL SET_PALAM_EXPLORER, "クラムジ", RAND:4 + 3
+		ENDIF
+	ELSEIF RAND:2 == 0
+		PRINTFORML !\nIt's a Harem trap! Nightmares will be drawn to you all at once!
+		LOCAL = RAND:4 + 3
+		CALL SET_PALAM_EXPLORER, "ハーレム", LOCAL
+		CALL SET_PALAM_EXPLORER, "遭遇率", LOCAL*10
+	ELSE
+		PRINTFORM !\nIt's a Succubus trap! %CALLNAME:PLAYER% feels... very good right now. VIG:
+		LOCALS = {BASE:PLAYER:精力}
+		BASE:PLAYER:精力 -= MAX(3, DICE(6,4))
+		PRINTFORML {BASE:PLAYER:精力}/%LOCALS%
+	ENDIF
+	RETURN 0
+ENDIF
+
+CALL TREASURE_BOX_EXPLORER_B
+
+
+
+;-------------------------------------------------
+;宝箱の中身決定関数
+;ARGは戦闘戦利品のときのみ、相手のTARGETが代入される
+;-------------------------------------------------
+@TREASURE_BOX_EXPLORER_B, ARG
+#DIM LCOUNT
+VARSET LOCAL
+;アイテムを持てるかチェック
+FOR LCOUNT, 0, 50
+	SIF LCOUNT <= 29 && ITEM:LCOUNT
+		CONTINUE
+	SIF ITEM:LCOUNT + I:LCOUNT < 99
+		LOCAL:LCOUNT = 1
+NEXT
+FOR LCOUNT, 96, 100
+	SIF ITEM:LCOUNT + I:LCOUNT < 99
+		LOCAL:LCOUNT = 1
+NEXT
+FOR LCOUNT, 300, 330
+	SIF ITEM:LCOUNT + I:LCOUNT < 99
+		LOCAL:LCOUNT = 1
+NEXT
+SIF ITEM:淫魔の雫 + I:350 < 999
+	LOCAL:350 = 1
+
+SELECTCASE RAND:5
+CASE 0
+	IF LOCAL:99 && RAND:3
+		PRINTFORM It had 
+		CALL PRINT_COLORTEXT, "Moondrops", DEF_COLOR("黄色")
+		PRINTFORML  inside.
+		IF PLAYER != MASTER && COND("夢魔", PLAYER)
+			PRINTFORM %CALLNAME:PLAYER% consumes it delightfully.
+			CFLAG:PLAYER:2 += 50
+			BASE:PLAYER:精力 = MAXBASE:PLAYER:精力
+		ELSE
+			I:99 += 1
+		ENDIF
+		RETURN 0
+	ELSEIF LOCAL:312 && RANDIF(1, LOCAL:96, LOCAL:311)
+		PRINTFORM It had a 
+		CALL PRINT_COLORTEXT, "Pale Butterfly", DEF_COLOR("黄色")
+		PRINTFORML  inside, which tried to flutter away.
+		I:312 += 1
+		RETURN 0
+	ELSEIF LOCAL:311 && RANDIF(1, LOCAL:96)
+		PRINTFORM It had a 
+		CALL PRINT_COLORTEXT, "Thought-Erasing Flame", DEF_COLOR("黄色")
+		PRINTFORML  inside.
+		I:311 += 1
+		RETURN 0
+	ELSEIF LOCAL:96
+		PRINTFORM It had a 
+		CALL PRINT_COLORTEXT, "Thought-Honing Stone", DEF_COLOR("黄色")
+		PRINTFORML  inside.
+		I:96 += 1
+		RETURN 0
+	ENDIF
+;アクセサリ
+CASE 1
+	PRINTFORM It had an 
+
+	;特殊なアクセサリ
+	IF ARG > 0
+		SELECTCASE CALLNAME:ARG
+		CASE "ヴィーヴル"
+			CALL PRINT_COLORTEXT, "Unidentified Gem", DEF_COLOR("黄色")
+			I:325 += 1
+			PRINTFORML  inside.
+			RETURN 0
+		ENDSELECT
+	ENDIF
+
+	SELECTCASE RAND:9
+	CASE 0 TO 1
+		CALL PRINT_COLORTEXT, "Unidentified Bracelet", DEF_COLOR("黄色")
+		I:320 += 1
+	CASE 2 TO 3
+		CALL PRINT_COLORTEXT, "Unidentified Cuffs", DEF_COLOR("黄色")
+		I:321 += 1
+	CASE 4 TO 5
+		CALL PRINT_COLORTEXT, "Unidentified Gloves", DEF_COLOR("黄色")
+		I:322 += 1
+	CASE 6 TO 7
+		CALL PRINT_COLORTEXT, "Unidentified Belt", DEF_COLOR("黄色")
+		I:323 += 1
+	CASEELSE
+		CALL PRINT_COLORTEXT, "Unidentified Ring", DEF_COLOR("黄色")
+		I:324 += 1
+	ENDSELECT
+	PRINTFORML  inside.
+	RETURN 0
+ENDSELECT
+
+LOCAL:101 = 1
+FOR LOCAL:102, 0, PALAM_EXPLORER("アイテムレベル")+1
+	SIF PALAM_EXPLORER("アイテム発見率") > RAND:100
+		LOCAL:101 += 1
+NEXT
+
+CALL SET_PALAM_EXPLORER, "財宝", RAND:(LOCAL:101)
+
+MONEY:5 = 0
+;ローズニルの詩集
+IF PALAM_EXPLORER("財宝") <= 3 && RAND:(3 + (ITEM:ローズニルの詩集 + I:310 > 0)*7) == 0 && LOCAL:315
+	CALL PRINT_COLORTEXT, "Poetry Anthology", DEF_COLOR("黄色")
+	PRINTFORML  obtained.
+	I:310 += 1
+	RETURN 0
+ENDIF
+
+SELECTCASE PALAM_EXPLORER("財宝")
+;お金
+CASE 0
+	MONEY:5 = PALAM_EXPLORER("財宝期待値")*PALAM_EXPLORER("アイテムレベル")*3 + RAND:100
+;LV1 安いアイテム($500,装備品は半額程度)
+CASE 1
+	IF RAND:10 == 0 && LOCAL:300
+		CALL PRINT_COLORTEXT, "Porcelain Spoon", DEF_COLOR("黄色")
+		I:300 += 1
+	ELSEIF LOCAL:30 && RANDIF(2, LOCAL:40, LOCAL:32)
+		CALL PRINT_COLORTEXT, "Lotion", DEF_COLOR("黄色")
+		I:30 += 1
+	ELSEIF LOCAL:32 && RANDIF(2, LOCAL:40)
+		CALL PRINT_COLORTEXT, "Diuretic", DEF_COLOR("黄色")
+		I:32 += 1
+	ELSEIF LOCAL:40 && RAND:2
+		CALL PRINT_COLORTEXT, "Jasmin", DEF_COLOR("黄色")
+		I:40 += 1
+	ELSE
+		MONEY:5 = 250 + RAND:100
+	ENDIF
+;LV2 安いアイテム2($1000)
+CASE 2
+	IF RAND:5 == 0 && LOCAL:300
+		CALL PRINT_COLORTEXT, "Porcelain Spoon", DEF_COLOR("黄色")
+		I:300 += 1
+	ELSEIF LOCAL:1 && RANDIF(2, LOCAL:41, LOCAL:33, LOCAL:0, LOCAL:10)
+		CALL PRINT_COLORTEXT, "Vibrator", DEF_COLOR("黄色")
+		I:1 += 1
+	ELSEIF LOCAL:10 && RANDIF(2, LOCAL:41, LOCAL:33, LOCAL:0)
+		CALL PRINT_COLORTEXT, "Whip", DEF_COLOR("黄色")
+		I:10 += 1
+	ELSEIF LOCAL:0 && RANDIF(2, LOCAL:41, LOCAL:33)
+		CALL PRINT_COLORTEXT, "Rotor", DEF_COLOR("黄色")
+		I:0 += 1
+	ELSEIF LOCAL:33 && RANDIF(2, LOCAL:41, LOCAL:33)
+		CALL PRINT_COLORTEXT, "Videotape", DEF_COLOR("黄色")
+		I:33 += 1
+	ELSEIF LOCAL:41 && RAND:2
+		CALL PRINT_COLORTEXT, "Lavender", DEF_COLOR("黄色")
+		I:41 += 1
+	ELSE
+		MONEY:5 = 400 + RAND:200
+	ENDIF
+;LV3 程ほどの値段のアイテム($2000)
+CASE 3
+	IF RAND:5 == 0 && LOCAL:301
+		CALL PRINT_COLORTEXT, "Porcelain Teacup", DEF_COLOR("黄色")
+		I:301 += 1
+	ELSEIF LOCAL:9 && RANDIF(2, LOCAL:43, LOCAL:31)
+		CALL PRINT_COLORTEXT, "Gag Set", DEF_COLOR("黄色")
+		I:9 += 1
+	ELSEIF LOCAL:31 && RANDIF(2, LOCAL:43)
+		CALL PRINT_COLORTEXT, "Aphrodisiac", DEF_COLOR("黄色")
+		I:31 += 1
+	ELSEIF LOCAL:43 && RAND:2
+		CALL PRINT_COLORTEXT, "Sandalwood", DEF_COLOR("黄色")
+		I:43 += 1
+	ELSE
+		MONEY:5 = 800 + RAND:500
+	ENDIF
+;LV4 程ほどの値段のアイテム2($4000)
+CASE 4
+	IF RAND:10 == 0 && LOCAL:305
+		CALL PRINT_COLORTEXT, "Silver Spoon", DEF_COLOR("黄色")
+		I:302 += 1
+	ELSEIF RAND:5 == 0 && LOCAL:301
+		CALL PRINT_COLORTEXT, "Porcelain Teacup", DEF_COLOR("黄色")
+		I:301 += 1
+	ELSEIF LOCAL:4 && RANDIF(2, LOCAL:34, LOCAL:44, LOCAL:17)
+		CALL PRINT_COLORTEXT, "Strap-on", DEF_COLOR("黄色")
+		I:4 += 1
+	ELSEIF LOCAL:17 && RANDIF(2, LOCAL:34, LOCAL:44)
+		CALL PRINT_COLORTEXT, "Milker", DEF_COLOR("黄色")
+		I:17 += 1
+	ELSEIF LOCAL:44 && RAND:2
+		CALL PRINT_COLORTEXT, "Rosemary", DEF_COLOR("黄色")
+		I:44 += 1
+	ELSEIF LOCAL:34 && RAND:2
+		CALL PRINT_COLORTEXT, "Sedative", DEF_COLOR("黄色")
+		I:34 += 1
+	ELSE
+		MONEY:5 = 1700 + RAND:1000
+	ENDIF
+;LV5 程ほどの値段のアイテム3($6000)
+CASE 5
+	IF RAND:5 == 0 && LOCAL:305
+		CALL PRINT_COLORTEXT, "Silver Spoon", DEF_COLOR("黄色")
+		I:302 += 1
+	ELSEIF LOCAL:8 && RANDIF(2, LOCAL:42, LOCAL:14, LOCAL:22)
+		CALL PRINT_COLORTEXT, "Nipple Caps", DEF_COLOR("黄色")
+		I:8 += 1
+	ELSEIF LOCAL:22 && RANDIF(2, LOCAL:42, LOCAL:14)
+		CALL PRINT_COLORTEXT, "Air Pump", DEF_COLOR("黄色")
+		I:22 += 1
+	ELSEIF LOCAL:14 && RANDIF(2, LOCAL:42)
+		CALL PRINT_COLORTEXT, "Bondage Tools", DEF_COLOR("黄色")
+		I:14 += 1
+	ELSEIF LOCAL:42 && RAND:2
+		CALL PRINT_COLORTEXT, "Musk", DEF_COLOR("黄色")
+		I:42 += 1
+	ELSE
+		MONEY:5 = 2500 + RAND:1000
+	ENDIF
+;LV6 高価なアイテム($8000)
+CASE 6
+	IF RAND:10 == 0 && LOCAL:306
+		CALL PRINT_COLORTEXT, "Silver Teacup", DEF_COLOR("黄色")
+		I:303 += 1
+	ELSEIF LOCAL:5 && RANDIF(2, LOCAL:49, LOCAL:12)
+		CALL PRINT_COLORTEXT, "Blindfold", DEF_COLOR("黄色")
+		I:5 += 1
+	ELSEIF LOCAL:12 && RANDIF(2, LOCAL:49)
+		CALL PRINT_COLORTEXT, "Onahole", DEF_COLOR("黄色")
+		I:12 += 1
+	ELSEIF LOCAL:49 && RAND:2
+		CALL PRINT_COLORTEXT, "Frankincense", DEF_COLOR("黄色")
+		I:49 += 1
+	ELSE
+		MONEY:5 = 3500 + RAND:1000
+	ENDIF
+;LV7 高価なアイテム2($10000)
+CASE 7
+	IF RAND:5 == 0 && LOCAL:306
+		CALL PRINT_COLORTEXT, "Silver Teacup", DEF_COLOR("黄色")
+		I:303 += 1
+	ELSEIF LOCAL:2 && RANDIF(2, LOCAL:49, LOCAL:26, LOCAL:25, LOCAL:18, LOCAL:13, LOCAL:3)
+		CALL PRINT_COLORTEXT, "Electric Massager", DEF_COLOR("黄色")
+		I:2 += 1
+	ELSEIF LOCAL:3 && RANDIF(2, LOCAL:49, LOCAL:26, LOCAL:25, LOCAL:18, LOCAL:13)
+		CALL PRINT_COLORTEXT, "Anal Vibrator", DEF_COLOR("黄色")
+		I:3 += 1
+	ELSEIF LOCAL:13 && RANDIF(2, LOCAL:49, LOCAL:26, LOCAL:25, LOCAL:18)
+		CALL PRINT_COLORTEXT, "Play Mat", DEF_COLOR("黄色")
+		I:13 += 1
+	ELSEIF LOCAL:18 && RANDIF(2, LOCAL:49, LOCAL:26, LOCAL:25)
+		CALL PRINT_COLORTEXT, "Collar", DEF_COLOR("黄色")
+		I:18 += 1
+	ELSEIF LOCAL:25 && RANDIF(2, LOCAL:49, LOCAL:26)
+		CALL PRINT_COLORTEXT, "Anal Beads", DEF_COLOR("黄色")
+		I:25 += 1
+	ELSEIF LOCAL:26 && RANDIF(2, LOCAL:49)
+		CALL PRINT_COLORTEXT, "Thermos", DEF_COLOR("黄色")
+		I:26 += 1
+	ELSEIF LOCAL:49 && RAND:2
+		CALL PRINT_COLORTEXT, "Frankincense", DEF_COLOR("黄色")
+		I:49 += 1
+	ELSE
+		MONEY:5 = 4500 + RAND:1000
+	ENDIF
+;LV8 レアアイテム($16000)
+CASEELSE
+	IF RAND:10 == 0 && LOCAL:311
+		CALL PRINT_COLORTEXT, "Mythril Teacup", DEF_COLOR("黄色")
+		I:305 += 1
+	ELSEIF RAND:5 == 0 && LOCAL:310
+		CALL PRINT_COLORTEXT, "Mythril Spoon", DEF_COLOR("黄色")
+		I:304 += 1
+	ELSEIF CONFIG("妊娠パッチ") && LOCAL:35 && RANDIF(2, LOCAL:49, LOCAL:6, LOCAL:15, LOCAL:23)
+		CALL PRINT_COLORTEXT, "Fertility Drug", DEF_COLOR("黄色")
+		I:35 += 1
+	ELSEIF LOCAL:23 && RANDIF(2, LOCAL:49, LOCAL:6, LOCAL:15)
+		CALL PRINT_COLORTEXT, "Stretching Balloon", DEF_COLOR("黄色")
+		I:23 += 1
+	ELSEIF LOCAL:15 && RANDIF(2, LOCAL:49, LOCAL:6)
+		CALL PRINT_COLORTEXT, "Enema&Plug", DEF_COLOR("黄色")
+		I:15 += 1
+	ELSEIF LOCAL:6 && RANDIF(2, LOCAL:49)
+		CALL PRINT_COLORTEXT, "Video Camera", DEF_COLOR("黄色")
+		I:6 += 1
+	ELSEIF LOCAL:49 && RAND:2
+		CALL PRINT_COLORTEXT, "Frankincense", DEF_COLOR("黄色")
+		I:49 += 1
+	ELSE
+		MONEY:5 = 7500 + RAND:1000
+	ENDIF
+ENDSELECT
+IF MONEY:5
+	CALL PRINT_COLORTEXT, MONEY_C(MONEY:5), DEF_COLOR("黄色")
+	PRINTFORML  acquired.
+	MONEY:6 += MONEY:5
+ELSE
+	PRINTFORML  obtained.
+ENDIF
