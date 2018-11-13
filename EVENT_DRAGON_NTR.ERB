@@ -1,0 +1,586 @@
+;--------------------------------------------------------
+;ドラ姦から発生する寝取られイベントは全てここで管理する
+;CFLAG:471	調教毎の進行度(-30～30)。正の値なら終了時に寝取られイベントが進行し、負の値なら寝取り返しが進行する
+;CFLAG:472	寝取られポイントの総計。この値が高いほどドラゴンに心奪われている
+;MARK:竜姦刻印	寝取られの具体的な進行度を示す。一度これを取得した後にドラゴンから寝取り返すとMARK:竜姦克服刻印を取得する
+;--------------------------------------------------------
+
+;TODO: Needs proofing
+
+@EVENT_DRAGON_NTR, ARGS
+#DIM MEMO_LINECOUNT
+#DIMS DickAdj
+
+DickAdj = %SPLIT_R("big:overwhelming:huge:enormous:giant:magnificent:gorgeous:admirable:brutal")%
+
+SIF COND("ドラ姦寝取られ") == 0
+	RETURN 0
+
+SELECTCASE ARGS
+CASE "言葉での寝取り返し"
+	SIF COND("甘い言葉：成功")
+		CFLAG:471 = LIMIT(CFLAG:471 - 8, -30, 30)
+	SIF COND("褒める：成功")
+		CFLAG:471 = LIMIT(CFLAG:471 - 5, -30, 30)
+
+;寝取られ進行度の最終補正
+CASE "寝取られ判定"
+	;寝取られ方向
+	IF CFLAG:471 > 0
+		SELECTCASE MARK:竜姦刻印
+		CASE 1
+			CFLAG:471 += 3 + RAND:2
+		CASE 2
+			CFLAG:471 += 8 + RAND:5
+		ENDSELECT
+
+		;惚れっぽい
+		SIF TALENT:惚れっぽい
+			CFLAG:471 += RAND:10
+		;妊娠中の子供の父親がドラゴン
+		SIF COND("精液の優勢") == -3
+			CFLAG:471 += 10 + RAND:10
+		;寝取られた（寝取り返した）経験があると…
+		SIF MARK:竜姦克服刻印
+			CFLAG:471 += 10 + RAND:10
+	;寝取られ返し方向
+	ELSE
+		SIF CFLAG:471 < 0
+			CFLAG:471 -= 5
+		;惚れっぽい
+		SIF TALENT:惚れっぽい
+			CFLAG:471 -= RAND:10
+		;妊娠中の子供の父親がMASTER
+		SIF COND("精液の優勢") == MASTER
+			CFLAG:471 -= 10 + RAND:10
+		;寝取られた（寝取り返した）経験があると…
+		SIF MARK:竜姦克服刻印
+			CFLAG:471 -= 10 + RAND:10
+	ENDIF
+
+	;寝取られ判定値の変動
+	;ドラ姦寝取られ進行度は0～299までしか取らない
+	CFLAG:472 = LIMIT(CFLAG:472 + CFLAG:471, 0, 299)
+	;調教毎の寝取られ進行度は用済みなのでリセット
+	CFLAG:471 = 0
+
+	;この条件だと何もおきない
+	SIF MARK:竜姦刻印 == 0 && CFLAG:472 < 70
+		RETURN 0
+
+	DRAWLINE
+	SETCOLOR DEF_COLOR("イエロー")
+
+	MEMO_LINECOUNT = LINECOUNT
+
+	;刻印の変化（CFLAG:472の変化と現在の竜姦刻印に依存）
+	SELECTCASE CFLAG:472
+	CASE IS >= 200
+		;寝取られが第二段階に進行
+		IF MARK:竜姦刻印 == 1
+			IF MARK:竜姦克服刻印
+				IF RAND:2 == 0
+					PRINTFORMW %CALLNAME:TARGET%'s heart yields to the overwhelming pleasure that the intimacy with the Dragon would bring,\n%SPLIT_R("forgetting about:losing:neglecting")% the \@ TALENT:恋慕 ? already existing%" "%#\@%SPLIT_R("affection:love:passion")% for %CALLNAME:MASTER%...!
+				ELSE
+					PRINTFORMW %CALLNAME:TARGET% recalls the %SPLIT_R("feelings:passion")% for the Dragon,\n%SPLIT_R("forgetting about:losing:neglecting")% the \@ TALENT:恋慕 ? already existing%" "%#\@%SPLIT_R("affection:love")% for %CALLNAME:MASTER%...!
+				ENDIF
+			ELSE
+				PRINTFORMW %CALLNAME:TARGET% %SPLIT_R("forgets about:loses:neglects")% the \@ TALENT:恋慕 ? already existing%" "%#\@%SPLIT_R("affection:love")% for %CALLNAME:MASTER%, submitting %HIS_HER(TARGET)% body and soul to the Dragon...!
+			ENDIF
+			SIF TALENT:恋慕 || TALENT:相思相愛
+				PRINTFORMW %CALLNAME:TARGET% has lost the sight of %HIS_HER(TARGET)% Love and the tenderness of Mutual Love...!
+			PRINTFORMW Furthermore, %HIS_HER(TARGET)% heart fills with scorn and regret towards %CALLNAME:MASTER%,\nacquiring Hate Mark LV3, losing Obedience and becoming Defiant and Reluctant...!
+			
+			TALENT:恋慕 = 0
+			TALENT:相思相愛 = 0
+			MARK:反発刻印 = 3
+			ABL:従順 = 0
+			TALENT:反抗的 = 1
+			TALENT:抵抗 = 1
+			;TARGET以外に相思相愛の相手がいない
+			SIF FIND_COND("相思相愛") == 0
+				TALENT:MASTER:相思相愛 = 0
+
+			;original uses locals here, not sure why because it seemingly doesn't return them (moved them up under printw)
+			LOCALS:1 = %CALLNAME:TARGET%は『恋慕』、『相思相愛』を失った…！
+			LOCALS:2 = さらに反発刻印がLV3に、従順がLV0になり、『反抗的』と『抵抗』を得た…！
+
+			JUEL:反感 += JUEL:恭順 + JUEL:屈服 + RAND:10000 + RAND:5000
+
+			MARK:竜姦刻印 = 2
+		ENDIF
+	CASE IS >= 100
+		;寝取られが第一段階に進行
+		IF MARK:竜姦刻印 == 0
+			IF MARK:竜姦克服刻印
+				PRINTFORMW %CALLNAME:TARGET%'s %BODYPART("Body", TARGET)% became %SPLIT_R("hooked on:addicted to:obsessed with:submitted to:unable to defy")% Dragon's %DickAdj% dick once again!
+			ELSE
+				PRINTFORMW %CALLNAME:TARGET%'s %BODYPART("Body", TARGET)% is becoming %SPLIT_R("infatuated:bewitched:captivated:spellbound")% with Dragon's %DickAdj% dick!
+			ENDIF
+
+			IF RAND:2 == 0
+				PRINTFORMW %HIS_HER(TARGET,1)% body is now completely %SPLIT_R("acclimatized to:adapted to:remade for")% Dragon's %DickAdj% manhood!
+			ELSE
+				PRINTFORMW %HIS_HER(TARGET,1)% body got %SPLIT_R("permeated:familiarized:ingrained")% with the taste of Dragon's pleasure!
+			ENDIF
+
+			SIF TALENT:淫乱 == 0
+				PRINTFORMW %CALLNAME:TARGET% has became a [Nympho]!
+
+			TALENT:淫乱 = 1
+			MARK:竜姦刻印 = 1
+		ENDIF
+	CASE 0
+		;寝取り返し達成
+		IF MARK:竜姦刻印
+			PRINTFORMW %CALLNAME:TARGET% has come back to %HIS_HER(TARGET)% senses, regaining Love for %CALLNAME:MASTER% back!
+			PRINTFORMW %CALLNAME:TARGET% rekindled %HIS_HER(TARGET)% Love and Mutual feelings once again!
+			PRINTFORMW Furthermore, %HIS_HER(TARGET)% heart is now free of ambivalence, which sets\n%HIM_HER(TARGET)% free of any Hate Marks, as well as Defiant and Reluctant feelings!
+
+			TALENT:恋慕 = 1
+			TALENT:相思相愛 = 1
+			MARK:反発刻印 = 0
+			ABL:従順 = 3
+			JUEL:反感 = 0
+			TALENT:反抗的 = 0
+			TALENT:抵抗 = 0
+			TALENT:MASTER:相思相愛 = 1
+
+			MARK:竜姦刻印 = 0
+			MARK:竜姦克服刻印 = 1
+		ENDIF
+	ENDSELECT
+
+	IF LINECOUNT > MEMO_LINECOUNT
+		RESETCOLOR
+		DRAWLINE
+		RETURN 1
+	ENDIF
+
+	;寝取られ進行描写
+	SELECTCASE MARK:竜姦刻印
+	CASE 2
+		SELECTCASE CFLAG:472
+		;寝取られ進行度カンスト
+		CASE IS >= 299
+			PRINTFORM %CALLNAME:TARGET% did not get separated from the Dragon even as the training was over, 
+			IF RAND:5 == 0
+				PRINTFORMW uttering words of love over and over again...
+			ELSEIF RAND:4 == 0
+				PRINTFORMW exchanging a very passionate kiss with his big mouth...
+			ELSEIF RAND:3 == 0
+				PRINTFORMW stroking his %DickAdj% %FSYN("penis")% %SPLIT_R("lovingly:affectionately")%...
+			ELSEIF RAND:2 == 0
+				PRINTFORMW \ngulping the precum oozing from his %DickAdj% %FSYN("penis")% with a great joy...
+			ELSE
+				;what the fuck is this locals?
+				PRINTFORMW %LOCALS%deliciously sucking on his %DickAdj% %FSYN("penis")%...
+			ENDIF
+		;寝取られ中
+		CASE IS >= 200
+			IF RAND:3 == 0
+				PRINTFORMW Only the sight of Dragon's %DickAdj% %FSYN("penis")% was reflected in %CALLNAME:TARGET%'s eyes...
+			ELSEIF RAND:2 == 0
+				PRINTFORMW Even though %CALLNAME:MASTER% was in the immediate vicinity, %CALLNAME:TARGET% chooses to cling to Dragon's %DickAdj% %FSYN("penis")%...
+			ELSE
+				PRINTFORMW %CALLNAME:TARGET% disregards %CALLNAME:MASTER% who was standing right in front of %HIM_HER(TARGET)% and continues to serve the Dragon...
+			ENDIF
+		;寝取られ返し中
+		CASE IS >= 100
+			IF RAND:2 == 0
+				PRINTFORMW It seemed like %CALLNAME:TARGET% still wanted to stay with the Dragon,\nbut %CALLNAME:MASTER%'s firm order caused %HIM_HER(TARGET)% to snap out of it and leave reluctantly...
+			ELSE
+				PRINTFORMW Although %CALLNAME:TARGET% sees %CALLNAME:MASTER% like an obstacle, %HE_SHE(TARGET)% seems to recognize %HIM_HER(MASTER)% as a Master for the time being...
+			ENDIF
+		;寝取られ返し寸前
+		CASEELSE
+			IF RAND:2 == 0
+				PRINTFORMW %CALLNAME:TARGET%'s pupils are wavering between the Dragon and %CALLNAME:MASTER%...!
+			ELSE
+				PRINTFORMW %CALLNAME:TARGET% feels hesitant to cuddle up with the Dragon, getting bothered by the look %CALLNAME:MASTER% gives %HIM_HER(TARGET)%...
+			ENDIF
+		ENDSELECT
+	CASE 1
+		SELECTCASE CFLAG:472
+		;第二段階へ進行直前
+		CASE IS >= 170
+			IF RAND:2 == 0
+				PRINTFORMW %CALLNAME:TARGET% is entranced by the strong and rich male odor as %HE_SHE(TARGET)% joyfully rubs %HIS_HER(TARGET)% cheeks against Dragon's %DickAdj% %FSYN("penis")%...
+			ELSEIF RAND:2 == 0
+				PRINTFORMW %CALLNAME:TARGET% gently strokes Dragon's %DickAdj% %FSYN("penis")% and looks at it somewhat %SPLIT_R("passionately:affectionately")%...
+			ELSE
+				PRINTFORMW %CALLNAME:TARGET% ignores %HIS_HER(TARGET)% Master %CALLNAME:MASTER% for the Dragon's %DickAdj% %FSYN("penis")%, thoroughly cleaning and caressing it with %HIS_HER(TARGET)% tongue...
+			ENDIF
+		;寝取られ中
+		CASE IS >= 100
+			IF RAND:3 == 0
+				PRINTFORMW %CALLNAME:TARGET% is absorbed in licking Dragon's %DickAdj% %FSYN("penis")% and even %FSYN("start:s")% masturbating %FSYN("reflex:ly")%...
+			ELSEIF RAND:2 == 0
+				PRINTFORMW Waiting for the chance, %CALLNAME:TARGET% secretly kisses Dragon's %DickAdj% %FSYN("penis")% while %CALLNAME:MASTER% is not looking...
+			ELSE
+				PRINTFORMW %CALLNAME:TARGET% is %FSYN("stare:ing")% at the Dragon's %DickAdj% %FSYN("penis")% %SPLIT_R("greedily:wistfully:yearningly")%...
+			ENDIF
+		;寝取られ返し中
+		CASE IS >= 50
+			PRINTFORMW Although %CALLNAME:TARGET% still seems to be bothered by the Dragon's %DickAdj% %FSYN("penis")%, %HE_SHE(TARGET)% decides to prioritize %CALLNAME:MASTER%'s body cleaning for now...
+		;寝取られ返し寸前
+		CASEELSE
+			PRINTFORMW Seems like %CALLNAME:TARGET% is getting infatuated with %CALLNAME:MASTER% once again,\nstealing glances at %HIM_HER(MASTER)% occasionally while blushing slightly...
+		ENDSELECT
+	CASE 0
+		;寝取られ返し経験済み（非寝取られ状態）
+		IF MARK:竜姦克服刻印
+			;寝取られ寸前
+			SIF CFLAG:472 >= 70
+				PRINTFORMW %CALLNAME:TARGET% is likely to yield to the captivation of the Dragon's %DickAdj% %FSYN("penis")% once again...
+		;寝取られ返し未経験（非寝取られ状態）
+		ELSE
+			;寝取られ寸前
+			SIF CFLAG:472 >= 70
+				PRINTFORMW Seems like %CALLNAME:TARGET% is getting infatuated with the Dragon's %DickAdj% %FSYN("penis")%, %FSYN("stare:ing")% at it with %SPLIT_R("greedy:wistful:yearning")% eyes...
+		ENDIF
+	ENDSELECT
+
+	RESETCOLOR
+	DRAWLINE
+
+CASE "射精"
+	SIF SHOOT("Ｖ中出し") == 0 && SHOOT("ドラゴン") == 0
+		RETURN 0
+
+	SELECTCASE SELECTCOM
+	CASE 304, 305
+		SIF TEQUIP:押し倒し
+			RETURN 0
+	CASEELSE
+		SIF PLAYER != MASTER
+			RETURN 0
+	ENDSELECT
+
+	LOCAL = 0
+	;素質で修正
+	LOCAL += TALENT:淫乱*5 + TALENT:快感に素直*3 + TALENT:マゾ*5
+	;媚薬や排卵誘発剤
+	LOCAL += TEQUIP:媚薬/100 + TEQUIP:排卵誘発剤
+	SIF COND("発情期")
+		LOCAL += 3
+	;感度
+	IF SELECTCOM == 304
+		LOCAL += RAND:(ABL:Ｖ感覚 + 1) + COND("絶頂：ドラゴン")*5
+	ELSEIF SELECTCOM == 305
+		LOCAL += RAND:(ABL:Ａ感覚 + 1) + COND("絶頂：ドラゴン")*5
+	ELSE
+		LOCAL -= LOCAL + COND("絶頂", MASTER)
+	ENDIF
+
+	;値は-30～30
+	CFLAG:471 = LIMIT(CFLAG:471 + LOCAL, -30, 30)
+
+	;アナルドラ姦
+	IF SELECTCOM == 305
+		SELECTCASE MARK:竜姦刻印
+		;第二段階
+		CASE 2
+			PRINTFORM %CALLNAME:TARGET% is %SPLIT_R("intoxicated with:filled with:infatuated with:absorbed in")% the pleasure of being %SPLIT_R("conquered:subdued:overpowered:cummed inside")% 
+			IF RAND:3 == 0
+				PRINTFORM after getting %FSYN("fill:ed")% with overwhelming amount of %SEMEN()% causing %HIS_HER(TARGET)% %BODYPART("Belly", TARGET)% to swell
+			ELSEIF RAND:2 == 0
+				PRINTFORM after having %FSYN("fill:ed")% with several liters worth of %SEMEN()% anally
+			ELSE
+				PRINTFORM after getting %FSYN("fill:ed")% with enough %SEMEN()% to %SPLIT_R("impregnate:fertilize")% %HIS_HER(TARGET)% %FSYN("anus")%
+			ENDIF
+			PRINTFORMW ...
+		;第一段階
+		CASE 1
+			IF RAND:3 == 0
+				PRINTFORM Feeling the %SPLIT_R("scorching:unbearable:passionate")% %SPLIT_R("hotness:warmth")% of %SEMEN()% inside %HIS_HER(TARGET)% %FSYN("anus")%, 
+			ELSEIF RAND:2 == 0
+				PRINTFORM Feeling how the absurd amount of %SEMEN()% rapidly makes %HIS_HER(TARGET)% %BODYPART("Belly", TARGET)% heavy, 
+			ELSE
+				PRINTFORM Feeling how the %SEMEN()% forcibly makes its way through %HIS_HER(TARGET)% %FSYN("anus")%, 
+			ENDIF
+			PRINTFORM %CALLNAME:TARGET% 
+			IF RAND:2 == 0
+				PRINTFORM gets overjoyed with the anal pleasure, twisting %HIS_HER(TARGET)% back ecstatically...
+			ELSE
+				PRINTFORM blissfully narrows %HIS_HER(TARGET)%, savoring the %FSYN("orgasm")%...
+			ENDIF
+		;寝取られ状態でない
+		CASE 0
+			PRINTFORMW %CALLNAME:TARGET% is having a hard time enduring the pressure after having %HIS_HER(TARGET)% %FSYN("anus")% filled to the brim with massive amount of %SEMEN()%...
+		ENDSELECT
+	;ドラ姦
+	ELSEIF SELECTCOM == 304
+		SELECTCASE MARK:竜姦刻印
+		;第二段階
+		CASE 2
+			IF RAND:2 == 0
+				PRINTFORML %CALLNAME:TARGET% is having a smile that can be described none other than %SPLIT_R("malevolent:malicious:vicious:spiteful")%,
+			ELSE
+				PRINTFORML %CALLNAME:TARGET% is in a such lewdly enraptured state that even her Master haven't seen yet,
+			ENDIF
+			IF RAND:2 == 0
+				PRINTFORMW showing off %SPLIT_R("the passionate sex:her love affair:the intimacy full of passion")% to %CALLNAME:MASTER%...!
+			ELSE
+				PRINTFORMW pleading for the Dragon to impregnate her right in front of %CALLNAME:MASTER%...!
+			ENDIF
+		;第一段階
+		CASE 1
+			PRINTFORM %CALLNAME:TARGET% is 
+			IF RAND:2 == 0
+				PRINTFORML trembling with the great joy of being %SPLIT_R("conquered:subdued:overpowered:cummed inside")% 
+			ELSE
+				PRINTFORML %SPLIT_R("intoxicated with:filled with:infatuated with:absorbed in")% the pleasure of being a woman 
+			ENDIF
+			IF RAND:2 == 0
+				PRINTFORM after having her womb %FSYN("fill:ed")% %SPLIT_R("to the brim with:with lots of:full of")% %SEMEN()%
+			ELSE
+				PRINTFORM after feeling how %SEMEN()% bursts inside the depths of her womb, painting its walls with warmth
+			ENDIF
+			PRINTFORMW ...
+		;寝取られ状態でない
+		CASE 0
+			PRINTFORMW %CALLNAME:TARGET% winces painfully from having her womb filled with the bursting amount of %SEMEN(-1,1)%...
+		ENDSELECT
+	ELSE
+		SELECTCASE MARK:竜姦刻印
+		;第二段階
+		CASE 2
+			PRINTFORML %CALLNAME:TARGET% is apparently very much grossed out by being doused with %CALLNAME:MASTER%'s %SEMEN(MASTER,1)%, 
+			IF RAND:3 == 0
+				PRINTFORMW putting up a fierce resistance, kicking and struggling...
+			ELSEIF RAND:2 == 0
+				PRINTFORMW openly %SPLIT_R("insulting:ridiculing:verbally abusing:hurling abuses at")% %HIM_HER(MASTER)%...
+			ELSE
+				PRINTFORMW starting to cry out loud...
+			ENDIF
+		;第一段階
+		CASE 1
+			PRINTFORML Although %CALLNAME:TARGET% certainly feels the pleasure of being %SPLIT_R("creampied:cummed inside")%, 
+			IF RAND:3 == 0
+				PRINTFORMW it seems to be wildly insufficient to quench the thirst of her womb...
+			ELSEIF RAND:2 == 0
+				PRINTFORMW she seems to be somewhat unsatisfied...
+			ELSE
+				PRINTFORMW she doesn't seem to be happy with the size of %CALLNAME:MASTER%'s %FSYN("penis")%...
+			ENDIF
+		;寝取られ状態でない
+		CASE 0
+			IF RAND:3 == 0 && COND("妊娠可能")
+				PRINTFORMW After receiving every single drop of %CALLNAME:MASTER%'s %SEMEN(MASTER,1)% inside her womb,\n%CALLNAME:TARGET% showers %HIM_HER(MASTER)% with the words of love, urging her Master to breed her some more...
+			ELSEIF RAND:2 == 0
+				PRINTFORMW As %CALLNAME:MASTER% finishes pouring %HIS_HER(MASTER)% love inside of %CALLNAME:TARGET%,\nshe closes her eyes in ecstasy, relishing the pleasure...
+			ELSE
+				PRINTFORMW After getting %FSYN("fill:ed")% with plenty of %CALLNAME:MASTER%'s %SEMEN(MASTER,1)%,\n%CALLNAME:TARGET% sways her hips left and right, asking for seconds...
+			ENDIF
+		ENDSELECT
+	ENDIF
+
+CASE "日常"
+	;寝取られていないならイベントは起きない
+	SIF MARK:竜姦刻印 == 0
+		RETURN 0
+
+	;ドラ姦寝取られ度進行
+	CFLAG:472 += 5
+
+	;セリフは以下の４つのタイミング
+	;"ドラ姦寝取られ：日常挨拶"
+	;"ドラ姦寝取られ：日常お楽しみ中"
+	;"ドラ姦寝取られ：日常おねだり"
+	;"ドラ姦寝取られ：日常夢中"
+
+	CALL SELF_KOJO, "ドラ姦寝取られ：日常挨拶"
+
+	;ドラ姦寝取られ：第二段階（寝取り返し中でない）
+	;愛情系（寝取られ度が高いほどこちらになる）
+	IF MARK:竜姦刻印 == 2 && CFLAG:472 >= 250
+		IF COND("夜") && ABL:露出癖 >= 3
+			PRINTFORMW %CALLNAME:TARGET% sneaks out of %HIS_HER(TARGET)% room in the middle of the night, %TEXTR("seemingly to spend the rest of the night with the Dragon together", "disappearing with the Dragon in the night city", "enjoying the secret date with the Dragon outside")%...
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORM %CALLNAME:TARGET% decides to do something else behind %CALLNAME:MASTER%'s back 
+			ELSE
+				PRINTFORM %CALLNAME:TARGET% couldn't suppress %HIS_HER(TARGET)% raging emotions and went out 
+			ENDIF
+			PRINTFORMW %SPLIT_R("seemingly:perhaps:possibly:in order")% to %TEXTR("stay with the Dragon together", "have a date with the Dragon", "meet with the Dragon secretly")%...
+		ENDIF
+	;淫乱系
+	ELSEIF MARK:竜姦刻印 == 2 && CFLAG:472 >= 200
+		PRINTFORM %TEXTR("Not being satisfied with the masturbation alone", "Unable to endure the thirst of her womb any longer", "Losing control over her heated up body")%, %CALLNAME:TARGET% 
+		IF COND("夜") && ABL:露出癖 >= 3
+			PRINTFORMW went out %TEXTR("to spend the night with the Dragon together", "to have sex with the Dragon many times over", "with the Dragon together on the nightly streets")%...
+		ELSE
+			PRINTFORMW decided to meet with the Dragon to %TEXTR(@"%SPLIT_R("make love:have sex")% with him", @"have her holes thoroughly %FVERB("ed")%", "savor the taste of his dick once again")%...
+		ENDIF
+	;ドラ姦寝取られ：第一段階（寝取り返し中でない）
+	ELSEIF MARK:竜姦刻印 == 1 && CFLAG:472 >= 100
+		PRINTFORM %TEXTR("Not being satisfied with the masturbation alone", "Unable to endure the thirst of her womb any longer", "Losing control over her heated up body")%, %CALLNAME:TARGET% 
+		IF COND("夜") && ABL:露出癖 >= 3
+			PRINTFORMW went out %TEXTR("to have sex with the Dragon many times over", "to spend the exciting night with the Dragon outside")%...
+		ELSE
+			PRINTFORMW decided to meet with the Dragon to %TEXTR("savor the taste of his dick once again", @"have her holes thoroughly %FVERB("ed")%")%...
+		ENDIF
+	;寝取り返し進行中
+	ELSEIF MARK:竜姦刻印
+		IF RAND:3 == 0
+			PRINTFORM Although %CALLNAME:TARGET% was about to knock on %CALLNAME:MASTER%'s door room, being too hesitant to go with it for a while, 
+		ELSEIF RAND:2 == 0
+			PRINTFORM Although %CALLNAME:TARGET% was telling %HIM_HER(TARGET)%self to stop doing this, 
+		ELSE
+			PRINTFORM Although %CALLNAME:TARGET% felt being tormented by the heartaching guilt, 
+		ENDIF
+		PRINTFORM %TEXTR("but in the end", @"but being unable to resist the sensual urges assailing %HIS_HER(TARGET)% body", "but being unable to forget the taste of the Dragon's splendid meat spear")%\n%HE_SHE(TARGET)% 
+		IF COND("夜") && ABL:露出癖 >= 3
+			PRINTFORMW ended up %TEXTR("going out for a night walk with the Dragon", @"letting the Dragon have his way with %HIM_HER(TARGET)% in the silent backyard")%...
+		ELSE
+			PRINTFORMW ended up meeting with the Dragon to %TEXTR("savor the taste of his dick once again", @"have her holes thoroughly %FVERB("ed")%")%...
+		ENDIF
+	ENDIF
+
+	PRINTFORML 
+
+	;両穴ルート
+	IF EXP:Ｖ竜姦経験 && EXP:Ａ竜姦経験 && RAND:3
+		;ドラ姦寝取られ度がさらに進行
+		CFLAG:472 += 5
+
+		IF MARK:竜姦刻印 == 2 && CFLAG:472 >= 200
+			PRINTFORMW %CALLNAME:TARGET% %TEXTR(@"%SPLIT_R("utterly:completely")% %SPLIT_R("resigns:submits")% %HIM_HER(TARGET)%self to the Dragon %FSYN("penis")%", @"is %SPLIT_R("spellbound:infatuated:obsessed")% with Dragon's %DickAdj% %FSYN("penis")%", @"accepts Dragon's %DickAdj% %FSYN("penis")%")%, %TEXTR(@"having both of her holes thoroughly %FVERB("ed")% while moaning like an animal", "getting plenty of love for both of her holes from it", @"having both of her holes %FSYN("fill:ed")% with tremendously huge amount of Dragon %SEMEN(-1,1)%")%...
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常ＶＡお楽しみ中"
+
+			PRINTFORMW Every time Dragon %FSYN("thrust:s")% his %DickAdj% %FSYN("penis")% with a deep grunt, all of the liquid poured inside of %CALLNAME:TARGET%'s orifices %FSYN("leak:s")% back, spraying everywhere!
+			PRINTFORMW Although being reduced to Dragon's personal sex relieving toy, %CALLNAME:TARGET% gives into the overwhelming pleasure, burning through both of her mind and soul...
+			PRINTFORML 
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常ＶＡおねだり"
+
+			;小柄体型
+			IF TALENT:小柄体型 && RAND:2 == 0
+				PRINTFORML %CALLNAME:TARGET% rubs her massively swelled up belly after it got filled with bursting amount of %SEMEN()%, %SPLIT_R("making it so inflated it looks like as if it's already pregnant:making her appear like a pregnant woman")%,
+			ELSE
+				PRINTFORM %CALLNAME:TARGET% plays with her %SEMEN()%-%FSYN("fill:ed")% holes 
+			ENDIF
+			
+			PRINTFORMW while zealously servicing the drenched wet %FSYN("penis")% in a daze...
+		ELSEIF MARK:竜姦刻印 == 1 && CFLAG:472 >= 100
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常ＶＡお楽しみ中"
+			PRINTFORMW %CALLNAME:TARGET% %TEXTR(@"turns into a slave to the Dragon's %FSYN("penis")%", @"is %SPLIT_R("spellbound:infatuated:obsessed")% with Dragon's %DickAdj% %FSYN("penis")%", @"accepts Dragon's %DickAdj% %FSYN("penis")%")%, %TEXTR(@"having both of her holes thoroughly %FVERB("ed")% while moaning like a starving beast", @"having both of her holes %FSYN("fill:ed")% with tremendously huge amount of Dragon %SEMEN(-1,1)%")%...
+		ELSEIF CFLAG:472 >= 30
+			PRINTFORMW Sensing %CALLNAME:TARGET%'s faithlessness, the Dragon impales her on his huge %FSYN("penis")% right away, as if trying to teach her whose bitch she is!
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常ＶＡお楽しみ中"
+
+			PRINTFORMW %CALLNAME:TARGET% was screaming at first, but it didn't take long before changing to sweet moans, as both of her holes got %FSYN("stir:ed")% by %ARTICLE(DickAdj)% %FSYN("penis")%.
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常ＶＡおねだり"
+
+			PRINTFORMW %CALLNAME:TARGET% %TEXTR(@"turns into a total slave to the Dragon's %FSYN("penis")%", @"is %SPLIT_R("utterly:completely")% %SPLIT_R("spellbound:infatuated:obsessed")% with Dragon's %DickAdj% %FSYN("penis")%", @"fully accepts Dragon's %DickAdj% %FSYN("penis")%")%, %TEXTR(@"having both of her holes thoroughly %FVERB("ed")% while moaning like a starving beast", @"having both of her holes %FSYN("fill:ed")% with tremendously huge amount of Dragon %SEMEN(-1,1)%")%...
+		ELSE
+			PRINTFORMW The Dragon impaled her on his huge %FSYN("penis")% right away, as if trying to teach her whose bitch she is!
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常ＶＡお楽しみ中"
+
+			PRINTFORMW %CALLNAME:TARGET% was screaming at first, trying to call %CALLNAME:MASTER% for help,\nbut having both of her holes trained by %ARTICLE(DickAdj)% %FSYN("penis")% quickly changed that,\nas her body got ingrained with the taste of it, making her face warp obscenely before the overwhelming pleasure...
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常ＶＡおねだり"
+
+			PRINTFORMW %CALLNAME:TARGET% %TEXTR(@"turns into a total slave to the Dragon's %FSYN("penis")%", @"is %SPLIT_R("utterly:completely")% %SPLIT_R("spellbound:infatuated:obsessed")% with Dragon's %DickAdj% %FSYN("penis")%", @"fully accepts Dragon's %DickAdj% %FSYN("penis")%")%, %TEXTR(@"having both of her holes thoroughly %FVERB("ed")% while moaning like a starving beast", @"having both of her holes %FSYN("fill:ed")% with tremendously huge amount of Dragon %SEMEN(-1,1)%")%...
+		ENDIF
+	;前穴ルート
+	ELSEIF EXP:Ｖ竜姦経験 && RANDIF(1, EXP:Ａ竜姦経験)
+		IF MARK:竜姦刻印 == 2 && CFLAG:472 >= 200
+			IF COND("夜") && ABL:露出癖 >= 3
+				PRINTFORMW %CALLNAME:TARGET% zealously %FSYN("lick:s")% Dragon's %DickAdj% %FSYN("penis")% on a desolated square, %TEXTR(@"%FSYN("tremble:ing")% in ecstasy as it finishes painting her whole body in white", "tempting him to breed her like a bitch she is")%...
+				CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖお楽しみ中"
+
+				PRINTFORMW Such obscene sight quickly fills the Dragon with overwhelming lust, as he %FSYN("restrain")% %CALLNAME:TARGET% down from behind and starts mating with her...!
+				CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖおねだり"
+
+				MEMO_LINECOUNT = LINECOUNT
+
+				CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖ夢中"
+
+				SIF LINECOUNT > MEMO_LINECOUNT
+					RETURN 1
+
+				;小柄体型
+				IF TALENT:小柄体型 && RAND:2 == 0
+					PRINTFORMW %CALLNAME:TARGET%'s tiny womb gets completely conquered by Dragon's %DickAdj% %FSYN("penis")%, making her moan in a great joy as her face %FSYN("melt:s")% into a sloppy mess...
+					PRINTFORMW When the Dragon realizes that %CALLNAME:TARGET%'s orifice got fully packed with his weapon, he then %FSYN("start:s")% to ejaculate with the tremendous vigor...!
+					PRINTFORMW %CALLNAME:TARGET% gets rapidly %FSYN("fill:ed")% with his %SEMEN()%, as his dick acts like a cork, not letting a single drop escape.
+					PRINTFORMW Once finished, %CALLNAME:TARGET%'s poor tiny belly became swelled greatly, making %SPLIT_R("it appear as if it's already pregnant:her appear like a pregnant woman on her last month")%...!
+				ELSE
+					PRINTFORMW %CALLNAME:TARGET% is not bothered whatsoever, despite being almost crushed by his gigantic body and impaled on its humongous shaft, instead continuing to moan in a great joy...
+					PRINTFORMW On the contrary, %CALLNAME:TARGET% is already degraded to the state of being one debauched female dragon,\nmoving her hips on her own accord and trying to get her mate's dick even deeper, greedily pursuing the pleasure...
+					PRINTFORMW Such sight makes the Dragon roar in contentment, as he %FSYN("start:s")% %FSYN("shoot:ing")% his %SEMEN(-1,1)% deep inside of %CALLNAME:TARGET%, as if claiming her as his personal possession...!
+				ENDIF
+			ELSE
+				PRINTFORMW %CALLNAME:TARGET% made passionate love with Dragon's %DickAdj% %FSYN("penis")%%TEXTR(", having her womb completely filled with the seed of his love", " while pledging the love to each other")%...
+				CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖお楽しみ中"
+
+				;小柄体型
+				IF TALENT:小柄体型 && RAND:3 == 0
+					PRINTFORMW %CALLNAME:TARGET% loses her senses and drowns in lust, unable to resist the pleasure of having her insides molded after Dragon's gigantic manhood...
+				ELSEIF RAND:2 == 0
+					PRINTFORMW %CALLNAME:TARGET% licks off her own pussy juices and Dragon's semen off of his %FSYN("penis")% with an intoxicated and euphoric expression, urging him to hurry up and inseminate her once again...
+				ELSE
+					PRINTFORMW The %SEMEN()% keeps %FSYN("leak:ing")% from %CALLNAME:TARGET%'s gaping wide %FSYN("vagina")% in an overflowing fashion, as she exchanges very passionate kiss with the Dragon...
+				ENDIF
+			ENDIF
+		ELSEIF MARK:竜姦刻印 == 1 && CFLAG:472 >= 100
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖお楽しみ中"
+			PRINTFORMW %CALLNAME:TARGET% makes passionate love with Dragon's %DickAdj% %FSYN("penis")%, getting %FVERB("ed")% by it until satisfaction...
+		ELSEIF CFLAG:472 >= 30
+			PRINTFORMW Sensing %CALLNAME:TARGET%'s faithlessness, the Dragon impales her on his huge %FSYN("penis")% right away, as if trying to teach her whose bitch she is!
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖお楽しみ中"
+
+			PRINTFORMW %CALLNAME:TARGET% was screaming at first, but it changed to sweet moans every time the %DickAdj% %FSYN("penis")% made its way inside of her...
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖおねだり"
+
+			PRINTFORMW And then, after having her womb filled to the brim with scorching hot dragon %SEMEN()%, she was degraded back to obedient Dragon bride just like that...
+		ELSE
+			PRINTFORMW The Dragon impaled her on his huge %FSYN("penis")% right away, as if trying to teach her whose bitch she is!
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖお楽しみ中"
+
+			PRINTFORMW %CALLNAME:TARGET% was screaming at first, trying to call %CALLNAME:MASTER% for help,\nbut after recalling the pleasure that was carved on her body numerous times\nshe ended up accepting Dragon's %FSYN("penis")%, while asking %CALLNAME:MASTER% for forgiveness...
+			
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ｖおねだり"
+
+			PRINTFORMW And then, after having her womb filled to the brim with scorching hot dragon %SEMEN()%, she was degraded back to obedient Dragon bride just like that...
+		ENDIF
+	;アナル
+	ELSE
+		IF MARK:竜姦刻印 == 2 && CFLAG:472 >= 200
+			PRINTFORM %CALLNAME:TARGET% %TEXTR(@"makes plenty of love with Dragon's %DickAdj% %FSYN("penis")% using %HIS_HER(TARGET)% %FSYN("anus")%", @"gets %FVERB("ed")% in the %FSYN("anus")%, while pledging the love to each other")%
+			SIF COND("夜") && ABL:露出癖 >= 3
+				PRINTFORM  in the bushes near the houses
+			PRINTW ...
+
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ａお楽しみ中"
+
+			;小柄体型
+			IF TALENT:小柄体型 && RAND:3 == 0
+				PRINTFORMW %CALLNAME:TARGET%'s lower opening gets %FSYN("fill:ed")% with %SEMEN()% until %HIS_HER(TARGET)% belly was literally full, %SPLIT_R(@"making it look as if it's already pregnant:making %HIM_HER(TARGET)% look as if %HE_SHE(TARGET)% was pregnant")%...
+			ELSEIF RAND:2 == 0
+				PRINTFORMW %CALLNAME:TARGET% licks off %HIS_HER(TARGET)% own anal juices and Dragon's semen off of his %FSYN("penis")% with an intoxicated and euphoric expression, making it squeaky clean...
+			ELSE
+				PRINTFORMW The %SEMEN()% keeps %FSYN("leak:ing")% from %CALLNAME:TARGET%'s gaping wide %FSYN("anus")% in an overflowing fashion, as %HE_SHE(TARGET)% exchanges very passionate kiss with the Dragon...
+			ENDIF
+		ELSEIF MARK:竜姦刻印 == 1 && CFLAG:472 >= 100
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ａお楽しみ中"
+			PRINTFORMW %CALLNAME:TARGET% makes passionate love with Dragon's %DickAdj% %FSYN("penis")%, having %HIS_HER(TARGET)% %FSYN("anus")% %FVERB("ed")% until satisfaction...
+		ELSEIF CFLAG:472 >= 30
+			PRINTFORMW Sensing %CALLNAME:TARGET%'s faithlessness, the Dragon impales %HIS_HER(TARGET)% %FSYN("anus")% on his huge %FSYN("penis")% right away!
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ａお楽しみ中"
+
+			PRINTFORMW %CALLNAME:TARGET% was screaming at first, but thinking how such violent fucking would leave %HIS_HER(TARGET)% %FSYN("anus")% perpetually open made %HIS_HER(TARGET)% voice change to sweet moans...
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ａおねだり"
+
+			PRINTFORMW In the end, the taste of Dragon's %FSYN("penis")% got carved on %HIM_HER(TARGET)% through %HIS_HER(TARGET)% stretched wide %FSYN("anus")% once again...
+		ELSE
+			PRINTFORMW The Dragon impaled %HIS_HER(TARGET)% %FSYN("anus")% on his huge %FSYN("penis")% right away!
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ａお楽しみ中"
+
+			PRINTFORMW %CALLNAME:TARGET% was screaming at first, trying to call %CALLNAME:MASTER% for help,\nbut after having %HIS_HER(TARGET)% %FSYN("anus")% etched persistently with %DickAdj% %FSYN("penis")%,\nshe ended up yielding to the tremendous anal pleasure while asking %CALLNAME:MASTER% for forgiveness...
+			CALL SELF_KOJO, "ドラ姦寝取られ：日常Ａおねだり"
+
+			PRINTFORMW In the end, the taste of Dragon's %FSYN("penis")% got carved on %HIM_HER(TARGET)% through %HIS_HER(TARGET)% stretched wide %FSYN("anus")% once again...
+		ENDIF
+	ENDIF
+ENDSELECT
